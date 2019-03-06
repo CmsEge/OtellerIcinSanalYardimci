@@ -104,7 +104,7 @@ public class MainActivity extends AppCompatActivity implements AIListener {
         Result result = response.getResult();
 
         // Get parameters
-        String parameterString = "";
+        String parameterString = result.getFulfillment().getSpeech();
         if (result.getParameters() != null && !result.getParameters().isEmpty()) {
             for (final Map.Entry<String, JsonElement> entry : result.getParameters().entrySet()) {
                 parameterString += "(" + entry.getKey() + ", " + entry.getValue() + ") ";
@@ -114,7 +114,7 @@ public class MainActivity extends AppCompatActivity implements AIListener {
         // Show results in TextView.
         resultTextView.setText("Query:" + result.getResolvedQuery() +
                 "\nAction: " + result.getAction() +
-                "\nParameters: " + parameterString);
+                "\nAnswer: " + parameterString);
     }
 
     @Override

@@ -25,9 +25,6 @@ public class MainActivity extends AppCompatActivity implements AIListener {
     private TextView resultTextView;
     private AIService aiService;
 
-    ///////////////deneme
-    //////// deneme 2
-
     //Requesting run-time permissions
 
     //Create placeholder for user's consent to record_audio permission.

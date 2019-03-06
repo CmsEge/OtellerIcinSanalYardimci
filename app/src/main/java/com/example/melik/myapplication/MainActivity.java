@@ -114,7 +114,7 @@ public class MainActivity extends AppCompatActivity implements AIListener {
         // Show results in TextView.
         resultTextView.setText("Query:" + result.getResolvedQuery() +
                 "\nAction: " + result.getAction() +
-                "\nParameters: " + parameterString);
+                "\nAnswer: " + parameterString);
     }
 
     @Override

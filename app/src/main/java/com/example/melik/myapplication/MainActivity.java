@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity implements AIListener {
     private TextView resultTextView;
     private AIService aiService;
 
-
+    ///////////////deneme
 
 
     //Requesting run-time permissions

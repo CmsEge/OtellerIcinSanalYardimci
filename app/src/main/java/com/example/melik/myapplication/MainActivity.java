@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity implements AIListener {
     private AIService aiService;
 
     ///////////////deneme
-
+    //////// deneme 2
 
     //Requesting run-time permissions
 

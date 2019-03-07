@@ -17,6 +17,7 @@ import ai.api.model.AIRequest;
 import ai.api.model.AIResponse;
 import ai.api.model.Result;
 
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -42,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
         final AIConfiguration config = new AIConfiguration("65ebee5b7327440e8f265d320ad76e93",
                 AIConfiguration.SupportedLanguages.English,
                 AIConfiguration.RecognitionEngine.System);
-
+        
         listenButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -80,6 +81,7 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }.execute(aiRequest);
                 }
+                queryText.setText("");
             }
         });
     }

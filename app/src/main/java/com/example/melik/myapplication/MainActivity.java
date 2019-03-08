@@ -17,11 +17,13 @@ import ai.api.model.AIRequest;
 import ai.api.model.AIResponse;
 import ai.api.model.Result;
 
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView; //olmayabilir
+import android.widget.Toast;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -30,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView resultTextView;
     private EditText queryText;
     private String data;
+    private String deneme;
 
     @SuppressLint("StaticFieldLeak")
     @Override
@@ -46,8 +49,8 @@ public class MainActivity extends AppCompatActivity {
         
         listenButton.setOnClickListener(new View.OnClickListener() {
 
-            @Override
-            public void onClick(View v) {
+                @Override
+                public void onClick(View v) {
 
                 if (!queryText.getText().toString().isEmpty()){
 
@@ -74,13 +77,22 @@ public class MainActivity extends AppCompatActivity {
                         @Override
                         protected void onPostExecute(AIResponse aiResponse) {
                             if (aiResponse != null) {
+                                if(aiResponse.getResult().getAction().equals("dinner-time"))
+                                {
+                                    /*deneme = aiResponse.getResult();*/
+
+                                    resultTextView.append(aiResponse.getResult().getStringParameter("DinnerTime"));
+                                }
                                 Result result = aiResponse.getResult();
                                 String parameterString = result.getFulfillment().getSpeech();
+
                                 resultTextView.append("Chatbot: " + parameterString + "\n");
                             }
                         }
                     }.execute(aiRequest);
                 }
+
+                //resultTextView.append(deneme);
                 queryText.setText("");
             }
         });

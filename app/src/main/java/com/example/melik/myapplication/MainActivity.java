@@ -25,6 +25,7 @@ import android.widget.EditText;
 import android.widget.TextView; //olmayabilir
 import android.widget.Toast;
 
+//deneme 1111111
 
 public class MainActivity extends AppCompatActivity {
     //implements AIListener yazıyordu extends yanında

@@ -95,21 +95,19 @@ public class MainActivity extends AppCompatActivity {
                         protected void onPostExecute(AIResponse aiResponse) {
                             if (!aiResponse.toString().isEmpty()) {
                                 if (aiResponse.getResult().getAction().equals("dinner-time")) {
-                                    /*deneme = aiResponse.getResult();*/
 
+                                    if(aiResponse.getResult().getAction().equals("dinner-time")){
+                                        String speech;
+                                        speech = aiResponse.getResult().getFulfillment().getSpeech();
+                                        speech = speech.replace("dinnerTimeStart","5");
+                                        speech = speech.replace("dinnerTimeFinish","10");
+                                        aiResponse.getResult().getFulfillment().setSpeech(speech);
+                                        Log.i("Bilgi",aiResponse.getResult().getFulfillment().getSpeech());
+                                    }
 
-                                    Log.i("Bilgi",aiResponse.getResult().getContexts().toString());
-                                    /*String speech;
-                                    aiResponse.getResult().getFulfillment().setDisplayText("5");
-                                    speech = aiResponse.getResult().getFulfillment().getSpeech();
-                                    Log.i("bilgi",speech);*/
-
-
-                                    //resultTextView.append(aiResponse.getResult().getStringParameter("DinnerTime"));
                                 }
                                 Result result = aiResponse.getResult();
                                 String parameterString = result.getFulfillment().getSpeech();
-
                                 resultTextView.append("Chatbot: " + parameterString + "\n");
                             }
                         }
@@ -121,7 +119,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-                new MyTask().execute();
+                //new MyTask().execute();
 
             }
         });

@@ -45,57 +45,9 @@ public class MainActivity extends AppCompatActivity {
     private String data;
     private String deneme;
 
-
-
-    private int name=0;
-    private String surName="";
-    private String errmsg="";
-    public void run() {
-        System.out.println("Select Records Example by using the Prepared Statement!");
-        Connection con = null;
-        int count = 0;
-        try {
-            Class.forName("com.mysql.jdbc.Driver");
-            con = DriverManager.getConnection
-                    ("jdbc:mysql://192.168.1.26:3306/Cms", "root", "14.Cms.14");
-           try{
-                String sql;
-                //	  sql
-                //	  = "SELECT title,year_made FROM movies WHERE year_made >= ? AND year_made <= ?";
-                sql
-                        = "SELECT name,surName FROM Customer";
-                PreparedStatement prest = con.prepareStatement(sql);
-                //prest.setInt(1,1980);
-                //prest.setInt(2,2004);
-                ResultSet rs = prest.executeQuery();
-                while (rs.next()){
-                    name = rs.getInt(1);
-                    surName = rs.getString(2);
-                    count++;
-                    System.out.println(name + "\t" + "- " + surName);
-                }
-                System.out.println("Number of records: " + count);
-                prest.close();
-                con.close();
-            }
-            catch (SQLException s){
-                System.out.println("SQL statement is not executed!");
-                errmsg=errmsg+s.getMessage();
-
-            }
-        }
-        catch (Exception e){
-            e.printStackTrace();
-           // errmsg=errmsg+e.getMessage();
-        }
-
-            //handler.sendEmptyMessage(0);
-
-    }
-
-
-
-
+    private static final String url="jdbc:mysql://192.168.1.26:3306/Cms";
+    private static final String user="root";
+    private static String pass="14.Cms.14";
 
 
     @SuppressLint("StaticFieldLeak")
@@ -115,6 +67,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
+
 
                 if (!queryText.getText().toString().isEmpty()) {
 
@@ -165,13 +118,39 @@ public class MainActivity extends AppCompatActivity {
 
                 //resultTextView.append(deneme);
                 queryText.setText("");
+
+
+
+                new MyTask().execute();
+
             }
         });
 
 
 
     }
+    private class MyTask extends AsyncTask<Void,Void,Void>{
+    private String surName="";
+        @Override
+        protected Void doInBackground(Void... voids) {
+            try{
+                Class.forName("com.mysql.jdbc.Driver");
+                Connection con= DriverManager.getConnection(url,user,pass);
+                Statement st=con.createStatement();
+                String sql="select * from Customer";
+                final ResultSet rs=st.executeQuery(sql);
+                rs.next();
+                surName=rs.getString(2);
+            }catch (Exception e){e.printStackTrace();}
+            return null;
+        }
 
+        @Override
+        protected void onPostExecute(Void result){
+            queryText.setText(surName);
+            super.onPostExecute(result);
+        }
+    }
 }
 
 

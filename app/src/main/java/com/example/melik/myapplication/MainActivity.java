@@ -13,9 +13,13 @@ import android.os.Bundle;
 import ai.api.AIDataService;
 import ai.api.AIServiceException;
 import ai.api.android.AIConfiguration;
+import ai.api.android.AIService;
+import ai.api.model.AIContext;
 import ai.api.model.AIRequest;
 import ai.api.model.AIResponse;
 import ai.api.model.Result;
+import ai.api.*;
+import ai.api.ui.AIDialog;
 
 import android.util.Log;
 import android.view.KeyEvent;
@@ -89,15 +93,21 @@ public class MainActivity extends AppCompatActivity {
 
                         @Override
                         protected void onPostExecute(AIResponse aiResponse) {
-                            if (aiResponse != null) {
+                            if (!aiResponse.toString().isEmpty()) {
                                 if (aiResponse.getResult().getAction().equals("dinner-time")) {
-                                    /*deneme = aiResponse.getResult();*/
 
-                                    resultTextView.append(aiResponse.getResult().getStringParameter("DinnerTime"));
+                                    if(aiResponse.getResult().getAction().equals("dinner-time")){
+                                        String speech;
+                                        speech = aiResponse.getResult().getFulfillment().getSpeech();
+                                        speech = speech.replace("dinnerTimeStart","5");
+                                        speech = speech.replace("dinnerTimeFinish","10");
+                                        aiResponse.getResult().getFulfillment().setSpeech(speech);
+                                        Log.i("Bilgi",aiResponse.getResult().getFulfillment().getSpeech());
+                                    }
+
                                 }
                                 Result result = aiResponse.getResult();
                                 String parameterString = result.getFulfillment().getSpeech();
-
                                 resultTextView.append("Chatbot: " + parameterString + "\n");
                             }
                         }
@@ -109,7 +119,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-                new MyTask().execute();
+                //new MyTask().execute();
 
             }
         });

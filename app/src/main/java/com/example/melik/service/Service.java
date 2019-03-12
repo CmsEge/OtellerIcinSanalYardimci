@@ -1,5 +1,4 @@
 package com.example.melik.service;
-import com.example.melik.myapplication.Student;
 import android.annotation.SuppressLint;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -9,11 +8,9 @@ import android.widget.TextView;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
 
 import ai.api.AIDataService;
 import ai.api.AIServiceException;

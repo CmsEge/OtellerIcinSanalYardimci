@@ -26,9 +26,6 @@ public class MainActivity extends AppCompatActivity {
     private EditText queryText;
     private Service service;
 
-    private ArrayList<Student> StudentList;
-
-
     @SuppressLint("StaticFieldLeak")
     @Override
     protected void onCreate(Bundle savedInstanceState) { //initialize kısmı
@@ -43,15 +40,15 @@ public class MainActivity extends AppCompatActivity {
         SyncData orderData=new SyncData();//veri tabanı bağlantısı başlatılıyor
         orderData.execute("");
     }
+    public void onClick (View view){ //tek butonumuz var zati
+        service.StartChat();
+    }
     private class SyncData extends AsyncTask<String,String,String> {//veri tabanı bağlantısı başlatılıyor
         @Override
         protected String doInBackground(String... strings) {
             service.SyncData();
             return null;
         }
-    }
-    public void onClick (View view){ //tek butonumuz var zati
-        service.StartChat();
     }
 }
 

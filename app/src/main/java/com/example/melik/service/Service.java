@@ -25,10 +25,17 @@ public class Service {
     private EditText queryText;
 
     public Service(Button listenButton,EditText queryText, TextView resultTextView){
-        this.listenButton=listenButton;
-        this.resultTextView=resultTextView;
-        this.queryText=queryText;
+        this.setListenButton(listenButton);
+        this.setResultTextView(resultTextView);
+        this.setQueryText(queryText);
     }
+    public void setListenButton(Button listenButton) { this.listenButton = listenButton; }
+    public void setQueryText(EditText queryText) { this.queryText = queryText; }
+    public void setResultTextView(TextView resultTextView){ this.resultTextView=resultTextView; }
+    public Button getListenButton(){return this.listenButton;}
+    public EditText getQueryText(){return this.queryText;}
+    public TextView getReResultTextView(){return this.resultTextView;}
+
     public void StartChat(){
         String data;
         if (!queryText.getText().toString().isEmpty()) {

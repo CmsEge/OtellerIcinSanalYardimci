@@ -31,4 +31,5 @@ dependencies {
     implementation 'ai.api:libai:1.6.12'
     //implementation 'com.google.android.gms:play-services-base:6.5.87'
     implementation 'mysql:mysql-connector-java:8.0.15'
+    implementation 'com.squareup.picasso:picasso:2.71828'
 }

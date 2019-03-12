@@ -1,5 +1,5 @@
 package com.example.melik.service;
-
+import com.example.melik.myapplication.Student;
 import android.annotation.SuppressLint;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -11,6 +11,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import ai.api.AIDataService;
 import ai.api.AIServiceException;
@@ -25,6 +26,7 @@ public class Service {
             AIConfiguration.SupportedLanguages.English,
             AIConfiguration.RecognitionEngine.System);
 
+
     private Button listenButton;
     private TextView resultTextView ;
     private EditText queryText;
@@ -33,10 +35,12 @@ public class Service {
         this.setListenButton(listenButton);
         this.setResultTextView(resultTextView);
         this.setQueryText(queryText);
+
     }
     public void setListenButton(Button listenButton) { this.listenButton = listenButton; }
     public void setQueryText(EditText queryText) { this.queryText = queryText; }
     public void setResultTextView(TextView resultTextView){ this.resultTextView=resultTextView; }
+
 
     public void StartChat(){
         String data;

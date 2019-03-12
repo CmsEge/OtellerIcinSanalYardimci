@@ -1,7 +1,6 @@
 package com.example.melik.myapplication;
 
 import android.annotation.SuppressLint;
-import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -22,18 +21,17 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) { //initialize kısmı
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         listenButton = (Button) findViewById(R.id.listenButton);
         queryText = (EditText) findViewById(R.id.queryText);
         resultTextView = (TextView) findViewById(R.id.resultTextView);
 
-        service=new Service(listenButton,queryText,resultTextView); //her işimizi bu servis arkadaına yaptırıcaz tüm metotları
+        service=new Service(listenButton,queryText,resultTextView); //her işimizi bu servis arkadaşına yaptırıcaz tüm metotları
         service.SyncData();
     }
     public void onClick (View view){ //tek butonumuz var zati
         service.StartChat();
-
     }
-
 }
 
 

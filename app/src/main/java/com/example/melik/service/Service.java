@@ -37,9 +37,6 @@ public class Service {
     public void setListenButton(Button listenButton) { this.listenButton = listenButton; }
     public void setQueryText(EditText queryText) { this.queryText = queryText; }
     public void setResultTextView(TextView resultTextView){ this.resultTextView=resultTextView; }
-    public Button getListenButton(){return this.listenButton;}
-    public EditText getQueryText(){return this.queryText;}
-    public TextView getReResultTextView(){return this.resultTextView;}
 
     public void StartChat(){
         String data;

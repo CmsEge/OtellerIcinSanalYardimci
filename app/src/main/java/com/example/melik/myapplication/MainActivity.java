@@ -4,20 +4,11 @@ import android.annotation.SuppressLint;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import com.example.melik.service.Service;
-
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
-import java.sql.SQLException;
-import java.util.ArrayList;
-
 
 public class MainActivity extends AppCompatActivity {
 
@@ -37,19 +28,12 @@ public class MainActivity extends AppCompatActivity {
 
         service=new Service(listenButton,queryText,resultTextView); //her işimizi bu servis arkadaına yaptırıcaz tüm metotları
 
-        SyncData orderData=new SyncData();//veri tabanı bağlantısı başlatılıyor
-        orderData.execute("");
     }
     public void onClick (View view){ //tek butonumuz var zati
         service.StartChat();
+        service.SyncData();
     }
-    private class SyncData extends AsyncTask<String,String,String> {//veri tabanı bağlantısı başlatılıyor
-        @Override
-        protected String doInBackground(String... strings) {
-            service.SyncData();
-            return null;
-        }
-    }
+
 }
 
 

@@ -24,7 +24,7 @@ public class Service {
     private  final AIConfiguration config = new AIConfiguration("ecd717ee86524b2e977ca6e4483c7346",
             AIConfiguration.SupportedLanguages.English,
             AIConfiguration.RecognitionEngine.System);
-
+    private Boolean success;
 
     private Button listenButton;
     private TextView resultTextView ;
@@ -88,32 +88,38 @@ public class Service {
         queryText.setText("");
     }
     public void SyncData(){//veri tabanı bağlantısı
-        Boolean success;
-        try{
-            Class.forName("com.mysql.jdbc.Driver"); //burada sıkıntı var sorunu anlamıyorum
-            String url="jdbc:mysql//192.168.0.23/ogrenci_schema"; //192 li yere kendi ipv4 adresini yaz
-            //veri tabanında bir veri tabanı(schema) oluştur oluşturduğunun ismini ogrenci_schema yerine yaz, gerisine dokunma
-            Connection c= DriverManager.getConnection(url,"tez","14.Cms.14");
-            //kendi username ve şifren mysqldeki
-            if(c==null){
-                success=false;
-            }else{
-                String query="SELECT id,first_name,last_name,email FROM student";
-                Statement stmt=c.createStatement();
-                ResultSet rs=stmt.executeQuery(query);
-                if(rs!=null){
-                    // Log.i(rs.getString("first_name"),rs.getString("last_name"));
-                    success=true;
-                    Log.i("success ","true rs null değil");
-                }else{
-                    success=false;
-                    Log.i("success ","false rs null");
-                }
-            }
 
-        } catch (ClassNotFoundException | SQLException e) {
-            e.printStackTrace();
-            Log.i("success ","false class forname de çaktı");
-        }
+        new AsyncTask<String, String, String>() {
+            @Override
+            protected String doInBackground(String... strings) {
+                try{
+                    Class.forName("com.mysql.jdbc.Driver"); //burada sıkıntı var sorunu anlamıyorum
+                    String url="jdbc:mysql//192.168.0.23/ogrenci_schema"; //192 li yere kendi ipv4 adresini yaz
+                    //veri tabanında bir veri tabanı(schema) oluştur oluşturduğunun ismini ogrenci_schema yerine yaz, gerisine dokunma
+                    Connection c= DriverManager.getConnection(url,"tez","14.Cms.14");
+                    //kendi username ve şifren mysqldeki
+                    if(c==null){
+                        success=false;
+                    }else{
+                        String query="SELECT id,first_name,last_name,email FROM student";
+                        Statement stmt=c.createStatement();
+                        ResultSet rs=stmt.executeQuery(query);
+                        if(rs!=null){
+                            // Log.i(rs.getString("first_name"),rs.getString("last_name"));
+                            success=true;
+                            Log.i("success ","true rs null değil");
+                        }else{
+                            success=false;
+                            Log.i("success ","false rs null");
+                        }
+                    }
+
+                } catch (ClassNotFoundException | SQLException e) {
+                    e.printStackTrace();
+                    Log.i("success ","false class forname de çaktı");
+                }
+                return null;
+            }
+        }.execute("");
     }
 }

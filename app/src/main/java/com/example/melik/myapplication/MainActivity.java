@@ -18,6 +18,7 @@ import java.sql.Statement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+
 public class MainActivity extends AppCompatActivity {
 
     private Button listenButton;
@@ -64,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
                     Statement stmt=c.createStatement();
                     ResultSet rs=stmt.executeQuery(query);
                     if(rs!=null){
-                        Log.i(rs.getString("first_name"),rs.getString("last_name"));
+                       // Log.i(rs.getString("first_name"),rs.getString("last_name"));
                         success=true;
                         Log.i("success ","true rs null değil");
                     }else{

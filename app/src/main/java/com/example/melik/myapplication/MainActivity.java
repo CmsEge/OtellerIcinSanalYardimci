@@ -29,6 +29,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.melik.service.Service;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -38,118 +40,47 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class MainActivity extends AppCompatActivity {
-    //implements AIListener yazıyordu extends yanında
+
     private Button listenButton;
     private TextView resultTextView;
     private EditText queryText;
-    private String data;
-    private String deneme;
-
-    private static final String url="jdbc:mysql://192.168.1.26:3306/Cms";
-    private static final String user="root";
-    private static String pass="14.Cms.14";
-
+    private Service service;
 
     @SuppressLint("StaticFieldLeak")
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) { //initialize kısmı
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         listenButton = (Button) findViewById(R.id.listenButton);
         queryText = (EditText) findViewById(R.id.queryText);
         resultTextView = (TextView) findViewById(R.id.resultTextView);
 
-        final AIConfiguration config = new AIConfiguration("65ebee5b7327440e8f265d320ad76e93",
-                AIConfiguration.SupportedLanguages.English,
-                AIConfiguration.RecognitionEngine.System);
-
-        listenButton.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-
-
-                if (!queryText.getText().toString().isEmpty()) {
-
-                    final AIDataService aiDataService = new AIDataService(config);
-                    data = queryText.getText().toString();
-                    resultTextView.append("You: " + data + "\n");
-                    final AIRequest aiRequest = new AIRequest();
-                    aiRequest.setQuery(data);
-
-                    new AsyncTask<AIRequest, Void, AIResponse>() {
-
-                        @SuppressLint("WrongThread")
-                        @Override
-                        protected AIResponse doInBackground(AIRequest... requests) {
-                            final AIRequest request = requests[0];
-                            try {
-                                final AIResponse response = aiDataService.request(aiRequest);
-                                return response;
-                            } catch (AIServiceException e) {
-                            }
-                            return null;
-                        }
-
-                        @Override
-                        protected void onPostExecute(AIResponse aiResponse) {
-                            if (!aiResponse.toString().isEmpty()) {
-                                if (aiResponse.getResult().getAction().equals("dinner-time")) {
-
-                                    if(aiResponse.getResult().getAction().equals("dinner-time")){
-                                        String speech;
-                                        speech = aiResponse.getResult().getFulfillment().getSpeech();
-                                        speech = speech.replace("dinnerTimeStart","5");
-                                        speech = speech.replace("dinnerTimeFinish","10");
-                                        aiResponse.getResult().getFulfillment().setSpeech(speech);
-                                        Log.i("Bilgi",aiResponse.getResult().getFulfillment().getSpeech());
-                                    }
-
-                                }
-                                Result result = aiResponse.getResult();
-                                String parameterString = result.getFulfillment().getSpeech();
-                                resultTextView.append("Chatbot: " + parameterString + "\n");
-                            }
-                        }
-                    }.execute(aiRequest);
-                }
-
-                //resultTextView.append(deneme);
-                queryText.setText("");
-
-
-
-                //new MyTask().execute();
-
-            }
-        });
-
-
-
+        service=new Service(listenButton,queryText,resultTextView); //her işimizi bu servis arkadaına yaptırıcaz tüm metotları
     }
-    private class MyTask extends AsyncTask<Void,Void,Void>{
-    private String surName="";
-        @Override
-        protected Void doInBackground(Void... voids) {
-            try{
-                Class.forName("com.mysql.jdbc.Driver");
-                Connection con= DriverManager.getConnection(url,user,pass);
-                Statement st=con.createStatement();
-                String sql="select * from Customer";
-                final ResultSet rs=st.executeQuery(sql);
-                rs.next();
-                surName=rs.getString(2);
-            }catch (Exception e){e.printStackTrace();}
-            return null;
+    public void onClick (View view){ //tek butonumuz var zati
+
+        service.StartChat();
+    }
+   /* private void insert() {
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+            String url="jdbc:mysql//192.168.0.23/ogrenci_schema";
+            Connection c=DriverManager.getConnection(url,"tez","14.Cms.14");
+            PreparedStatement st=c.prepareStatement("insert into student values(?,?,?,?)");
+            st.setInt(1,8);
+            st.setString(2,"A001");
+            st.setString(3,"momo");
+            st.setString(4,"coco");
+            st.execute();
+            st.close();
+            c.close();
+        } catch (ClassNotFoundException | SQLException e) {
+            e.printStackTrace();
         }
 
-        @Override
-        protected void onPostExecute(Void result){
-            queryText.setText(surName);
-            super.onPostExecute(result);
-        }
-    }
+    }*/
 }
+
 
 
 

@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
     private Service service;
 
     private ArrayList<Student> StudentList;
-    private boolean success=false;
+
 
     @SuppressLint("StaticFieldLeak")
     @Override
@@ -39,49 +39,15 @@ public class MainActivity extends AppCompatActivity {
         resultTextView = (TextView) findViewById(R.id.resultTextView);
 
         service=new Service(listenButton,queryText,resultTextView); //her işimizi bu servis arkadaına yaptırıcaz tüm metotları
-        StudentList=new ArrayList<Student>();
-        SyncData orderData=new SyncData();
+
+        SyncData orderData=new SyncData();//veri tabanı bağlantısı başlatılıyor
         orderData.execute("");
     }
-    private class SyncData extends AsyncTask<String,String,String> {
-        String msg="Internet/DB_Credentials/Windows_Firewall_TurnOn Error, See Android Monitor in the bottom For details!";
-
-        @Override
-        protected void onPreExecute(){
-            //do nothing
-        }
+    private class SyncData extends AsyncTask<String,String,String> {//veri tabanı bağlantısı başlatılıyor
         @Override
         protected String doInBackground(String... strings) {
-            try{
-                Class.forName("com.mysql.jdbc.Driver"); //burada sıkıntı var sorunu anlamıyorum
-                String url="jdbc:mysql//192.168.0.23/ogrenci_schema"; //192 li yere kendi ipv4 adresini yaz
-                //veri tabanında bir veri tabanı(schema) oluştur oluşturduğunun ismini ogrenci_schema yerine yaz, gerisine dokunma
-                Connection c= DriverManager.getConnection(url,"tez","14.Cms.14");
-                //kendi username ve şifren mysqldeki
-                if(c==null){
-                    success=false;
-                }else{
-                    String query="SELECT id,first_name,last_name,email FROM student";
-                    Statement stmt=c.createStatement();
-                    ResultSet rs=stmt.executeQuery(query);
-                    if(rs!=null){
-                       // Log.i(rs.getString("first_name"),rs.getString("last_name"));
-                        success=true;
-                        Log.i("success ","true rs null değil");
-                    }else{
-                        success=false;
-                        Log.i("success ","false rs null");
-                    }
-                }
-
-            } catch (ClassNotFoundException | SQLException e) {
-                e.printStackTrace();
-                Log.i("success ","false class forname de çaktı");
-            }
+            service.SyncData();
             return null;
-        }
-        protected void onPostExecute(){
-            //do nothing
         }
     }
     public void onClick (View view){ //tek butonumuz var zati

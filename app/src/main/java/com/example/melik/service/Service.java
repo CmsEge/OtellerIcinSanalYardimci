@@ -10,7 +10,9 @@ import android.widget.TextView;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 
 import ai.api.AIDataService;
@@ -88,23 +90,33 @@ public class Service {
         }
         queryText.setText("");
     }
-    public void ConnectToDb(){
+    public void SyncData(){//veri tabanı bağlantısı
+        Boolean success;
         try{
             Class.forName("com.mysql.jdbc.Driver"); //burada sıkıntı var sorunu anlamıyorum
             String url="jdbc:mysql//192.168.0.23/ogrenci_schema"; //192 li yere kendi ipv4 adresini yaz
             //veri tabanında bir veri tabanı(schema) oluştur oluşturduğunun ismini ogrenci_schema yerine yaz, gerisine dokunma
-            Connection c=DriverManager.getConnection(url,"tez","14.Cms.14");
+            Connection c= DriverManager.getConnection(url,"tez","14.Cms.14");
             //kendi username ve şifren mysqldeki
-            PreparedStatement st=c.prepareStatement("insert into student values(?,?,?,?)");
-            st.setInt(1,8);
-            st.setString(2,"A001");
-            st.setString(3,"momo");
-            st.setString(4,"coco");
-            st.execute();
-            st.close();
-            c.close();
+            if(c==null){
+                success=false;
+            }else{
+                String query="SELECT id,first_name,last_name,email FROM student";
+                Statement stmt=c.createStatement();
+                ResultSet rs=stmt.executeQuery(query);
+                if(rs!=null){
+                    // Log.i(rs.getString("first_name"),rs.getString("last_name"));
+                    success=true;
+                    Log.i("success ","true rs null değil");
+                }else{
+                    success=false;
+                    Log.i("success ","false rs null");
+                }
+            }
+
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
+            Log.i("success ","false class forname de çaktı");
         }
     }
 }

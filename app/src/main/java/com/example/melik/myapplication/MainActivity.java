@@ -18,8 +18,6 @@ import ai.api.model.AIContext;
 import ai.api.model.AIRequest;
 import ai.api.model.AIResponse;
 import ai.api.model.Result;
-import ai.api.*;
-import ai.api.ui.AIDialog;
 
 import android.util.Log;
 import android.view.KeyEvent;
@@ -29,13 +27,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
-import java.sql.Statement;
+
 
 public class MainActivity extends AppCompatActivity {
     //implements AIListener yazıyordu extends yanında
@@ -45,9 +37,9 @@ public class MainActivity extends AppCompatActivity {
     private String data;
     private String deneme;
 
-    private static final String url="jdbc:mysql://192.168.1.26:3306/Cms";
+    private static final String url="jdbc:mysql://localhost:3306/Cms";
     private static final String user="root";
-    private static String pass="14.Cms.14";
+    private static String pass="Saskin*9";
 
 
     @SuppressLint("StaticFieldLeak")
@@ -59,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
         queryText = (EditText) findViewById(R.id.queryText);
         resultTextView = (TextView) findViewById(R.id.resultTextView);
 
-        final AIConfiguration config = new AIConfiguration("65ebee5b7327440e8f265d320ad76e93",
+        final AIConfiguration config = new AIConfiguration("ecd717ee86524b2e977ca6e4483c7346",
                 AIConfiguration.SupportedLanguages.English,
                 AIConfiguration.RecognitionEngine.System);
 
@@ -77,6 +69,7 @@ public class MainActivity extends AppCompatActivity {
                     final AIRequest aiRequest = new AIRequest();
                     aiRequest.setQuery(data);
 
+
                     new AsyncTask<AIRequest, Void, AIResponse>() {
 
                         @SuppressLint("WrongThread")
@@ -93,7 +86,8 @@ public class MainActivity extends AppCompatActivity {
 
                         @Override
                         protected void onPostExecute(AIResponse aiResponse) {
-                            if (!aiResponse.toString().isEmpty()) {
+
+                            if (!aiResponse.getResult().getAction().isEmpty()) {
                                 if (aiResponse.getResult().getAction().equals("dinner-time")) {
 
                                     if(aiResponse.getResult().getAction().equals("dinner-time")){
@@ -111,6 +105,7 @@ public class MainActivity extends AppCompatActivity {
                                 resultTextView.append("Chatbot: " + parameterString + "\n");
                             }
                         }
+
                     }.execute(aiRequest);
                 }
 
@@ -127,28 +122,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
-    private class MyTask extends AsyncTask<Void,Void,Void>{
-    private String surName="";
-        @Override
-        protected Void doInBackground(Void... voids) {
-            try{
-                Class.forName("com.mysql.jdbc.Driver");
-                Connection con= DriverManager.getConnection(url,user,pass);
-                Statement st=con.createStatement();
-                String sql="select * from Customer";
-                final ResultSet rs=st.executeQuery(sql);
-                rs.next();
-                surName=rs.getString(2);
-            }catch (Exception e){e.printStackTrace();}
-            return null;
-        }
 
-        @Override
-        protected void onPostExecute(Void result){
-            queryText.setText(surName);
-            super.onPostExecute(result);
-        }
-    }
 }
 
 

@@ -25,10 +25,12 @@ dependencies {
     //testImplementation 'junit:junit:4.12'
     //androidTestImplementation 'com.android.support.test:runner:1.0.2'
     //androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+
     implementation 'ai.api:sdk:2.0.7@aar'
     implementation 'com.google.code.gson:gson:2.8.5'
     implementation 'commons-io:commons-io:20030203.000550'
     implementation 'ai.api:libai:1.6.12'
+
     //implementation 'com.google.android.gms:play-services-base:6.5.87'
-    implementation 'mysql:mysql-connector-java:8.0.15'
+    //implementation 'mysql:mysql-connector-java:8.0.15'
 }

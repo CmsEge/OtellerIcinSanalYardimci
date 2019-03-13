@@ -41,6 +41,7 @@ public class Service {
     public void setResultTextView(TextView resultTextView){ this.resultTextView=resultTextView; }
 
 
+    @SuppressLint("StaticFieldLeak")
     public void StartChat(){
         String data;
         if (!queryText.getText().toString().isEmpty()) {
@@ -66,18 +67,18 @@ public class Service {
                 }
                 @Override
                 protected void onPostExecute(AIResponse aiResponse) {
-                    if (!aiResponse.toString().isEmpty()) {
-                        if (aiResponse.getResult().getAction().equals("dinner-time")) {
 
-                            if(aiResponse.getResult().getAction().equals("dinner-time")){
+                    if (!aiResponse.toString().isEmpty()) {
+
+                        if (aiResponse.getResult().getAction().equals("dinner-time")) {
                                 String speech;
                                 speech = aiResponse.getResult().getFulfillment().getSpeech();
                                 speech = speech.replace("dinnerTimeStart","5");
                                 speech = speech.replace("dinnerTimeFinish","10");
                                 aiResponse.getResult().getFulfillment().setSpeech(speech);
                                 Log.i("Bilgi",aiResponse.getResult().getFulfillment().getSpeech());
-                            }
                         }
+
                         Result result = aiResponse.getResult();
                         String parameterString = result.getFulfillment().getSpeech();
                         resultTextView.append("Chatbot: " + parameterString + "\n");
@@ -87,38 +88,60 @@ public class Service {
         }
         queryText.setText("");
     }
+
+
+    @SuppressLint("StaticFieldLeak")
     public void SyncData(){//veri tabanı bağlantısı
 
-        new AsyncTask<String, String, String>() {
+        new AsyncTask<String, String, ResultSet>() {
             @Override
-            protected String doInBackground(String... strings) {
+            protected ResultSet doInBackground(String... strings) {
                 try{
-                    Class.forName("com.mysql.jdbc.Driver"); //burada sıkıntı var sorunu anlamıyorum
-                    String url="jdbc:mysql//192.168.0.23/ogrenci_schema"; //192 li yere kendi ipv4 adresini yaz
+                    Class.forName("com.mysql.jdbc.Driver");
+                    //burada sıkıntı var sorunu anlamıyorum
+                    String url = "jdbc:mysql//localhost/CMS"; //192 li yere kendi ipv4 adresini yaz
                     //veri tabanında bir veri tabanı(schema) oluştur oluşturduğunun ismini ogrenci_schema yerine yaz, gerisine dokunma
-                    Connection c= DriverManager.getConnection(url,"tez","14.Cms.14");
+                    Connection c = DriverManager.getConnection(url,"root","Saskin*9");
                     //kendi username ve şifren mysqldeki
-                    if(c==null){
+
+                    //if(c == null){//JAVADA == KÖTÜ BİR ŞEYDİ DİYE HATIRLIYORUM NESNELERİ DENKLİĞE GÖRE KARŞILAŞTIRIYORDU SANKİ EŞİTLİĞE GÖRE DEĞİL.BURADA PROBLEM OLURSA AKLINIZDA BULUNSUN.
+                    if(c.toString().isEmpty()){
                         success=false;
                     }else{
-                        String query="SELECT id,first_name,last_name,email FROM student";
-                        Statement stmt=c.createStatement();
-                        ResultSet rs=stmt.executeQuery(query);
-                        if(rs!=null){
+                        String query = "SELECT customerId,name,surName,idNo,roomNo,phoneNo FROM Customer";
+                        Statement stmt = c.createStatement();
+                        ResultSet rs = stmt.executeQuery(query);
+                        rs.next();
+                        Log.i("hoppili:",rs.getNString(1));//çalışmadı.
+
+                        //
+
+
+                        /*if(rs != null){//null direk olmuyor sanırım ya 107. satırda yazdığım gibi.Ben tostring yapıp sonra isempty yapıyorum genelde.
                             // Log.i(rs.getString("first_name"),rs.getString("last_name"));
-                            success=true;
+                            success = true;
                             Log.i("success ","true rs null değil");
+                            return rs;
                         }else{
-                            success=false;
+                            success = false;
                             Log.i("success ","false rs null");
-                        }
+                            return null;
+                        }*/
                     }
 
                 } catch (ClassNotFoundException | SQLException e) {
                     e.printStackTrace();
                     Log.i("success ","false class forname de çaktı");
+                    return null;
                 }
+
                 return null;
+            }
+
+            @Override
+            protected void onPostExecute(ResultSet resultSet) {//doInBackgrounddan sonra onpost yapılıp sanki burada çektiğimiz sonuçla ilgili şeyler yapıcaz.
+                super.onPostExecute(resultSet);
+                Log.i("Sonuç:",resultSet.toString());
             }
         }.execute("");
     }

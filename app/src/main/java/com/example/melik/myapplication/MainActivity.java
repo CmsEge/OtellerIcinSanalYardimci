@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
         resultTextView = (TextView) findViewById(R.id.resultTextView);
 
         service=new Service(listenButton,queryText,resultTextView); //her işimizi bu servis arkadaşına yaptırıcaz tüm metotları
-        service.SyncData();// veri tabanı bağlamaya çalıştığın zaman bu commenti aç hata veriyor ondan kapattım
+        //service.SyncData();// veri tabanı bağlamaya çalıştığın zaman bu commenti aç hata veriyor ondan kapattım
     }
 
     public void onClick (View view){ //tek butonumuz var zati

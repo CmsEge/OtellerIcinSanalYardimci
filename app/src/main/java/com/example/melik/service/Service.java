@@ -90,7 +90,7 @@ public class Service {
     }
 
 
-    @SuppressLint("StaticFieldLeak")
+    /*@SuppressLint("StaticFieldLeak")
     public void SyncData(){//veri tabanı bağlantısı
 
         new AsyncTask<String, String, ResultSet>() {
@@ -117,7 +117,7 @@ public class Service {
                         //
 
 
-                        /*if(rs != null){//null direk olmuyor sanırım ya 107. satırda yazdığım gibi.Ben tostring yapıp sonra isempty yapıyorum genelde.
+                        if(rs != null){//null direk olmuyor sanırım ya 107. satırda yazdığım gibi.Ben tostring yapıp sonra isempty yapıyorum genelde.
                             // Log.i(rs.getString("first_name"),rs.getString("last_name"));
                             success = true;
                             Log.i("success ","true rs null değil");
@@ -126,7 +126,7 @@ public class Service {
                             success = false;
                             Log.i("success ","false rs null");
                             return null;
-                        }*/
+                        }
                     }
 
                 } catch (ClassNotFoundException | SQLException e) {
@@ -144,5 +144,5 @@ public class Service {
                 Log.i("Sonuç:",resultSet.toString());
             }
         }.execute("");
-    }
+    }*/
 }

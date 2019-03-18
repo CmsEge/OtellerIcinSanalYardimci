@@ -1,16 +1,17 @@
 package com.example.melik.service;
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import com.example.melik.database.Database;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 import ai.api.AIDataService;
 import ai.api.AIServiceException;
@@ -29,6 +30,9 @@ public class Service {
     private Button listenButton;
     private TextView resultTextView ;
     private EditText queryText;
+    ArrayList<HashMap<String, String>> customerList;
+    String customerNames[];
+    int customerIds[];
 
     public Service(Button listenButton,EditText queryText, TextView resultTextView){
         this.setListenButton(listenButton);
@@ -88,6 +92,30 @@ public class Service {
         }
         queryText.setText("");
     }
+
+
+    public void SyncData(Context context){
+
+        Database db = new Database(context.getApplicationContext());//parametre olarak gelen context ile database oluşturuyoruz.
+        customerList = db.allCustomers();//Database classında oluşturduğumuz metottan tüm müşterileri çekip customerListe alıyoruz.
+
+        //db.customerInsert("17614534630","Saygun","Askin","107","0506 870 74 03");//bunu sanırım ayrı bir text falan açıp yapabiliyorduk tek seferde ona bakarız ben denemelik ekledim.
+        if(customerList.size()==0){
+            Toast.makeText(context.getApplicationContext(), "Customer list is empty!", Toast.LENGTH_LONG).show();//burada liste boşsa kullanıcıya bir uyarı atıyor çok önemli değil.
+        }else {
+            customerNames = new String[customerList.size()];//listenin büyüklüğü kadar ayarlıyor alttakiyle bunda.
+            customerIds = new int[customerList.size()];
+            for (int i = 0; i < customerList.size(); i++) {
+                customerNames[i] = customerList.get(i).get("cName");//customerList.get[i] ile müşterinin tüm satırını alıyor .get("cName") ile de sadece ismini alıyor altta da aynı şekil.
+                customerIds[i] = Integer.parseInt(customerList.get(i).get("customerId"));
+            }
+            //Log.i("customerName",customerNames[0]);
+            //Log.i("customerId", String.valueOf(customerIds[0]));
+            Log.i("customers",db.allCustomers().toString());//Logda denemek için yazdırdım bi sadece farklı sırayla yazıyor ama hiçbir önemi yok bizim için.
+        }
+    }
+
+
 
 
     /*@SuppressLint("StaticFieldLeak")

@@ -84,7 +84,7 @@ public class Service {
         }
         queryText.setText("");
     }
-    public void ConnectToDb(){
+    /*public void ConnectToDb(){
         try{
             Class.forName("com.mysql.jdbc.Driver"); //burada sıkıntı var sorunu anlamıyorum
             String url="jdbc:mysql//192.168.0.23/ogrenci_schema"; //192 li yere kendi ipv4 adresini yaz
@@ -102,5 +102,5 @@ public class Service {
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
         }
-    }
+    }*/
 }

@@ -7,6 +7,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import com.example.melik.RequestExtras.requestextras;
 import com.example.melik.service.Service;
 
 public class MainActivity extends AppCompatActivity {
@@ -15,6 +17,8 @@ public class MainActivity extends AppCompatActivity {
     private TextView resultTextView;
     private EditText queryText;
     private Service service;
+
+    private requestextras requestextras;
 
     @SuppressLint("StaticFieldLeak")
     @Override

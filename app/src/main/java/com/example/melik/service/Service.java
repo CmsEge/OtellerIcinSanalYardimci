@@ -28,13 +28,13 @@ public class Service {
     private Boolean success;
 
     private Button listenButton;
-    private TextView resultTextView ;
+    private TextView resultTextView ;//chatview yerine textview
     private EditText queryText;
     ArrayList<HashMap<String, String>> customerList;
     String customerNames[];
     int customerIds[];
 
-    public Service(Button listenButton,EditText queryText, TextView resultTextView){
+    public Service(Button listenButton,EditText queryText, TextView resultTextView){//chatview yerine textview
         this.setListenButton(listenButton);
         this.setResultTextView(resultTextView);
         this.setQueryText(queryText);
@@ -42,7 +42,7 @@ public class Service {
     }
     public void setListenButton(Button listenButton) { this.listenButton = listenButton; }
     public void setQueryText(EditText queryText) { this.queryText = queryText; }
-    public void setResultTextView(TextView resultTextView){ this.resultTextView=resultTextView; }
+    public void setResultTextView(TextView resultTextView){ this.resultTextView=resultTextView; }//chatview yerine textview
 
 
     @SuppressLint("StaticFieldLeak")
@@ -52,6 +52,7 @@ public class Service {
 
             final AIDataService aiDataService = new AIDataService(config);
             data = queryText.getText().toString();
+
             resultTextView.append("You: " + data + "\n");
             final AIRequest aiRequest = new AIRequest();
             aiRequest.setQuery(data);

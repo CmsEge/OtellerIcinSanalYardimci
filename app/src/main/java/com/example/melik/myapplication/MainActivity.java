@@ -17,6 +17,8 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.example.melik.myapplication.User;
 import com.example.melik.config.LanguageConfig;
+import com.example.melik.database.CustomerDB;
+import com.example.melik.service.Service;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -45,13 +47,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private ChatView chatView;
     private User myAccount;
     private User droidKaigiBot;
+    private CustomerDB customerDB;
+    private Service service;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        customerDB = new CustomerDB(getApplicationContext());
+        service = new Service(); //her işimizi bu servis arkadaşına yaptırıcaz tüm metotları
+        service.InsertTables(customerDB);//syncdata fonksiyonunda sqllite çalıştırıyoruz bu çalıştırma için context'e ihtiyaç duyuyor o yüzden parametre olarak gönderiyoruz.
+        Log.i("deneme",customerDB.allCustomers().toString());
 
         initChatView();
-
         //Language, Dialogflow Client access token
         final LanguageConfig config = new LanguageConfig("en", "ecd717ee86524b2e977ca6e4483c7346");
         initService(config);
@@ -82,10 +90,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         final String eventString = null;
         final String contextString = null;
 
-        /*if (TextUtils.isEmpty(queryString) && TextUtils.isEmpty(eventString)) {
+        if (TextUtils.isEmpty(queryString) && TextUtils.isEmpty(eventString)) {
             onError(new AIError(getString(R.string.non_empty_query)));
             return;
-        }*/
+        }
 
         new AiTask().execute(queryString, eventString, contextString);
     }
@@ -198,11 +206,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         droidKaigiBot = new User(botId, botName, icon);
 
         chatView = findViewById(R.id.chat_view);
-        chatView.setRightBubbleColor(ContextCompat.getColor(this, R.color.green500));
+        chatView.setRightBubbleColor(ContextCompat.getColor(this, R.color.colorPrimaryDark));
         chatView.setLeftBubbleColor(Color.WHITE);
-        chatView.setBackgroundColor(ContextCompat.getColor(this, R.color.blueGray500));
-        chatView.setSendButtonColor(ContextCompat.getColor(this, R.color.lightBlue500));
-        chatView.setSendIcon(R.drawable.ic_action_send);
+        chatView.setBackgroundColor(ContextCompat.getColor(this, R.color.colorAccent));
+        chatView.setSendButtonColor(ContextCompat.getColor(this, R.color.colorPrimary));
+        //chatView.setSendIcon(R.drawable.ic_action_send);
         chatView.setRightMessageTextColor(Color.WHITE);
         chatView.setLeftMessageTextColor(Color.BLACK);
         chatView.setUsernameTextColor(Color.WHITE);

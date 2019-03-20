@@ -9,7 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class Database extends SQLiteOpenHelper {
+public class CustomerDB extends SQLiteOpenHelper {
 
     private static final int DATABASE_VERSION = 1;//Bu neden bilmiyorum versiyon değiştirirsek diye bizi bilgilendirmek amaçlı sanırım.
 
@@ -23,7 +23,7 @@ public class Database extends SQLiteOpenHelper {
     private static String ROOM_NO = "roomNo";
     private static String PHONE_NO = "phoneNo";
 
-    public Database(Context context) {//Database context ile oluşuyor.
+    public CustomerDB(Context context) {//Database context ile oluşuyor.
 
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
 
@@ -35,7 +35,7 @@ public class Database extends SQLiteOpenHelper {
         //burası normal sorgu kısmı bunu bir string ile oluşturuyoruz.
         String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME + "("
                 + CUSTOMER_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
-                + ID + " TEXT,"
+        + ID + " TEXT,"
                 + CUSTOMER_NAME + " TEXT,"
                 + CUSTOMER_SURNAME + " TEXT,"
                 + ROOM_NO + " TEXT,"

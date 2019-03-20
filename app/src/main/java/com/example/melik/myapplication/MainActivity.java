@@ -11,11 +11,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.melik.database.Database;
+import com.example.melik.database.CustomerDB;
 import com.example.melik.service.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -23,6 +21,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView resultTextView;
     private EditText queryText;
     private Service service;
+    private CustomerDB customerDB;
 
 
     @SuppressLint("StaticFieldLeak")
@@ -34,9 +33,11 @@ public class MainActivity extends AppCompatActivity {
         listenButton = (Button) findViewById(R.id.listenButton);
         queryText = (EditText) findViewById(R.id.queryText);
         resultTextView = (TextView) findViewById(R.id.resultTextView);
+        customerDB = new CustomerDB(getApplicationContext());
 
         service=new Service(listenButton,queryText,resultTextView); //her işimizi bu servis arkadaşına yaptırıcaz tüm metotları
-        service.SyncData(getApplicationContext());//syncdata fonksiyonunda sqllite çalıştırıyoruz bu çalıştırma için context'e ihtiyaç duyuyor o yüzden parametre olarak gönderiyoruz.
+        service.InsertTables(customerDB);//syncdata fonksiyonunda sqllite çalıştırıyoruz bu çalıştırma için context'e ihtiyaç duyuyor o yüzden parametre olarak gönderiyoruz.
+
     }
 
 

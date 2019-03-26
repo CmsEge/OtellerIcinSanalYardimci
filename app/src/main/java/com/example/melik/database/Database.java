@@ -211,7 +211,7 @@ public class Database  extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();//yine sadece okunabilir.
         String selectQuery = "SELECT * FROM " + TABLE_ALACARTE;
         Cursor cursor = db.rawQuery(selectQuery, null);
-        ArrayList<String> List = new ArrayList<String>();//bu kadar iç içe arraylist hashmap anlamam ben internetten baktım...
+        ArrayList<String> List = new ArrayList<String>();
 
         if (cursor.moveToFirst()) {
             do {
@@ -219,6 +219,7 @@ public class Database  extends SQLiteOpenHelper {
             } while (cursor.moveToNext());
         }
         db.close();
+        cursor.close();
         return List;//Tüm müşterilerin listesini geri döndürüyor.
     }
 

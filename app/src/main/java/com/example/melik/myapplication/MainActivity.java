@@ -17,13 +17,14 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.example.melik.myapplication.User;
 import com.example.melik.config.LanguageConfig;
-import com.example.melik.database.CustomerDB;
+import com.example.melik.database.Database;
 import com.example.melik.service.Service;
 
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.ArrayList;
 
 import ai.api.AIServiceException;
 import ai.api.RequestExtras;
@@ -47,18 +48,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private ChatView chatView;
     private User myAccount;
     private User droidKaigiBot;
-    private CustomerDB customerDB;
     private Service service;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        customerDB = new CustomerDB(getApplicationContext());
-        service = new Service(); //her işimizi bu servis arkadaşına yaptırıcaz tüm metotları
-        service.InsertTables(customerDB);//syncdata fonksiyonunda sqllite çalıştırıyoruz bu çalıştırma için context'e ihtiyaç duyuyor o yüzden parametre olarak gönderiyoruz.
-        Log.i("deneme",customerDB.allCustomers().toString());
-
+        Database database = new Database(getApplicationContext());
+        service = new Service(database); //her işimizi bu servis arkadaşına yaptırıcaz tüm metotları
+        service.InsertTables();//syncdata fonksiyonunda sqllite çalıştırıyoruz bu çalıştırma için context'e ihtiyaç duyuyor o yüzden parametre olarak gönderiyoruz.
+        // Log.i("deneme",database.allCustomers().toString());
+        //Log.i("alacarte",service.getAllAlacarteNames().toString());
         initChatView();
         //Language, Dialogflow Client access token
         final LanguageConfig config = new LanguageConfig("en", "ecd717ee86524b2e977ca6e4483c7346");
@@ -174,7 +175,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 entry.getKey(), entry.getValue().toString()));
                     }
                 }
+                String speech2="";
+                ArrayList<String> List =new ArrayList<String>();
+                List=service.getAllAlacarteNames().toArray();
+                if(response.getResult().getAction().equals("dinner-reservation")){
+                    speech2 = response.getResult().getFulfillment().getSpeech();
+                    String a="";
+                    for(String c : List){
+                        a+=" ,"+c;
+                    }
+                    speech2 = speech2.replace("restaurantTypes",a);
 
+                    response.getResult().getFulfillment().setSpeech(speech2);
+                }
                 //Update view to bot says
                 final Message receivedMessage = new Message.Builder()
                         .setUser(droidKaigiBot)

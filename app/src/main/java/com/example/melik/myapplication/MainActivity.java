@@ -176,8 +176,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     }
                 }
                 String speech2="";
-                ArrayList<String> List =new ArrayList<String>();
-                List=service.getAllAlacarteNames().toArray();
+                List<String> List =new ArrayList<String>();
+                List=service.getAllAlacarteNames();
                 if(response.getResult().getAction().equals("dinner-reservation")){
                     speech2 = response.getResult().getFulfillment().getSpeech();
                     String a="";

@@ -5,9 +5,12 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.provider.SyncStateContract;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class Database  extends SQLiteOpenHelper {
 
@@ -193,31 +196,36 @@ public class Database  extends SQLiteOpenHelper {
     }
 
     //Alacarte Functions
-    public void alacarteInsert(String name, String entree, String warm, String main, String dessert) {
+    public void alacarteInsert(String name, ArrayList<String> entree, ArrayList<String> warm, ArrayList<String> main, ArrayList<String> dessert) {
 
         SQLiteDatabase db = this.getWritableDatabase();//yine yazılabilir olarak açıyoruz db'yi.
         ContentValues values = new ContentValues();//ContentValues tipinde bir değişken oluşturuyoruz.Isme takılmayın mantık anlaşılıyor içine atıyoruz gönderdiğimiz parametreleri.
         values.put(NAME, name);
-        values.put(ENTREE_START, entree);
-        values.put(WARM_STARTER, warm);
-        values.put(MAIN_COURSE, main);
-        values.put(DESSERT, dessert);
+        values.put(ENTREE_START, String.valueOf(entree));
+        values.put(WARM_STARTER, String.valueOf(warm));
+        values.put(MAIN_COURSE, String.valueOf(main));
+        values.put(DESSERT, String.valueOf(dessert));
 
         db.insert(TABLE_ALACARTE, null, values);//bu değerleri insert'e direk gönderiyoruz.
         db.close();
     }
-    public ArrayList<String> allAlacarteNames(){
+    public List<String> allAlacarteNames(){
 
         SQLiteDatabase db = this.getReadableDatabase();//yine sadece okunabilir.
         String selectQuery = "SELECT * FROM " + TABLE_ALACARTE;
         Cursor cursor = db.rawQuery(selectQuery, null);
-        ArrayList<String> List = new ArrayList<String>();
+        List<String> List = new ArrayList<String>();
 
-        if (cursor.moveToFirst()) {
-            do {
-                List.add(cursor.getString(1));
-            } while (cursor.moveToNext());
+        if(cursor.getCount()>0){
+            if (cursor.moveToFirst()) {
+                do {
+                    List.add(cursor.getString(1));
+                } while (cursor.moveToNext());
+            }
+        }else{
+            Log.i("alacartenames","boş");
         }
+
         db.close();
         cursor.close();
         return List;//Tüm müşterilerin listesini geri döndürüyor.

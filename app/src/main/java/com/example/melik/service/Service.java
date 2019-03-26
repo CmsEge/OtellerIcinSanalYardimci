@@ -12,6 +12,7 @@ import com.example.melik.database.Database;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import ai.api.AIDataService;
 import ai.api.AIServiceException;
@@ -33,12 +34,24 @@ public class Service {
         db.customerInsert("11223344556","Melikenur","Gülas","108","0512 345 67 89");
         db.customerInsert("11223344567","Ceren Yaren","Erer","109","0512 345 67 90");
 
-        db.alacarteInsert("Italian Restourant","dsfsdf","zf","sfsdf","fdgdfg");
-        db.alacarteInsert("Far East Restourant","dsfsdf","zf","sfsdf","fdgdfg");
-        db.alacarteInsert("Ottoman Restourant","dsfsdf","zf","sfsdf","fdgdfg");
+        ArrayList<String> entree=new ArrayList<String>();
+        entree.add("dsfsd");
+        entree.add("dfsd");
+        ArrayList<String> warm=new ArrayList<String>();
+        warm.add("dsfsd");
+        warm.add("dfsd");
+        ArrayList<String> main=new ArrayList<String>();
+        main.add("dsfsd");
+        main.add("dfsd");
+        ArrayList<String> dessert=new ArrayList<String>();
+        dessert.add("dsfsd");
+        dessert.add("dfsd");
+        db.alacarteInsert("Italian Restourant",entree,warm,main,dessert);
+        db.alacarteInsert("Far East Restourant",entree,warm,main,dessert);
+        db.alacarteInsert("Ottoman Restourant",entree,warm,main,dessert);
 
     }
-    public ArrayList<String> getAllAlacarteNames(){
+    public List<String> getAllAlacarteNames(){
         return db.allAlacarteNames();
     }
 }

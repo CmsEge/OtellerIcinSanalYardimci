@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Database database = new Database(getApplicationContext());
         service = new Service(database); //her işimizi bu servis arkadaşına yaptırıcaz tüm metotları
         service.InsertTables();//syncdata fonksiyonunda sqllite çalıştırıyoruz bu çalıştırma için context'e ihtiyaç duyuyor o yüzden parametre olarak gönderiyoruz.
-        // Log.i("deneme",database.allCustomers().toString());
+        Log.i("deneme",service.allCustomer().toString());
         //Log.i("alacarte",service.getAllAlacarteNames().toString());
         initChatView();
         //Language, Dialogflow Client access token
@@ -175,17 +175,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 entry.getKey(), entry.getValue().toString()));
                     }
                 }
+
                 String speech2="";
-                List<String> List =new ArrayList<String>();
-                List=service.getAllAlacarteNames();
                 if(response.getResult().getAction().equals("dinner-reservation")){
                     speech2 = response.getResult().getFulfillment().getSpeech();
-                    String a="";
-                    for(String c : List){
-                        a+=" ,"+c;
-                    }
-                    speech2 = speech2.replace("restaurantTypes",a);
-
+                    speech2=service.DinnerReservation(speech2);
                     response.getResult().getFulfillment().setSpeech(speech2);
                 }
                 //Update view to bot says

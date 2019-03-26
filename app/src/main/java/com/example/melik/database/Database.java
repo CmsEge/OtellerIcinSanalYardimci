@@ -196,7 +196,7 @@ public class Database  extends SQLiteOpenHelper {
     }
 
     //Alacarte Functions
-    public void alacarteInsert(String name, ArrayList<String> entree, ArrayList<String> warm, ArrayList<String> main, ArrayList<String> dessert) {
+    public void alacarteInsert(String name,ArrayList<String> entree, ArrayList<String> warm, ArrayList<String> main, ArrayList<String> dessert) {
 
         SQLiteDatabase db = this.getWritableDatabase();//yine yazılabilir olarak açıyoruz db'yi.
         ContentValues values = new ContentValues();//ContentValues tipinde bir değişken oluşturuyoruz.Isme takılmayın mantık anlaşılıyor içine atıyoruz gönderdiğimiz parametreleri.

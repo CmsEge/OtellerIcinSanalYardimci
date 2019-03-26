@@ -54,4 +54,17 @@ public class Service {
     public List<String> getAllAlacarteNames(){
         return db.allAlacarteNames();
     }
+    public ArrayList<HashMap<String, String>> allCustomer(){
+        return db.allCustomers();
+    }
+    public String DinnerReservation(String speech){
+        List<String> list=new ArrayList<String>();
+        list=this.getAllAlacarteNames(); //hata burada
+        String a="";
+        for(String i: list){
+            a=a+" ,"+i;
+        }
+        speech.replace("restaurantTypes",a);
+        return speech;
+    }
 }

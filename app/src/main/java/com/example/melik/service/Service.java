@@ -50,6 +50,7 @@ public class Service {
         db.alacarteInsert("Far East Restourant",entree,warm,main,dessert);
         db.alacarteInsert("Ottoman Restourant",entree,warm,main,dessert);
 
+
     }
     public List<String> getAllAlacarteNames(){
         return db.allAlacarteNames();

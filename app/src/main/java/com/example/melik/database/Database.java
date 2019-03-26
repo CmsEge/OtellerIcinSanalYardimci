@@ -71,6 +71,8 @@ public class Database  extends SQLiteOpenHelper {
         String CREATE_TABLE_RESERVATION_ALA = "CREATE TABLE " + TABLE_RESERVATION_ALA + "("
                 + RESERVATION_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
                 + DATE + " TEXT,"
+                + CUS_ID + " INTEGER,"
+                + ALA_ID + " INTEGER,"
                 + " FOREIGN KEY ("+ CUS_ID +") REFERENCES "+TABLE_CUSTOMER+"("+CUSTOMER_ID+"),"
                 + " FOREIGN KEY ("+ ALA_ID +") REFERENCES "+TABLE_ALACARTE+"("+ALACARTE_ID+"));";
 
@@ -260,5 +262,6 @@ public class Database  extends SQLiteOpenHelper {
     }
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+
     }
 }

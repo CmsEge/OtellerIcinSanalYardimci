@@ -49,17 +49,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private User myAccount;
     private User droidKaigiBot;
     private Service service;
+    private Database database;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Database database = new Database(getApplicationContext());
+        database = new Database(getApplicationContext());
         service = new Service(database); //her işimizi bu servis arkadaşına yaptırıcaz tüm metotları
         service.InsertTables();//syncdata fonksiyonunda sqllite çalıştırıyoruz bu çalıştırma için context'e ihtiyaç duyuyor o yüzden parametre olarak gönderiyoruz.
         // Log.i("deneme",database.allCustomers().toString());
-        //Log.i("alacarte",service.getAllAlacarteNames().toString());
+        Log.i("alacarte",database.allAlacarteNames().toString());
         initChatView();
         //Language, Dialogflow Client access token
         final LanguageConfig config = new LanguageConfig("en", "ecd717ee86524b2e977ca6e4483c7346");
@@ -177,7 +178,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
                 String speech2="";
                 List<String> List =new ArrayList<String>();
-                List=service.getAllAlacarteNames();
+                List=database.allAlacarteNames();
                 if(response.getResult().getAction().equals("dinner-reservation")){
                     speech2 = response.getResult().getFulfillment().getSpeech();
                     String a="";

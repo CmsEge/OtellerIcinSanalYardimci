@@ -58,9 +58,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
         database = new Database(getApplicationContext());
         service = new Service(database); //her işimizi bu servis arkadaşına yaptırıcaz tüm metotları
-        service.InsertTables();//syncdata fonksiyonunda sqllite çalıştırıyoruz bu çalıştırma için context'e ihtiyaç duyuyor o yüzden parametre olarak gönderiyoruz.
-        // Log.i("deneme",database.allCustomers().toString());
-        Log.i("alacarte",database.allAlacarteNames().toString());
+       // service.InsertTables();//syncdata fonksiyonunda sqllite çalıştırıyoruz bu çalıştırma için context'e ihtiyaç duyuyor o yüzden parametre olarak gönderiyoruz.
+         Log.i("deneme",service.allCustomer().toString());
+       // Log.i("alacarte",database.allAlacarteNames().toString());
         initChatView();
         //Language, Dialogflow Client access token
         final LanguageConfig config = new LanguageConfig("en", "ecd717ee86524b2e977ca6e4483c7346");
@@ -149,7 +149,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public void run() {
                 // Variables
                 gson.toJson(response);
-                final Status status = response.getStatus();
+                /*final Status status = response.getStatus();
                 final Result result = response.getResult();
                 final String speech = result.getFulfillment().getSpeech();
                 final Metadata metadata = result.getMetadata();
@@ -175,31 +175,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         Log.i(TAG, String.format("%s: %s",
                                 entry.getKey(), entry.getValue().toString()));
                     }
-                }
-                String speech2="";
-                List<String> List =new ArrayList<String>();
-                List=database.allAlacarteNames();
+                }*/
+                String speech=response.getResult().getFulfillment().getSpeech();
                 if(response.getResult().getAction().equals("dinner-reservation")){
-                    speech2 = response.getResult().getFulfillment().getSpeech();
-                    String a="";
-                    for(String c : List){
-                        a+=" ,"+c;
-                    }
-                    speech2 = speech2.replace("restaurantTypes",a);
-
-                    response.getResult().getFulfillment().setSpeech(speech2);
+                    speech = response.getResult().getFulfillment().getSpeech();
+                    speech=service.DinnerReservation(speech);
+                    Receive(speech);
+                }else{
+                    Receive(speech);
                 }
                 //Update view to bot says
-                final Message receivedMessage = new Message.Builder()
-                        .setUser(droidKaigiBot)
-                        .setRightMessage(false)
-                        .setMessageText(speech)
-                        .build();
-                chatView.receive(receivedMessage);
+
             }
         });
     }
-
+    private void Receive(String speech){
+        final Message receivedMessage=new Message.Builder()
+                .setUser(droidKaigiBot)
+                .setRightMessage(false)
+                .setMessageText(speech)
+                .build();
+        chatView.receive(receivedMessage);
+    }
     private void onError(final AIError error) {
         runOnUiThread(new Runnable() {
             @Override

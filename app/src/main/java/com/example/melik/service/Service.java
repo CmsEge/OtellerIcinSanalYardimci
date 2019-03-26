@@ -30,9 +30,9 @@ public class Service {
     }
     public void InsertTables() {
 
-        db.customerInsert("17614534630", "Saygun", "Askin", "107", "0506 870 74 03");
-        db.customerInsert("11223344556","Melikenur","Gülas","108","0512 345 67 89");
-        db.customerInsert("11223344567","Ceren Yaren","Erer","109","0512 345 67 90");
+        db.customerInsert("0", "Saygun", "Askin", "107", "0506 870 74 03");
+        db.customerInsert("1","Melikenur","Gülas","108","0512 345 67 89");
+        db.customerInsert("2","Ceren Yaren","Erer","109","0512 345 67 90");
 
         ArrayList<String> entree=new ArrayList<String>();
         entree.add("dsfsd");
@@ -60,12 +60,12 @@ public class Service {
     }
     public String DinnerReservation(String speech){
         List<String> list=new ArrayList<String>();
-        list=this.getAllAlacarteNames(); //hata burada
+        list=this.getAllAlacarteNames();
         String a="";
         for(String i: list){
-            a=a+" ,"+i;
+            a+="\n"+i;
         }
-        speech.replace("restaurantTypes",a);
+        speech=speech.replace("$RestaurantTypes",a);
         return speech;
     }
 }

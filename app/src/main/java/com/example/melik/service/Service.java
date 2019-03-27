@@ -10,7 +10,11 @@ import android.widget.Toast;
 
 import com.example.melik.database.Database;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -56,9 +60,10 @@ public class Service {
         db.eventInsert("Concert","23:00","00:00","Concert Hall");
         db.eventInsert("Aerobic","09:00","10:00","Near The Pool");
 
-
-
+        db.orderInsert("Water","2TL");
+        db.orderInsert("Beer","20TL");
     }
+
     public List<String> getAllAlacarteNames(){
         return db.allAlacarteNames();
     }
@@ -106,5 +111,24 @@ public class Service {
 
     public void insertEventNotification(int eveId, int custId){
         db.eventNotificationInsert(eveId,custId);
+    }
+    public String OrderInfo(String speech){
+        ArrayList<HashMap<String, String>> list=db.listAll("OrderTable");
+        String s="";
+        for(HashMap<String,String> i: list){
+            s+="\n"+ i.get("orderId")+"."+i.get("orderName")+" costs "+i.get("cost");
+        }
+        s+="\n";
+        speech=speech.replace("$orderList",s);  //buraya bak
+        return speech;
+    }
+    public void insertOrderRequest(int custId,int orderId){
+        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+        DateFormat dateFormat2 = new SimpleDateFormat("HH:mm:ss");
+        Calendar cal = Calendar.getInstance();
+        String date=dateFormat.format(cal.getTime());
+        String time=dateFormat2.format(cal.getTime());
+        db.orderRequestInsert(custId,orderId,date,time);
+
     }
 }

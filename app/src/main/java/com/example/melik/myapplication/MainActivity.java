@@ -4,27 +4,25 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 
+import com.example.melik.config.LanguageConfig;
+import com.example.melik.database.Database;
+import com.example.melik.service.Service;
 import com.github.bassaer.chatmessageview.model.Message;
 import com.github.bassaer.chatmessageview.view.ChatView;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
-import com.example.melik.myapplication.User;
-import com.example.melik.config.LanguageConfig;
-import com.example.melik.database.Database;
-import com.example.melik.service.Service;
 
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.ArrayList;
 
 import ai.api.AIServiceException;
 import ai.api.RequestExtras;
@@ -32,14 +30,11 @@ import ai.api.android.AIConfiguration;
 import ai.api.android.AIDataService;
 import ai.api.android.GsonFactory;
 import ai.api.model.AIContext;
-import ai.api.model.AIOutputContext;
 import ai.api.model.AIError;
 import ai.api.model.AIEvent;
+import ai.api.model.AIOutputContext;
 import ai.api.model.AIRequest;
 import ai.api.model.AIResponse;
-import ai.api.model.Metadata;
-import ai.api.model.Result;
-import ai.api.model.Status;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -59,11 +54,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
         database = new Database(getApplicationContext());
         service = new Service(database); //her işimizi bu servis arkadaşına yaptırıcaz tüm metotları
-        //service.InsertTables();//syncdata fonksiyonunda sqllite çalıştırıyoruz bu çalıştırma için context'e ihtiyaç duyuyor o yüzden parametre olarak gönderiyoruz.
+        service.InsertTables();//syncdata fonksiyonunda sqllite çalıştırıyoruz bu çalıştırma için context'e ihtiyaç duyuyor o yüzden parametre olarak gönderiyoruz.
         Log.i("deneme",service.listAll("Customer").toString());
         Log.i("alacarte",database.allAlacarteNames().toString());
         Log.i("alacarte",service.listAll("Alacarte").toString());
         Log.i("reservations",service.listAll("ReservationAla").toString());
+        Log.i("events",service.listAll("Event").toString());
         initChatView();
         //Language, Dialogflow Client access token
         final LanguageConfig config = new LanguageConfig("en", "ecd717ee86524b2e977ca6e4483c7346");
@@ -186,7 +182,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 switch(action){
                     case "dinner-reservation":
                     {
-                        speech=response.getResult().getFulfillment().getSpeech();
                         speech=service.DinnerReservation(speech);
                         Receive(speech);
                         break;
@@ -196,6 +191,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         AIOutputContext outputContext = response.getResult().getContext("dinner-reservation");
                         Map<String, JsonElement> list = outputContext.getParameters();
                         service.getReservationInfo(Integer.parseInt(myAccount.getId()),list.get("Restaurant-Type").getAsString(),list.get("date").getAsString());
+                        Receive(speech);
+                        break;
+                    }
+                    case "Hotel-Activity": {
+                        speech=service.EventInfo(speech);
                         Receive(speech);
                         break;
                     }

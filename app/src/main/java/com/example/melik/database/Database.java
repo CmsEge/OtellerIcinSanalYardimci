@@ -42,6 +42,20 @@ public class Database  extends SQLiteOpenHelper {
     private static String ALA_ID = "alaID";
     private static String CUS_ID = "cusID";
 
+    //Table of Event
+    private static final String TABLE_EVENT = "Event";//burası normal değişken tanımlama gibi
+    private static String EVENT_ID = "eventId";
+    private static String EVENT_NAME = "eventName";
+    private static String START_TIME = "startTime";
+    private static String END_TIME = "endTime";
+    private static String EVENT_PLACE = "eventPlace";
+
+    //Table of EventNotification
+    private static final String TABLE_EVENT_NOTIFICATION = "EventNotification";//burası normal değişken tanımlama gibi
+    private static String NOTIFICATION_ID = "notificationId";
+    private static String EVE_ID = "eveId";
+    private static String CUST_ID = "custId";
+
     public Database(Context context) {//Database context ile oluşuyor.
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
@@ -76,6 +90,22 @@ public class Database  extends SQLiteOpenHelper {
                 + " FOREIGN KEY ("+ CUS_ID +") REFERENCES "+TABLE_CUSTOMER+"("+CUSTOMER_ID+"),"
                 + " FOREIGN KEY ("+ ALA_ID +") REFERENCES "+TABLE_ALACARTE+"("+ALACARTE_ID+"));";
         db.execSQL(CREATE_TABLE_RESERVATION_ALA);
+
+        String CREATE_TABLE_EVENT = "CREATE TABLE " + TABLE_EVENT + "("
+                + EVENT_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+                + EVENT_NAME + " TEXT,"
+                + START_TIME + " TEXT,"
+                + END_TIME + " TEXT,"
+                + EVENT_PLACE + " TEXT"+ ")";
+        db.execSQL(CREATE_TABLE_EVENT);
+
+        String CREATE_TABLE_EVENT_NOTIFICATION = "CREATE TABLE " + TABLE_EVENT_NOTIFICATION + "("
+                + NOTIFICATION_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+                + EVE_ID + "INTEGER,"
+                + CUST_ID + " INTEGER,"
+                + " FOREIGN KEY ("+ EVE_ID +") REFERENCES "+TABLE_EVENT+"("+EVENT_ID+"),"
+                + " FOREIGN KEY ("+ CUST_ID +") REFERENCES "+TABLE_CUSTOMER+"("+CUSTOMER_ID+"));";
+        db.execSQL(CREATE_TABLE_EVENT_NOTIFICATION);
     }
     //Customer Functions
     public void customerDelete(int customerId){
@@ -243,6 +273,31 @@ public class Database  extends SQLiteOpenHelper {
         db.insert(TABLE_RESERVATION_ALA, null, values);//bu değerleri insert'e direk gönderiyoruz.
         db.close();
     }
+
+    public void eventInsert(String eventName, String startTime, String endTime, String eventPlace) {
+
+        SQLiteDatabase db = this.getWritableDatabase();//yine yazılabilir olarak açıyoruz db'yi.
+        ContentValues values = new ContentValues();//ContentValues tipinde bir değişken oluşturuyoruz.Isme takılmayın mantık anlaşılıyor içine atıyoruz gönderdiğimiz parametreleri.
+        values.put(EVENT_NAME, eventName);
+        values.put(START_TIME, startTime);
+        values.put(END_TIME, endTime);
+        values.put(EVENT_PLACE, eventPlace);
+
+        db.insert(TABLE_EVENT, null, values);//bu değerleri insert'e direk gönderiyoruz.
+        db.close();
+    }
+
+    public void eventNotificationInsert(int eventId, int custId) {
+
+        SQLiteDatabase db = this.getWritableDatabase();//yine yazılabilir olarak açıyoruz db'yi.
+        ContentValues values = new ContentValues();//ContentValues tipinde bir değişken oluşturuyoruz.Isme takılmayın mantık anlaşılıyor içine atıyoruz gönderdiğimiz parametreleri.
+        values.put(EVE_ID, eventId);
+        values.put(CUST_ID, custId);
+
+        db.insert(TABLE_EVENT_NOTIFICATION, null, values);//bu değerleri insert'e direk gönderiyoruz.
+        db.close();
+    }
+
     public ArrayList<HashMap<String, String>> listAll(String tableName){
 
         SQLiteDatabase db = this.getReadableDatabase();//yine sadece okunabilir.

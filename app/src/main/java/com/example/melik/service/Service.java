@@ -97,8 +97,14 @@ public class Service {
         ArrayList<HashMap<String, String>> list=db.listAll("Event");
         String s="";
         for(HashMap<String,String> i: list){
-
+            s+="\n"+ i.get("eventId")+"."+i.get("eventName")+" starts at "+i.get("startTime")+" and ends at "+i.get("endTime")+" at "+i.get("eventPlace");
         }
+        s+="\n";
+        speech=speech.replace("$HotelActivities",s);
         return speech;
+    }
+
+    public void insertEventNotification(int eveId, int custId){
+        db.eventNotificationInsert(eveId,custId);
     }
 }

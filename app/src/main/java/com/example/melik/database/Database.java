@@ -101,6 +101,8 @@ public class Database  extends SQLiteOpenHelper {
 
         String CREATE_TABLE_EVENT_NOTIFICATION = "CREATE TABLE " + TABLE_EVENT_NOTIFICATION + "("
                 + NOTIFICATION_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+                + EVE_ID + " INTEGER,"
+                + CUST_ID + " INTEGER,"
                 + " FOREIGN KEY ("+ EVE_ID +") REFERENCES "+TABLE_EVENT+"("+EVENT_ID+"),"
                 + " FOREIGN KEY ("+ CUST_ID +") REFERENCES "+TABLE_CUSTOMER+"("+CUSTOMER_ID+"));";
         db.execSQL(CREATE_TABLE_EVENT_NOTIFICATION);
@@ -285,11 +287,11 @@ public class Database  extends SQLiteOpenHelper {
         db.close();
     }
 
-    public void eventNotificationInsert(int eventId, int custId) {
+    public void eventNotificationInsert(int eveId, int custId) {
 
         SQLiteDatabase db = this.getWritableDatabase();//yine yazılabilir olarak açıyoruz db'yi.
         ContentValues values = new ContentValues();//ContentValues tipinde bir değişken oluşturuyoruz.Isme takılmayın mantık anlaşılıyor içine atıyoruz gönderdiğimiz parametreleri.
-        values.put(EVE_ID, eventId);
+        values.put(EVE_ID, eveId);
         values.put(CUST_ID, custId);
 
         db.insert(TABLE_EVENT_NOTIFICATION, null, values);//bu değerleri insert'e direk gönderiyoruz.

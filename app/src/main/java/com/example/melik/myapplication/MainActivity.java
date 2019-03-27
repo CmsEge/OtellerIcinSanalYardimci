@@ -229,7 +229,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         String myName = "Saygun";
         myAccount = new User(myId, myName, icon);
 
-        int botId = 1;
+        int botId = 2;
         String botName = "Shire";
         droidKaigiBot = new User(botId, botName, icon);
 

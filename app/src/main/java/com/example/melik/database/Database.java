@@ -75,8 +75,6 @@ public class Database  extends SQLiteOpenHelper {
                 + ALA_ID + " INTEGER,"
                 + " FOREIGN KEY ("+ CUS_ID +") REFERENCES "+TABLE_CUSTOMER+"("+CUSTOMER_ID+"),"
                 + " FOREIGN KEY ("+ ALA_ID +") REFERENCES "+TABLE_ALACARTE+"("+ALACARTE_ID+"));";
-
-
         db.execSQL(CREATE_TABLE_RESERVATION_ALA);
     }
     //Customer Functions

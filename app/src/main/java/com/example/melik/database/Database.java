@@ -56,6 +56,13 @@ public class Database  extends SQLiteOpenHelper {
     private static String EVE_ID = "eveId";
     private static String CUST_ID = "custId";
 
+    //Table of Meals
+    private static final String TABLE_MEALS = "Meals";//burası normal değişken tanımlama gibi
+    private static String MEAL_ID = "mealId";
+    private static String MEAL_NAME = "mealName";
+    private static String MEAL_START_TIME = "mealStartTime";
+    private static String MEAL_END_TIME = "mealEndTime";
+
     public Database(Context context) {//Database context ile oluşuyor.
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
@@ -106,6 +113,13 @@ public class Database  extends SQLiteOpenHelper {
                 + " FOREIGN KEY ("+ EVE_ID +") REFERENCES "+TABLE_EVENT+"("+EVENT_ID+"),"
                 + " FOREIGN KEY ("+ CUST_ID +") REFERENCES "+TABLE_CUSTOMER+"("+CUSTOMER_ID+"));";
         db.execSQL(CREATE_TABLE_EVENT_NOTIFICATION);
+
+        String CREATE_TABLE_MEALS = "CREATE TABLE " + TABLE_MEALS + "("
+                + MEAL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+                + MEAL_NAME + " TEXT,"
+                + MEAL_START_TIME + " TEXT,"
+                + MEAL_END_TIME + " TEXT" + ")";
+        db.execSQL(CREATE_TABLE_MEALS);
     }
     //Customer Functions
     public void customerDelete(int customerId){
@@ -261,6 +275,26 @@ public class Database  extends SQLiteOpenHelper {
         return List;//Tüm müşterilerin listesini geri döndürüyor.
     }
 
+    public List<String> listMealTimes(String mealName){
+        SQLiteDatabase db = this.getReadableDatabase();//yine sadece okunabilir.
+        String selectQuery = "SELECT mealStartTime, mealEndTime FROM " + TABLE_MEALS+ " WHERE "+MEAL_NAME+"="+"'"+mealName+"'";
+
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        List<String> List = new ArrayList<String>();
+
+        if(cursor.getCount()>0) {
+            if (cursor.moveToFirst()) {
+                do {
+                    List.add(cursor.getString(0));
+                    List.add(cursor.getString(1));
+                } while (cursor.moveToNext());
+            }
+        }
+        db.close();
+        cursor.close();
+        return List;
+    }
+
     //ReservationAla Functions
     public void reservationAlaInsert(String date, int cus, int ala) {
 
@@ -295,6 +329,18 @@ public class Database  extends SQLiteOpenHelper {
         values.put(CUST_ID, custId);
 
         db.insert(TABLE_EVENT_NOTIFICATION, null, values);//bu değerleri insert'e direk gönderiyoruz.
+        db.close();
+    }
+
+    public void mealInsert(String mealName, String mealStartTime, String mealEndTime) {
+
+        SQLiteDatabase db = this.getWritableDatabase();//yine yazılabilir olarak açıyoruz db'yi.
+        ContentValues values = new ContentValues();//ContentValues tipinde bir değişken oluşturuyoruz.Isme takılmayın mantık anlaşılıyor içine atıyoruz gönderdiğimiz parametreleri.
+        values.put(MEAL_NAME, mealName);
+        values.put(MEAL_START_TIME, mealStartTime);
+        values.put(MEAL_END_TIME, mealEndTime);
+
+        db.insert(TABLE_MEALS, null, values);//bu değerleri insert'e direk gönderiyoruz.
         db.close();
     }
 

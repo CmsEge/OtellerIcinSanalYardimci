@@ -61,6 +61,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Log.i("reservations",service.listAll("ReservationAla").toString());
         Log.i("events",service.listAll("Event").toString());
         Log.i("notifications",service.listAll("EventNotification").toString());
+        Log.i("meals",service.listAll("Meals").toString());
         initChatView();
         //Language, Dialogflow Client access token
         final LanguageConfig config = new LanguageConfig("en", "ecd717ee86524b2e977ca6e4483c7346");
@@ -201,7 +202,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         break;
                     }
                     case "hotel-activity-notification": {
-                        service.insertEventNotification(params.get("number").getAsInt(),Integer.parseInt(myAccount.getId()));
+                        service.insertEventNotification(Integer.parseInt(response.getResult().getResolvedQuery()),Integer.parseInt(myAccount.getId()));
+                        Receive(speech);
+                        break;
+                    }
+                    case "All-meals": {
+                        speech=service.MealInfo(speech);
+                        Receive(speech);
+                        break;
+                    }
+                    case "breakfast-time": {
+                        speech=service.mainMealsInfo("Breakfast",speech);
+                        Receive(speech);
+                        break;
+                    }
+                    case "Lunch-Time":{
+                        speech=service.mainMealsInfo("Lunch",speech);
+                        Receive(speech);
+                        break;
+                    }
+                    case "dinner-time":{
+                        speech=service.mainMealsInfo("Dinner",speech);
                         Receive(speech);
                         break;
                     }

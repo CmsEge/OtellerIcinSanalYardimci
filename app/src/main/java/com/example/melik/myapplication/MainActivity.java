@@ -201,7 +201,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         break;
                     }
                     case "hotel-activity-notification": {
-                        service.insertEventNotification(Integer.parseInt(speech),Integer.parseInt(myAccount.getId()));
+                        service.insertEventNotification(params.get("number").getAsInt(),Integer.parseInt(myAccount.getId()));
                         Receive(speech);
                         break;
                     }

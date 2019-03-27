@@ -50,6 +50,13 @@ public class Service {
         db.alacarteInsert("Far East Restaurant",entree,warm,main,dessert);
         db.alacarteInsert("Ottoman Restaurant",entree,warm,main,dessert);
 
+        db.eventInsert("Beach Volleyball","11:00","12:00","Beach");
+        db.eventInsert("Water Polo","15:00","16:00","Pool");
+        db.eventInsert("Animation Show","20:00","21:00","Theatre");
+        db.eventInsert("Concert","23:00","00:00","Concert Hall");
+        db.eventInsert("Aerobic","09:00","10:00","Near The Pool");
+
+
 
     }
     public List<String> getAllAlacarteNames(){
@@ -83,5 +90,15 @@ public class Service {
             if(i.equals(AlaName)){alaID=a;break;}else{a++;}
         }
         this.reservationAlaInsert(date,cusID,alaID);
+    }
+
+    public String EventInfo(String speech)
+    {
+        ArrayList<HashMap<String, String>> list=db.listAll("Event");
+        String s="";
+        for(HashMap<String,String> i: list){
+
+        }
+        return speech;
     }
 }

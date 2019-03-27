@@ -2,10 +2,10 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/OtellerIcinSanalYardimci.iml" filepath="$PROJECT_DIR$/OtellerIcinSanalYardimci.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/mysql-connector-java-8.0.15/mysql-connector-java-8.0.15.iml" filepath="$PROJECT_DIR$/mysql-connector-java-8.0.15/mysql-connector-java-8.0.15.iml" />
       <module fileurl="file://$PROJECT_DIR$/protobuf-java-3.6.1/protobuf-java-3.6.1.iml" filepath="$PROJECT_DIR$/protobuf-java-3.6.1/protobuf-java-3.6.1.iml" />
+      <module fileurl="file://$PROJECT_DIR$/tezdeneme2.iml" filepath="$PROJECT_DIR$/tezdeneme2.iml" />
     </modules>
   </component>
 </project>

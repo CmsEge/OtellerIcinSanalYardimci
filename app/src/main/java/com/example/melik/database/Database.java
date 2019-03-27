@@ -245,6 +245,26 @@ public class Database  extends SQLiteOpenHelper {
         db.insert(TABLE_RESERVATION_ALA, null, values);//bu değerleri insert'e direk gönderiyoruz.
         db.close();
     }
+    public ArrayList<HashMap<String, String>> listAll(String tableName){
+
+        SQLiteDatabase db = this.getReadableDatabase();//yine sadece okunabilir.
+        String selectQuery = "SELECT * FROM " + tableName;
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        ArrayList<HashMap<String, String>> List = new ArrayList<HashMap<String, String>>();//bu kadar iç içe arraylist hashmap anlamam ben internetten baktım...
+
+        if (cursor.moveToFirst()) {
+            do {
+                HashMap<String, String> map = new HashMap<String, String>();
+                for(int i=0; i<cursor.getColumnCount();i++)
+                {
+                    map.put(cursor.getColumnName(i), cursor.getString(i));//tek tek customerleri çıkarıyor ve bir altta listeye ekliyor.
+                }
+                List.add(map);
+            } while (cursor.moveToNext());
+        }
+        db.close();
+        return List;//Tüm müşterilerin listesini geri döndürüyor.
+    }
 
 
 

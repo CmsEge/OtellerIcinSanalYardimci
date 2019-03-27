@@ -46,9 +46,9 @@ public class Service {
         ArrayList<String> dessert=new ArrayList<String>();
         dessert.add("dsfsd");
         dessert.add("dfsd");
-        db.alacarteInsert("Italian Restourant",entree,warm,main,dessert);
-        db.alacarteInsert("Far East Restourant",entree,warm,main,dessert);
-        db.alacarteInsert("Ottoman Restourant",entree,warm,main,dessert);
+        db.alacarteInsert("Italian Restaurant",entree,warm,main,dessert);
+        db.alacarteInsert("Far East Restaurant",entree,warm,main,dessert);
+        db.alacarteInsert("Ottoman Restaurant",entree,warm,main,dessert);
 
 
     }
@@ -57,6 +57,12 @@ public class Service {
     }
     public ArrayList<HashMap<String, String>> allCustomer(){
         return db.allCustomers();
+    }
+    public void  reservationAlaInsert(String date, int cus, int ala) {
+        db.reservationAlaInsert(date,cus,ala);
+    }
+    public ArrayList<HashMap<String, String>> listAll(String tableName){
+        return db.listAll(tableName);
     }
     public String DinnerReservation(String speech){
         List<String> list=new ArrayList<String>();
@@ -67,5 +73,15 @@ public class Service {
         }
         speech=speech.replace("$RestaurantTypes",a);
         return speech;
+    }
+    public void getReservationInfo(int cusID,String AlaName,String date){
+        List<String> list=new ArrayList<String>();
+        list=this.getAllAlacarteNames();
+        int alaID=0;
+        int a=1;
+        for(String i: list){
+            if(i.equals(AlaName)){alaID=a;break;}else{a++;}
+        }
+        this.reservationAlaInsert(date,cusID,alaID);
     }
 }

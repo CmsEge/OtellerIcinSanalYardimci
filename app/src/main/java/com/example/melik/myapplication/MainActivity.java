@@ -32,6 +32,7 @@ import ai.api.android.AIConfiguration;
 import ai.api.android.AIDataService;
 import ai.api.android.GsonFactory;
 import ai.api.model.AIContext;
+import ai.api.model.AIOutputContext;
 import ai.api.model.AIError;
 import ai.api.model.AIEvent;
 import ai.api.model.AIRequest;
@@ -58,9 +59,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
         database = new Database(getApplicationContext());
         service = new Service(database); //her işimizi bu servis arkadaşına yaptırıcaz tüm metotları
-       // service.InsertTables();//syncdata fonksiyonunda sqllite çalıştırıyoruz bu çalıştırma için context'e ihtiyaç duyuyor o yüzden parametre olarak gönderiyoruz.
-         Log.i("deneme",service.allCustomer().toString());
-       // Log.i("alacarte",database.allAlacarteNames().toString());
+        //service.InsertTables();//syncdata fonksiyonunda sqllite çalıştırıyoruz bu çalıştırma için context'e ihtiyaç duyuyor o yüzden parametre olarak gönderiyoruz.
+        Log.i("deneme",service.listAll("Customer").toString());
+        Log.i("alacarte",database.allAlacarteNames().toString());
+        Log.i("alacarte",service.listAll("Alacarte").toString());
+        Log.i("reservations",service.listAll("ReservationAla").toString());
         initChatView();
         //Language, Dialogflow Client access token
         final LanguageConfig config = new LanguageConfig("en", "ecd717ee86524b2e977ca6e4483c7346");
@@ -168,24 +171,38 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     Log.i(TAG, "Intent id: " + metadata.getIntentId());
                     Log.i(TAG, "Intent name: " + metadata.getIntentName());
                 }
-
+*/
+                final HashMap<String, JsonElement> params=response.getResult().getParameters();
                 if (params != null && !params.isEmpty()) {
+                    Log.i("Action: ",response.getResult().getAction().toString());
                     Log.i(TAG, "Parameters: ");
                     for (final Map.Entry<String, JsonElement> entry : params.entrySet()) {
                         Log.i(TAG, String.format("%s: %s",
                                 entry.getKey(), entry.getValue().toString()));
                     }
-                }*/
-                String speech=response.getResult().getFulfillment().getSpeech();
-                if(response.getResult().getAction().equals("dinner-reservation")){
-                    speech = response.getResult().getFulfillment().getSpeech();
-                    speech=service.DinnerReservation(speech);
-                    Receive(speech);
-                }else{
-                    Receive(speech);
                 }
-                //Update view to bot says
-
+                String speech=response.getResult().getFulfillment().getSpeech();
+                String action=response.getResult().getAction().toString();
+                switch(action){
+                    case "dinner-reservation":
+                    {
+                        speech=response.getResult().getFulfillment().getSpeech();
+                        speech=service.DinnerReservation(speech);
+                        Receive(speech);
+                        break;
+                    }
+                    case "Dinner-Reservation.Dinner-Reservation-custom": {
+                        //final AIOutputContext outputContext=response.getResult().getContext("projects/cmsbot-48dcf/agent/sessions/0176a748-a5bd-d3e9-16ac-34a081556910/contexts/dinner-reservation");
+                        AIOutputContext outputContext = response.getResult().getContext("dinner-reservation");
+                        Map<String, JsonElement> list = outputContext.getParameters();
+                        service.getReservationInfo(Integer.parseInt(myAccount.getId()),list.get("Restaurant-Type").getAsString(),list.get("date").getAsString());
+                        Receive(speech);
+                        break;
+                    }
+                    default:
+                        Receive(speech);
+                        break;
+                }
             }
         });
     }
@@ -207,7 +224,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void initChatView() {
-        int myId = 0;
+        int myId = 1;
         Bitmap icon = BitmapFactory.decodeResource(getResources(), R.drawable.ic_action_user);
         String myName = "Saygun";
         myAccount = new User(myId, myName, icon);

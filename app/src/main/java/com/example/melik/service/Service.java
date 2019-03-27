@@ -62,7 +62,18 @@ public class Service {
 
         db.orderInsert("Water","2TL");
         db.orderInsert("Beer","20TL");
+        db.mealInsert("Breakfast","07:00","10:00");
+        db.mealInsert("Brunch","10:00","11:00");
+        db.mealInsert("Patisserie","11:00","22:00");
+        db.mealInsert("Waffle","12:30","16:00");
+        db.mealInsert("Snack Menu","12:30","16:00");
+        db.mealInsert("Lunch","12:30","14:30");
+        db.mealInsert("Icecream","12:30","18:00");
+        db.mealInsert("Dinner","18:30","21:00");
+        db.mealInsert("A La Carte Restaurants","19:00","22:30");
+        db.mealInsert("Night Buffet","00:00","03:00");
     }
+
 
     public List<String> getAllAlacarteNames(){
         return db.allAlacarteNames();
@@ -106,6 +117,24 @@ public class Service {
         }
         s+="\n";
         speech=speech.replace("$HotelActivities",s);
+        return speech;
+    }
+
+    public String MealInfo(String speech){
+        ArrayList<HashMap<String, String>> list=db.listAll("Meals");
+        String s="";
+        for(HashMap<String,String> i: list){
+            s+="\n"+i.get("mealName")+" starts at "+i.get("mealStartTime")+" and ends at "+i.get("mealEndTime");
+        }
+        s+="\n";
+        speech=speech.replace("$mealTable",s);
+        return speech;
+    }
+
+    public String mainMealsInfo(String mealName, String speech){
+        List<String> list=db.listMealTimes(mealName);
+        speech=speech.replace("$StartTime",list.get(0));
+        speech=speech.replace("$EndTime",list.get(1));
         return speech;
     }
 

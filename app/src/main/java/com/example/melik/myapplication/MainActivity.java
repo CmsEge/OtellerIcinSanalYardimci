@@ -7,9 +7,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.app.Notification;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.NotificationManagerCompat;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -21,6 +18,18 @@ import com.github.bassaer.chatmessageview.model.Message;
 import com.github.bassaer.chatmessageview.view.ChatView;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
+
+import android.app.Notification;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
+import static com.example.melik.myapplication.App.CHANNEL_1_ID;
+import com.example.melik.myapplication.NotificationPublisher;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
+import android.app.Activity;
+import android.os.SystemClock;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -39,7 +48,9 @@ import ai.api.model.AIOutputContext;
 import ai.api.model.AIRequest;
 import ai.api.model.AIResponse;
 
-import static com.example.melik.myapplication.App.CHANNEL_ID;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -53,10 +64,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Database database;
     private NotificationManagerCompat notificationManager;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        notificationManager = NotificationManagerCompat.from(this);
         database = new Database(getApplicationContext());
         service = new Service(database); //her işimizi bu servis arkadaşına yaptırıcaz tüm metotları
         //service.InsertTables();//syncdata fonksiyonunda sqllite çalıştırıyoruz bu çalıştırma için context'e ihtiyaç duyuyor o yüzden parametre olarak gönderiyoruz.
@@ -74,11 +87,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //Language, Dialogflow Client access token
         final LanguageConfig config = new LanguageConfig("en", "ecd717ee86524b2e977ca6e4483c7346");
         initService(config);
-        notificationManager = NotificationManagerCompat.from(this);
+
     }
 
     @Override
     public void onClick(View v) {
+
         //new message
         final Message message = new Message.Builder()
                 .setUser(myAccount)
@@ -91,8 +105,41 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         sendRequest(chatView.getInputText());
         //Reset edit text
         chatView.setInputText("");
-        sendOnChannel(v);
+        scheduleNotification(getNotification("5 second delay"), 5000);
     }
+
+    private void scheduleNotification(Notification notification, int delay) {
+
+        Intent notificationIntent = new Intent(this, NotificationPublisher.class);
+        notificationIntent.putExtra(NotificationPublisher.NOTIFICATION_ID, 1);
+        notificationIntent.putExtra(NotificationPublisher.NOTIFICATION, notification);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        long futureInMillis = SystemClock.elapsedRealtime() + delay;
+        AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+        alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, futureInMillis, pendingIntent);
+    }
+
+    private Notification getNotification(String content) {
+        Notification.Builder builder = new Notification.Builder(this);
+        builder.setContentTitle("Scheduled Notification");
+        builder.setContentText(content);
+        builder.setSmallIcon(R.drawable.ic_one);
+        return builder.build();
+    }
+    public void sendOnChannel() {
+
+        Notification notification = new NotificationCompat.Builder(this, CHANNEL_1_ID)
+                .setSmallIcon(R.drawable.ic_one)
+                .setContentTitle("Oteller İcin Sanal Yardimci")
+                .setContentText("message")
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setCategory(NotificationCompat.CATEGORY_MESSAGE)
+                .build();
+
+        notificationManager.notify(1, notification);
+    }
+
 
     /*
      * AIRequest should have query OR event
@@ -153,18 +200,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    public void sendOnChannel(View v) {
-
-        Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
-                .setSmallIcon(R.drawable.ic_one)
-                .setContentTitle("aaaa")
-                .setContentText("bbbbb")
-                .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .setCategory(NotificationCompat.CATEGORY_MESSAGE)
-                .build();
-
-        notificationManager.notify(1, notification);
-    }
 
     private void onResult(final AIResponse response) {
         runOnUiThread(new Runnable() {
@@ -245,7 +280,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         break;
                     }
                     case "breakfast-time": {
-
                         speech=service.mainMealsInfo("Breakfast",speech);
                         Receive(speech);
                         break;

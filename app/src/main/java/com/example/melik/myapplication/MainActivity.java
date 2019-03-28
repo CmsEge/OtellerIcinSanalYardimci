@@ -18,6 +18,10 @@ import com.github.bassaer.chatmessageview.model.Message;
 import com.github.bassaer.chatmessageview.view.ChatView;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
+import android.app.Notification;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
+import static com.example.melik.myapplication.App.CHANNEL_1_ID;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -46,12 +50,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private User droidKaigiBot;
     private Service service;
     private Database database;
+    private NotificationManagerCompat notificationManager;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        notificationManager = NotificationManagerCompat.from(this);
         database = new Database(getApplicationContext());
         service = new Service(database); //her işimizi bu servis arkadaşına yaptırıcaz tüm metotları
         //service.InsertTables();//syncdata fonksiyonunda sqllite çalıştırıyoruz bu çalıştırma için context'e ihtiyaç duyuyor o yüzden parametre olarak gönderiyoruz.
@@ -69,10 +77,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //Language, Dialogflow Client access token
         final LanguageConfig config = new LanguageConfig("en", "ecd717ee86524b2e977ca6e4483c7346");
         initService(config);
+
+
     }
 
     @Override
     public void onClick(View v) {
+
         //new message
         final Message message = new Message.Builder()
                 .setUser(myAccount)
@@ -86,6 +97,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //Reset edit text
         chatView.setInputText("");
     }
+
+    public void sendOnChannel() {
+
+        Notification notification = new NotificationCompat.Builder(this, CHANNEL_1_ID)
+                .setSmallIcon(R.drawable.ic_one)
+                .setContentTitle("Oteller İcin Sanal Yardimci")
+                .setContentText("message")
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setCategory(NotificationCompat.CATEGORY_MESSAGE)
+                .build();
+
+        notificationManager.notify(1, notification);
+    }
+
 
     /*
      * AIRequest should have query OR event
@@ -226,6 +251,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         break;
                     }
                     case "breakfast-time": {
+                        sendOnChannel();
                         speech=service.mainMealsInfo("Breakfast",speech);
                         Receive(speech);
                         break;

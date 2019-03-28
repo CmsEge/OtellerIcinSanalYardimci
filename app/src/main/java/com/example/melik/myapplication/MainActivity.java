@@ -7,6 +7,9 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.app.Notification;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -36,6 +39,8 @@ import ai.api.model.AIOutputContext;
 import ai.api.model.AIRequest;
 import ai.api.model.AIResponse;
 
+import static com.example.melik.myapplication.App.CHANNEL_ID;
+
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     public static final String TAG = MainActivity.class.getName();
@@ -46,7 +51,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private User droidKaigiBot;
     private Service service;
     private Database database;
-
+    private NotificationManagerCompat notificationManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +74,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //Language, Dialogflow Client access token
         final LanguageConfig config = new LanguageConfig("en", "ecd717ee86524b2e977ca6e4483c7346");
         initService(config);
+        notificationManager = NotificationManagerCompat.from(this);
     }
 
     @Override
@@ -85,6 +91,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         sendRequest(chatView.getInputText());
         //Reset edit text
         chatView.setInputText("");
+        sendOnChannel(v);
     }
 
     /*
@@ -146,6 +153,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    public void sendOnChannel(View v) {
+
+        Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
+                .setSmallIcon(R.drawable.ic_one)
+                .setContentTitle("aaaa")
+                .setContentText("bbbbb")
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setCategory(NotificationCompat.CATEGORY_MESSAGE)
+                .build();
+
+        notificationManager.notify(1, notification);
+    }
 
     private void onResult(final AIResponse response) {
         runOnUiThread(new Runnable() {
@@ -226,6 +245,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         break;
                     }
                     case "breakfast-time": {
+
                         speech=service.mainMealsInfo("Breakfast",speech);
                         Receive(speech);
                         break;

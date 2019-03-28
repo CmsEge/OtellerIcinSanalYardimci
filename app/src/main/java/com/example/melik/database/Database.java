@@ -77,6 +77,16 @@ public class Database  extends SQLiteOpenHelper {
     private static String MEAL_START_TIME = "mealStartTime";
     private static String MEAL_END_TIME = "mealEndTime";
 
+    //Table of RoomStatus
+    private static final String TABLE_ROOM_SATATUS = "RoomStatus";//burası normal değişken tanımlama gibi
+    private static String STATUS_ID = "statusId";
+    private static String CUSTOME_ID = "custID";
+    private static String DATE_ = "date";
+    private static String TIME_ = "time";
+    private static String DISTURB = "disturb";
+    private static String CLEAN = "clean";
+    private static String ALARM = "alarm";
+
     public Database(Context context) {//Database context ile oluşuyor.
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
@@ -148,6 +158,17 @@ public class Database  extends SQLiteOpenHelper {
                 + MEAL_START_TIME + " TEXT,"
                 + MEAL_END_TIME + " TEXT" + ")";
         db.execSQL(CREATE_TABLE_MEALS);
+
+        String CREATE_TABLE_ROOM_STATUS = "CREATE TABLE " + TABLE_ROOM_SATATUS + "("
+                + STATUS_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+                + CUSTOME_ID + " INTEGER,"
+                + DATE_ + " TEXT,"
+                + TIME_ + " TEXT,"
+                + DISTURB + " INTEGER,"
+                + CLEAN + " INTEGER,"
+                + ALARM + " TEXT,"
+                + " FOREIGN KEY ("+ CUSTOME_ID +") REFERENCES "+TABLE_CUSTOMER+"("+CUSTOMER_ID+"));";
+        db.execSQL(CREATE_TABLE_ROOM_STATUS);
     }
     //Customer Functions
     public void customerDelete(int customerId){
@@ -388,6 +409,20 @@ public class Database  extends SQLiteOpenHelper {
         }
         db.close();
         return List;//Tüm müşterilerin listesini geri döndürüyor.
+    }
+    public void roomStatusInsert(int custID, String date,String time, int disturb,int clean,String alarm) {
+
+        SQLiteDatabase db = this.getWritableDatabase();//yine yazılabilir olarak açıyoruz db'yi.
+        ContentValues values = new ContentValues();//ContentValues tipinde bir değişken oluşturuyoruz.Isme takılmayın mantık anlaşılıyor içine atıyoruz gönderdiğimiz parametreleri.
+        values.put(CUSTOME_ID, custID);
+        values.put(DATE_, date);
+        values.put(TIME_, time);
+        values.put(DISTURB, disturb);
+        values.put(CLEAN, clean);
+        values.put(ALARM, alarm);
+
+        db.insert(TABLE_ROOM_SATATUS, null, values);//bu değerleri insert'e direk gönderiyoruz.
+        db.close();
     }
     /**
      * !!!!!!!!!!!!!!!!!!!!!!!!!

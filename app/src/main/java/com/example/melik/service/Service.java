@@ -76,6 +76,9 @@ public class Service {
 
 
         db.faqInsert("Are pets accepted?","No, we do not accept pets.");
+        db.faqInsert("Do you have WIFI at the hotel?","Free wireless internet is available throughout the hotel and in all rooms.");
+        db.faqInsert("What are the check-in and check-out times?","Check-in time is 14:00 and check-out time is 12:00.");
+
     }
 
 

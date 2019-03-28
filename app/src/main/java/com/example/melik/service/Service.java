@@ -9,6 +9,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.melik.database.Database;
+import com.example.melik.myapplication.R;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -72,6 +73,9 @@ public class Service {
         db.mealInsert("Dinner","18:30","21:00");
         db.mealInsert("A La Carte Restaurants","19:00","22:30");
         db.mealInsert("Night Buffet","00:00","03:00");
+
+
+        db.faqInsert("Are pets accepted?","No, we do not accept pets.");
     }
 
 
@@ -118,6 +122,23 @@ public class Service {
         s+="\n";
         speech=speech.replace("$HotelActivities",s);
         return speech;
+    }
+    public String FaqInfo(String speech)
+    {
+        ArrayList<HashMap<String, String>> list=db.listAll("FAQTable");
+        String s="";
+        for(HashMap<String,String> i: list){
+            s+="\n"+i.get("faqId")+"."+i.get("question")+"\n";
+        }
+        //s+="\n";
+        speech=speech.replace("$faq",s);
+        return speech;
+    }
+
+    public String FaqAnswer(String speech){
+        String s = db.listAnswer(Integer.parseInt(speech));
+        speech = speech.replace("$answer",s);
+        return s;
     }
 
     public String MealInfo(String speech){

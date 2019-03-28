@@ -135,7 +135,9 @@ public class Service {
         List<String> list=db.listMealTimes(mealName);
         speech=speech.replace("$StartTime",list.get(0));
         speech=speech.replace("$EndTime",list.get(1));
+
         return speech;
+
     }
 
     public void insertEventNotification(int eveId, int custId){

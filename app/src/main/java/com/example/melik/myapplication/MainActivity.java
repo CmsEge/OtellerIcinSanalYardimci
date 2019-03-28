@@ -22,14 +22,10 @@ import com.google.gson.JsonElement;
 import android.app.Notification;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
-import static com.example.melik.myapplication.App.CHANNEL_1_ID;
-import com.example.melik.myapplication.NotificationPublisher;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.app.Activity;
-import android.os.SystemClock;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -50,7 +46,10 @@ import ai.api.model.AIResponse;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+
+
 import java.util.Calendar;
+import java.util.Date;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -69,7 +68,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        notificationManager = NotificationManagerCompat.from(this);
+
+        //alarmService
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+
+        Intent notificationIntent = new Intent(this, AlarmReceiver.class);
+        PendingIntent broadcast = PendingIntent.getBroadcast(this, 100, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        Calendar cal = Calendar.getInstance();
+       // cal.add(Calendar.SECOND, 5);
+        cal.set(cal.HOUR_OF_DAY,17);
+        cal.set(cal.MINUTE,23);
+        cal.set(cal.SECOND,0);
+        cal.set(cal.MILLISECOND,0);
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), broadcast);
+
+
         database = new Database(getApplicationContext());
         service = new Service(database); //her işimizi bu servis arkadaşına yaptırıcaz tüm metotları
         //service.InsertTables();//syncdata fonksiyonunda sqllite çalıştırıyoruz bu çalıştırma için context'e ihtiyaç duyuyor o yüzden parametre olarak gönderiyoruz.
@@ -88,6 +102,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         final LanguageConfig config = new LanguageConfig("en", "ecd717ee86524b2e977ca6e4483c7346");
         initService(config);
 
+
     }
 
     @Override
@@ -105,40 +120,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         sendRequest(chatView.getInputText());
         //Reset edit text
         chatView.setInputText("");
-        scheduleNotification(getNotification("5 second delay"), 5000);
     }
 
-    private void scheduleNotification(Notification notification, int delay) {
-
-        Intent notificationIntent = new Intent(this, NotificationPublisher.class);
-        notificationIntent.putExtra(NotificationPublisher.NOTIFICATION_ID, 1);
-        notificationIntent.putExtra(NotificationPublisher.NOTIFICATION, notification);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        long futureInMillis = SystemClock.elapsedRealtime() + delay;
-        AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
-        alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, futureInMillis, pendingIntent);
-    }
-
-    private Notification getNotification(String content) {
-        Notification.Builder builder = new Notification.Builder(this);
-        builder.setContentTitle("Scheduled Notification");
-        builder.setContentText(content);
-        builder.setSmallIcon(R.drawable.ic_one);
-        return builder.build();
-    }
-    public void sendOnChannel() {
-
-        Notification notification = new NotificationCompat.Builder(this, CHANNEL_1_ID)
-                .setSmallIcon(R.drawable.ic_one)
-                .setContentTitle("Oteller İcin Sanal Yardimci")
-                .setContentText("message")
-                .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .setCategory(NotificationCompat.CATEGORY_MESSAGE)
-                .build();
-
-        notificationManager.notify(1, notification);
-    }
 
 
     /*

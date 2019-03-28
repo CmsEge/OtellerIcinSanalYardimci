@@ -20,10 +20,14 @@ import com.github.bassaer.chatmessageview.model.Message;
 import com.github.bassaer.chatmessageview.view.ChatView;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
+
 import android.app.Notification;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
-
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -47,7 +51,10 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+
+
 import java.util.Calendar;
+import java.util.Date;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -64,23 +71,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        //alarmService
-        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-
-        Intent notificationIntent = new Intent(this, AlarmReceiver.class);
-        PendingIntent broadcast = PendingIntent.getBroadcast(this, 100, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.SECOND, 5);
-
-        alarmManager.setExact(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), broadcast);
-
-
         database = new Database(getApplicationContext());
         service = new Service(database); //her işimizi bu servis arkadaşına yaptırıcaz tüm metotları
         //service.InsertTables();//syncdata fonksiyonunda sqllite çalıştırıyoruz bu çalıştırma için context'e ihtiyaç duyuyor o yüzden parametre olarak gönderiyoruz.
@@ -98,8 +90,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //Language, Dialogflow Client access token
         final LanguageConfig config = new LanguageConfig("en", "ecd717ee86524b2e977ca6e4483c7346");
         initService(config);
-
-
+        //NotificationHandle();
     }
 
     @Override
@@ -117,7 +108,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //Reset edit text
         chatView.setInputText("");
     }
-
+    public void NotificationHandle(){
+       HashMap<String,String>list=service.getStartDateOfMeal();
+       String breakfastTime=list.get("Breakfast");
+       String[] tokens=breakfastTime.split(":");
+       int hour=Integer.parseInt(tokens[0]);
+       Notification("Breakfast starts at "+list.get("Breakfast")+". Don't be late, we will be waiting for you :)",35);
+       tokens=list.get("Lunch").split(":");
+       hour=Integer.parseInt(tokens[0]);
+       Notification("Lunch starts at "+list.get("Lunch")+". Don't be late, we will be waiting for you :)",hour-1);
+       tokens=list.get("Dinner").split(":");
+       hour=Integer.parseInt(tokens[0]);
+       Notification("Dinner starts at "+list.get("Dinner")+". Don't be late, we will be waiting for you :)", hour-1);
+    }
+    public void Notification(String text,int hour){
+        AlarmManager alarmManager=(AlarmManager)getSystemService(Context.ALARM_SERVICE);
+        Intent notificationIntent= new Intent(this,AlarmReceiver.class).putExtra("msg",text);
+        PendingIntent broadcast= PendingIntent.getBroadcast(this,100,notificationIntent,PendingIntent.FLAG_UPDATE_CURRENT);
+        Calendar cal=Calendar.getInstance();
+        cal.set(cal.MINUTE,hour);
+        alarmManager.setExact(alarmManager.RTC_WAKEUP,cal.getTimeInMillis(),broadcast);
+    }
 
 
     /*

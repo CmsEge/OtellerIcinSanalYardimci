@@ -14,6 +14,8 @@ import android.view.View;
 import com.example.melik.config.LanguageConfig;
 import com.example.melik.database.Database;
 import com.example.melik.service.Service;
+import com.example.melik.places.GooglePlace;
+import com.example.melik.places.PlaceMain;
 import com.github.bassaer.chatmessageview.model.Message;
 import com.github.bassaer.chatmessageview.view.ChatView;
 import com.google.gson.Gson;
@@ -302,6 +304,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         service.insertRoomStatus(Integer.parseInt(myAccount.getId()),0,0,params.get("time").getAsString());
                         Log.i("timeeeeeee ,",params.get("time").getAsString());
                         Receive(speech);
+                        break;
+                    }
+                    case "event":{
+                        Intent intent = new Intent(MainActivity.this, PlaceMain.class);
+                        startActivity(intent);
+                        overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
+                        speech = service.MealInfo(speech); Receive(speech);
                         break;
                     }
                     default:

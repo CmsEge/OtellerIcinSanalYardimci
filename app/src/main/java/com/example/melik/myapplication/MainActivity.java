@@ -10,7 +10,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.content.Intent;
 
 import com.example.melik.config.LanguageConfig;
 import com.example.melik.database.Database;
@@ -21,6 +20,10 @@ import com.github.bassaer.chatmessageview.model.Message;
 import com.github.bassaer.chatmessageview.view.ChatView;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
+import android.app.Notification;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
+import static com.example.melik.myapplication.App.CHANNEL_1_ID;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -39,7 +42,14 @@ import ai.api.model.AIOutputContext;
 import ai.api.model.AIRequest;
 import ai.api.model.AIResponse;
 
+import android.app.Activity;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
 
+
+import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -51,12 +61,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private User droidKaigiBot;
     private Service service;
     private Database database;
+    private NotificationManagerCompat notificationManager;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //alarmService
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+
+        Intent notificationIntent = new Intent(this, AlarmReceiver.class);
+        PendingIntent broadcast = PendingIntent.getBroadcast(this, 100, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.SECOND, 5);
+
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), broadcast);
+
+
         database = new Database(getApplicationContext());
         service = new Service(database); //her işimizi bu servis arkadaşına yaptırıcaz tüm metotları
         //service.InsertTables();//syncdata fonksiyonunda sqllite çalıştırıyoruz bu çalıştırma için context'e ihtiyaç duyuyor o yüzden parametre olarak gönderiyoruz.
@@ -69,14 +95,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Log.i("orders: ",service.listAll("OrderTable").toString());
         Log.i("orderReq", service.listAll("OrderRequest").toString());
         Log.i("meals",service.listAll("Meals").toString());
+        Log.i("roomStatus", service.listAll("RoomStatus").toString());
         initChatView();
         //Language, Dialogflow Client access token
         final LanguageConfig config = new LanguageConfig("en", "ecd717ee86524b2e977ca6e4483c7346");
         initService(config);
+
+
     }
 
     @Override
     public void onClick(View v) {
+
         //new message
         final Message message = new Message.Builder()
                 .setUser(myAccount)
@@ -90,6 +120,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //Reset edit text
         chatView.setInputText("");
     }
+
+    public void sendOnChannel() {
+
+        Notification notification = new NotificationCompat.Builder(this, CHANNEL_1_ID)
+                .setSmallIcon(R.drawable.ic_one)
+                .setContentTitle("Oteller İcin Sanal Yardimci")
+                .setContentText("message")
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setCategory(NotificationCompat.CATEGORY_MESSAGE)
+                .build();
+
+        notificationManager.notify(1, notification);
+    }
+
 
     /*
      * AIRequest should have query OR event
@@ -107,7 +151,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         new AiTask().execute(queryString, eventString, contextString);
     }
-
 
     public class AiTask extends AsyncTask<String, Void, AIResponse> {
         private AIError aiError;
@@ -192,7 +235,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 switch(action){
                     case "dinner-reservation":
                     {
-                        speech = service.DinnerReservation(speech);
+                        speech=service.DinnerReservation(speech);
                         Receive(speech);
                         break;
                     }
@@ -205,7 +248,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         break;
                     }
                     case "Hotel-Activity": {
-                        speech = service.EventInfo(speech);
+                        speech=service.EventInfo(speech);
                         Receive(speech);
                         break;
                     }
@@ -215,7 +258,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         break;
                     }
                     case "order":{
-                        speech = service.OrderInfo(speech);
+                        speech=service.OrderInfo(speech);
                         Receive(speech);
                         break;
                     }
@@ -226,22 +269,40 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         break;
                     }
                     case "All-meals": {
-                        speech = service.MealInfo(speech);
+                        speech=service.MealInfo(speech);
                         Receive(speech);
                         break;
                     }
                     case "breakfast-time": {
-                        speech = service.mainMealsInfo("Breakfast",speech);
+                        sendOnChannel();
+                        speech=service.mainMealsInfo("Breakfast",speech);
                         Receive(speech);
                         break;
                     }
                     case "Lunch-Time":{
-                        speech = service.mainMealsInfo("Lunch",speech);
+                        speech=service.mainMealsInfo("Lunch",speech);
                         Receive(speech);
                         break;
                     }
                     case "dinner-time":{
-                        speech = service.mainMealsInfo("Dinner",speech);
+                        speech=service.mainMealsInfo("Dinner",speech);
+                        Receive(speech);
+                        break;
+                    }
+                    case "Do-not-disturb":{
+                        service.insertRoomStatus(Integer.parseInt(myAccount.getId()),1,0,"");//disturb==1 rahatsız etmeyin demek
+                        Receive(speech);
+                        break;
+                    }
+                    case "Cleaning":{
+                        service.insertRoomStatus(Integer.parseInt(myAccount.getId()),0,1,"");
+                        Receive(speech);
+                        break;
+                    }
+                    case "set-alarm":{
+
+                        service.insertRoomStatus(Integer.parseInt(myAccount.getId()),0,0,params.get("time").getAsString());
+                        Log.i("timeeeeeee ,",params.get("time").getAsString());
                         Receive(speech);
                         break;
                     }
@@ -249,8 +310,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         Intent intent = new Intent(MainActivity.this, PlaceMain.class);
                         startActivity(intent);
                         overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
-                        speech = service.MealInfo(speech);
-                        Receive(speech);
+                        speech = service.MealInfo(speech); Receive(speech);
                         break;
                     }
                     default:

@@ -22,6 +22,8 @@ import android.widget.ArrayAdapter;
 
 import com.example.melik.myapplication.R;
 
+
+
 public class PlaceMain extends ListActivity {
     ArrayList<GooglePlace> venuesList;
 

@@ -1,5 +1,6 @@
 package com.example.melik.myapplication;
 
+import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -9,6 +10,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.support.v4.app.NotificationCompat;
 
 import static android.app.NotificationManager.IMPORTANCE_DEFAULT;
 
@@ -27,11 +29,14 @@ public class AlarmReceiver extends BroadcastReceiver{
 
         Notification.Builder builder = new Notification.Builder(context);
 
-        Notification notification = builder.setContentTitle("Demo App Notification")
-                .setContentText("New Notification From Demo App..")
+        @SuppressLint("WrongConstant") Notification notification = builder.setContentTitle("Demo App Notification")
+                .setContentText(intent.getStringExtra("msg"))
                 .setTicker("New Message Alert!")
                 .setSmallIcon(R.mipmap.ic_launcher)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setContentTitle("Oteller İçin Sanal Yardımcı")
                 .setContentIntent(pendingIntent).build();
+
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             builder.setChannelId(CHANNEL_ID);

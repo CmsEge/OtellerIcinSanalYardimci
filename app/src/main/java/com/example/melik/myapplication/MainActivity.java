@@ -64,6 +64,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Log.i("orders: ",service.listAll("OrderTable").toString());
         Log.i("orderReq", service.listAll("OrderRequest").toString());
         Log.i("meals",service.listAll("Meals").toString());
+        Log.i("roomStatus", service.listAll("RoomStatus").toString());
         initChatView();
         //Language, Dialogflow Client access token
         final LanguageConfig config = new LanguageConfig("en", "ecd717ee86524b2e977ca6e4483c7346");
@@ -236,6 +237,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     }
                     case "dinner-time":{
                         speech=service.mainMealsInfo("Dinner",speech);
+                        Receive(speech);
+                        break;
+                    }
+                    case "Do-not-disturb":{
+                        service.insertRoomStatus(Integer.parseInt(myAccount.getId()),1,0,"");//disturb==1 rahatsız etmeyin demek
+                        Receive(speech);
+                        break;
+                    }
+                    case "Cleaning":{
+                        service.insertRoomStatus(Integer.parseInt(myAccount.getId()),0,1,"");
+                        Receive(speech);
+                        break;
+                    }
+                    case "set-alarm":{
+
+                        service.insertRoomStatus(Integer.parseInt(myAccount.getId()),0,0,params.get("time").getAsString());
+                        Log.i("timeeeeeee ,",params.get("time").getAsString());
                         Receive(speech);
                         break;
                     }

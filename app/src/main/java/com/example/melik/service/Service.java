@@ -160,4 +160,13 @@ public class Service {
         db.orderRequestInsert(custId,orderId,date,time);
 
     }
+    public void insertRoomStatus(int custID, int disturb, int clean, String alarm){
+        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+        DateFormat dateFormat2 = new SimpleDateFormat("HH:mm:ss");
+        Calendar cal = Calendar.getInstance();
+        String date=dateFormat.format(cal.getTime());
+        String time=dateFormat2.format(cal.getTime());
+        db.roomStatusInsert(custID,date,time,disturb,clean,alarm);
+
+    }
 }

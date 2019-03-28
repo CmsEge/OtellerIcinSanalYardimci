@@ -23,7 +23,7 @@ import com.google.gson.JsonElement;
 import android.app.Notification;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
-import static com.example.melik.myapplication.App.CHANNEL_1_ID;
+
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private User droidKaigiBot;
     private Service service;
     private Database database;
-    private NotificationManagerCompat notificationManager;
+
 
 
     @Override
@@ -118,18 +118,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         chatView.setInputText("");
     }
 
-    public void sendOnChannel() {
-
-        Notification notification = new NotificationCompat.Builder(this, CHANNEL_1_ID)
-                .setSmallIcon(R.drawable.ic_one)
-                .setContentTitle("Oteller İcin Sanal Yardimci")
-                .setContentText("message")
-                .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .setCategory(NotificationCompat.CATEGORY_MESSAGE)
-                .build();
-
-        notificationManager.notify(1, notification);
-    }
 
 
     /*
@@ -271,7 +259,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         break;
                     }
                     case "breakfast-time": {
-                        sendOnChannel();
                         speech=service.mainMealsInfo("Breakfast",speech);
                         Receive(speech);
                         break;

@@ -23,7 +23,6 @@ import com.google.gson.JsonElement;
 import android.app.Notification;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
-import static com.example.melik.myapplication.App.CHANNEL_1_ID;
 
 import java.util.Collections;
 import java.util.HashMap;

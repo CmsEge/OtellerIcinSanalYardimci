@@ -10,10 +10,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.content.Intent;
 
 import com.example.melik.config.LanguageConfig;
 import com.example.melik.database.Database;
 import com.example.melik.service.Service;
+import com.example.melik.places.GooglePlace;
+import com.example.melik.places.PlaceMain;
 import com.github.bassaer.chatmessageview.model.Message;
 import com.github.bassaer.chatmessageview.view.ChatView;
 import com.google.gson.Gson;
@@ -35,6 +38,8 @@ import ai.api.model.AIEvent;
 import ai.api.model.AIOutputContext;
 import ai.api.model.AIRequest;
 import ai.api.model.AIResponse;
+
+
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -102,6 +107,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         new AiTask().execute(queryString, eventString, contextString);
     }
+
 
     public class AiTask extends AsyncTask<String, Void, AIResponse> {
         private AIError aiError;
@@ -186,7 +192,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 switch(action){
                     case "dinner-reservation":
                     {
-                        speech=service.DinnerReservation(speech);
+                        speech = service.DinnerReservation(speech);
                         Receive(speech);
                         break;
                     }
@@ -199,7 +205,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         break;
                     }
                     case "Hotel-Activity": {
-                        speech=service.EventInfo(speech);
+                        speech = service.EventInfo(speech);
                         Receive(speech);
                         break;
                     }
@@ -209,7 +215,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         break;
                     }
                     case "order":{
-                        speech=service.OrderInfo(speech);
+                        speech = service.OrderInfo(speech);
                         Receive(speech);
                         break;
                     }
@@ -220,22 +226,30 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         break;
                     }
                     case "All-meals": {
-                        speech=service.MealInfo(speech);
+                        speech = service.MealInfo(speech);
                         Receive(speech);
                         break;
                     }
                     case "breakfast-time": {
-                        speech=service.mainMealsInfo("Breakfast",speech);
+                        speech = service.mainMealsInfo("Breakfast",speech);
                         Receive(speech);
                         break;
                     }
                     case "Lunch-Time":{
-                        speech=service.mainMealsInfo("Lunch",speech);
+                        speech = service.mainMealsInfo("Lunch",speech);
                         Receive(speech);
                         break;
                     }
                     case "dinner-time":{
-                        speech=service.mainMealsInfo("Dinner",speech);
+                        speech = service.mainMealsInfo("Dinner",speech);
+                        Receive(speech);
+                        break;
+                    }
+                    case "event":{
+                        Intent intent = new Intent(MainActivity.this, PlaceMain.class);
+                        startActivity(intent);
+                        overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
+                        speech = service.MealInfo(speech);
                         Receive(speech);
                         break;
                     }

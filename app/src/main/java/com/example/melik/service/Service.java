@@ -9,6 +9,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.melik.database.Database;
+import com.example.melik.myapplication.AlarmReceiver;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -17,6 +18,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import android.support.v4.content.ContextCompat;
 
 import ai.api.AIDataService;
 import ai.api.AIServiceException;
@@ -24,6 +26,13 @@ import ai.api.android.AIConfiguration;
 import ai.api.model.AIRequest;
 import ai.api.model.AIResponse;
 import ai.api.model.Result;
+import android.support.v4.app.NotificationManagerCompat;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
+import com.example.melik.myapplication.AlarmReceiver;
+
 
 
 public class Service {
@@ -170,5 +179,27 @@ public class Service {
         String time=dateFormat2.format(cal.getTime());
         db.roomStatusInsert(custID,date,time,disturb,clean,alarm);
 
+    }
+    public HashMap<String,String> getStartDateOfMeal(){
+        ArrayList<HashMap<String, String>> list=db.listAll("Meals");
+        HashMap<String,String> list2= new HashMap<String,String>();
+        for(HashMap<String,String> i: list){
+            switch (i.get("mealName")){
+                case "Breakfast":{
+
+                    list2.put("Breakfast",i.get("mealStartTime"));
+                    break;
+                }
+                case "Lunch":{
+                    list2.put("Lunch",i.get("mealStartTime"));
+                    break;
+                }
+                case "Dinner":{
+                    list2.put("Dinner",i.get("mealStartTime"));
+                    break;
+                }
+            }
+        }
+        return list2;
     }
 }

@@ -391,6 +391,7 @@ public class Database  extends SQLiteOpenHelper {
         db.close();
     }
 
+
     public ArrayList<HashMap<String, String>> listAll(String tableName){
 
         SQLiteDatabase db = this.getReadableDatabase();//yine sadece okunabilir.

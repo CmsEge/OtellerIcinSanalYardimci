@@ -30,7 +30,7 @@ public class AlarmReceiver extends BroadcastReceiver{
         Notification.Builder builder = new Notification.Builder(context);
 
         @SuppressLint("WrongConstant") Notification notification = builder.setContentTitle("Demo App Notification")
-                .setContentText("New Notification From Demo App..")
+                .setContentText(intent.getStringExtra("msg"))
                 .setTicker("New Message Alert!")
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)

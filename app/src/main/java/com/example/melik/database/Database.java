@@ -78,7 +78,7 @@ public class Database  extends SQLiteOpenHelper {
     private static String MEAL_END_TIME = "mealEndTime";
 
     //Table of RoomStatus
-    private static final String TABLE_ROOM_SATATUS = "RoomStatus";//burası normal değişken tanımlama gibi
+    private static final String TABLE_ROOM_STATUS = "RoomStatus";//burası normal değişken tanımlama gibi
     private static String STATUS_ID = "statusId";
     private static String CUSTOME_ID = "custID";
     private static String DATE_ = "date";
@@ -86,6 +86,13 @@ public class Database  extends SQLiteOpenHelper {
     private static String DISTURB = "disturb";
     private static String CLEAN = "clean";
     private static String ALARM = "alarm";
+
+    //Table of FAQ
+    private static final String TABLE_FAQ = "FAQTable";//burası normal değişken tanımlama gibi
+    private static String FAQ_ID = "faqId";
+    private static String QUESTION = "question";
+    private static String ANSWER = "answer";
+
 
     public Database(Context context) {//Database context ile oluşuyor.
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -159,7 +166,7 @@ public class Database  extends SQLiteOpenHelper {
                 + MEAL_END_TIME + " TEXT" + ")";
         db.execSQL(CREATE_TABLE_MEALS);
 
-        String CREATE_TABLE_ROOM_STATUS = "CREATE TABLE " + TABLE_ROOM_SATATUS + "("
+        String CREATE_TABLE_ROOM_STATUS = "CREATE TABLE " + TABLE_ROOM_STATUS + "("
                 + STATUS_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
                 + CUSTOME_ID + " INTEGER,"
                 + DATE_ + " TEXT,"
@@ -169,6 +176,12 @@ public class Database  extends SQLiteOpenHelper {
                 + ALARM + " TEXT,"
                 + " FOREIGN KEY ("+ CUSTOME_ID +") REFERENCES "+TABLE_CUSTOMER+"("+CUSTOMER_ID+"));";
         db.execSQL(CREATE_TABLE_ROOM_STATUS);
+
+        String CREATE_TABLE_FAQ = "CREATE TABLE " + TABLE_FAQ + "("
+                + FAQ_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+                + QUESTION + " TEXT,"
+                + ANSWER + " TEXT" + ")";
+        db.execSQL(CREATE_TABLE_FAQ);
     }
     //Customer Functions
     public void customerDelete(int customerId){
@@ -198,6 +211,7 @@ public class Database  extends SQLiteOpenHelper {
         db.insert(TABLE_CUSTOMER, null, values);//bu değerleri insert'e direk gönderiyoruz.
         db.close();
     }
+
     public void orderInsert(String order, String cost) {
         SQLiteDatabase db = this.getWritableDatabase();//yine yazılabilir olarak açıyoruz db'yi.
         ContentValues values = new ContentValues();//ContentValues tipinde bir değişken oluşturuyoruz.Isme takılmayın mantık anlaşılıyor içine atıyoruz gönderdiğimiz parametreleri.
@@ -206,6 +220,16 @@ public class Database  extends SQLiteOpenHelper {
         db.insert(TABLE_ORDER, null, values);//bu değerleri insert'e direk gönderiyoruz.
         db.close();
     }
+
+    public void faqInsert(String question, String answer) {
+        SQLiteDatabase db = this.getWritableDatabase();//yine yazılabilir olarak açıyoruz db'yi.
+        ContentValues values = new ContentValues();//ContentValues tipinde bir değişken oluşturuyoruz.Isme takılmayın mantık anlaşılıyor içine atıyoruz gönderdiğimiz parametreleri.
+        values.put(QUESTION, question);
+        values.put(ANSWER, answer);
+        db.insert(TABLE_FAQ, null, values);//bu değerleri insert'e direk gönderiyoruz.
+        db.close();
+    }
+
     public void orderRequestInsert(int custId, int orderId, String date, String time) {
         SQLiteDatabase db = this.getWritableDatabase();//yine yazılabilir olarak açıyoruz db'yi.
         ContentValues values = new ContentValues();//ContentValues tipinde bir değişken oluşturuyoruz.Isme takılmayın mantık anlaşılıyor içine atıyoruz gönderdiğimiz parametreleri.
@@ -347,6 +371,20 @@ public class Database  extends SQLiteOpenHelper {
         return List;
     }
 
+    public String listAnswer(int id){
+        SQLiteDatabase db = this.getReadableDatabase();//yine sadece okunabilir.
+        String selectQuery = "SELECT answer FROM " + TABLE_FAQ+ " WHERE "+FAQ_ID+"="+"'"+id+"'";
+
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        cursor.moveToFirst();
+        String answer= cursor.getString(0);
+        db.close();
+        cursor.close();
+        return answer;
+    }
+
+
+
     //ReservationAla Functions
     public void reservationAlaInsert(String date, int cus, int ala) {
         SQLiteDatabase db = this.getWritableDatabase();//yine yazılabilir olarak açıyoruz db'yi.
@@ -421,7 +459,7 @@ public class Database  extends SQLiteOpenHelper {
         values.put(CLEAN, clean);
         values.put(ALARM, alarm);
 
-        db.insert(TABLE_ROOM_SATATUS, null, values);//bu değerleri insert'e direk gönderiyoruz.
+        db.insert(TABLE_ROOM_STATUS, null, values);//bu değerleri insert'e direk gönderiyoruz.
         db.close();
     }
     /**

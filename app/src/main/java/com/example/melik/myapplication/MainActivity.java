@@ -46,8 +46,11 @@ import ai.api.model.AIOutputContext;
 import ai.api.model.AIRequest;
 import ai.api.model.AIResponse;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
+import android.app.Activity;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
 
 
 import java.util.Calendar;
@@ -63,7 +66,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private User droidKaigiBot;
     private Service service;
     private Database database;
-    private NotificationManagerCompat notificationManager;
+
 
 
     @Override
@@ -98,7 +101,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 .setUser(myAccount)
                 .setRightMessage(true)
                 .setMessageText(chatView.getInputText())
-                .hideIcon(true)
                 .build();
         //Set to chat view
         chatView.send(message);
@@ -303,7 +305,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         Intent intent = new Intent(MainActivity.this, PlaceMain.class);
                         startActivity(intent);
                         overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
-                        speech = service.MealInfo(speech); Receive(speech);
+                        Receive(speech);
+                        break;
+                    }case "faq":{
+                        speech = service.FaqInfo(speech);
+                        Receive(speech);
+                        break;
+                    }case "faq-choice":{
+                        speech = service.FaqAnswer(response.getResult().getResolvedQuery());
+                        Receive(speech);
                         break;
                     }
                     default:
@@ -332,28 +342,30 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void initChatView() {
         int myId = 1;
-        Bitmap icon = BitmapFactory.decodeResource(getResources(), R.drawable.ic_action_user);
-        String myName = "Saygun";
-        myAccount = new User(myId, myName, icon);
+        Bitmap icon = BitmapFactory.decodeResource(getResources(), R.drawable.robot_icon);
+        Bitmap userIcon = BitmapFactory.decodeResource(getResources(), R.drawable.user_icon);
+        String myName = "Siz";
+        myAccount = new User(myId, myName, userIcon);
 
         int botId = 2;
         String botName = "Shire";
         droidKaigiBot = new User(botId, botName, icon);
 
         chatView = findViewById(R.id.chat_view);
-        chatView.setRightBubbleColor(ContextCompat.getColor(this, R.color.colorPrimaryDark));
-        chatView.setLeftBubbleColor(Color.WHITE);
-        chatView.setBackgroundColor(ContextCompat.getColor(this, R.color.colorAccent));
-        chatView.setSendButtonColor(ContextCompat.getColor(this, R.color.colorPrimary));
-        //chatView.setSendIcon(R.drawable.ic_action_send);
+        chatView.setRightBubbleColor(Color.parseColor("#459FB2"));
+        chatView.setLeftBubbleColor(Color.parseColor("#B25D7F"));
+        chatView.setBackgroundColor(Color.parseColor("#D4D4D4"));
+        chatView.setSendButtonColor(Color.parseColor("#021aee"));
+        //chatView.setSendIcon(R.drawable.user_icon);
         chatView.setRightMessageTextColor(Color.WHITE);
-        chatView.setLeftMessageTextColor(Color.BLACK);
+        chatView.setLeftMessageTextColor(Color.WHITE);
         chatView.setUsernameTextColor(Color.WHITE);
         chatView.setSendTimeTextColor(Color.WHITE);
         chatView.setDateSeparatorColor(Color.WHITE);
         chatView.setInputTextHint("new message...");
         chatView.setMessageMarginTop(5);
         chatView.setMessageMarginBottom(5);
+        chatView.setMessageFontSize(40);
         chatView.setOnClickSendButtonListener(this);
     }
 

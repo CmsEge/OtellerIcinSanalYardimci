@@ -118,12 +118,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
        //PendingIntent broadcast1=PendingIntent.getBroadcast(this,100,intent1,PendingIntent.FLAG_UPDATE_CURRENT);
        Calendar cal=Calendar.getInstance();
        Log.i("time1",cal.getTime().toString());
-       cal.set(cal.HOUR_OF_DAY,14);
-       cal.set(cal.MINUTE,05);
+       cal.set(cal.HOUR_OF_DAY,16);
+       cal.set(cal.MINUTE,52);
        //cal.set(cal.SECOND,0);
         Log.i("time2",cal.getTime().toString());
+        intent1.setAction("Breakfast");
        PendingIntent broadcast1=PendingIntent.getBroadcast(this,(int)cal.getTimeInMillis(),intent1,PendingIntent.FLAG_ONE_SHOT);
-       alarmManager1.set(alarmManager1.RTC_WAKEUP,cal.getTimeInMillis(),broadcast1);
+
+       alarmManager1.setInexactRepeating(alarmManager1.RTC_WAKEUP,cal.getTimeInMillis(),AlarmManager.INTERVAL_DAY,broadcast1);
       // Notification("Breakfast starts at "+list.get("Breakfast")+". Don't be late, we will be waiting for you :)",hour-1);
 
        AlarmManager alarmManager2=(AlarmManager)getSystemService(Context.ALARM_SERVICE);
@@ -132,10 +134,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
        Intent intent2=new Intent(this,AlarmReceiver.class).putExtra("msg","Lunch starts at "+list.get("Lunch")+".Don't be late, we will be waiting for you :)");
        //PendingIntent broadcast2=PendingIntent.getBroadcast(this,100,intent2,PendingIntent.FLAG_UPDATE_CURRENT);
        Calendar cal2=Calendar.getInstance();
-       cal2.set(cal2.HOUR_OF_DAY,14);
-       cal2.set(cal2.MINUTE,06);
-        PendingIntent broadcast2=PendingIntent.getBroadcast(this,(int)cal2.getTimeInMillis(),intent2,PendingIntent.FLAG_ONE_SHOT);
-       alarmManager2.set(alarmManager2.RTC_WAKEUP,cal2.getTimeInMillis(),broadcast2);
+       cal2.set(cal2.HOUR_OF_DAY,16);
+       cal2.set(cal2.MINUTE,53);
+       intent2.setAction("Lunch");
+       PendingIntent broadcast2=PendingIntent.getBroadcast(this,(int)cal2.getTimeInMillis(),intent2,PendingIntent.FLAG_ONE_SHOT);
+       alarmManager2.setInexactRepeating(alarmManager2.RTC_WAKEUP,cal2.getTimeInMillis(),AlarmManager.INTERVAL_DAY,broadcast2);
        //Notification("Lunch starts at "+list.get("Lunch")+". Don't be late, we will be waiting for you :)",hour2-1);
 
        AlarmManager alarmManager3=(AlarmManager)getSystemService(Context.ALARM_SERVICE);
@@ -144,9 +147,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
        Intent intent3=new Intent(this,AlarmReceiver.class).putExtra("msg","Dinner starts at "+list.get("Dinner")+".Don't be late, we will be waiting for you :)");
       // PendingIntent broadcast3=PendingIntent.getBroadcast(this,100,intent3,PendingIntent.FLAG_UPDATE_CURRENT);
        Calendar cal3=Calendar.getInstance();
-       cal3.set(cal3.HOUR_OF_DAY,hour-1);
+       cal3.set(cal3.HOUR_OF_DAY,16);
+       cal3.set(cal3.MINUTE,56);
+       intent3.setAction("Dinner");
        PendingIntent broadcast3=PendingIntent.getBroadcast(this,(int)cal3.getTimeInMillis(),intent3,PendingIntent.FLAG_ONE_SHOT);
-       alarmManager3.set(alarmManager3.RTC_WAKEUP,cal3.getTimeInMillis(),broadcast3);
+       alarmManager3.setInexactRepeating(alarmManager3.RTC_WAKEUP,cal3.getTimeInMillis(),AlarmManager.INTERVAL_DAY,broadcast3);
        //Notification("Dinner starts at "+list.get("Dinner")+". Don't be late, we will be waiting for you :)", hour3-1);
     }
 

@@ -240,4 +240,14 @@ public class Service {
         }
         return list2;
     }
+    public HashMap<String,String> getStartDateOfEvents(){
+        ArrayList<HashMap<String, String>> list=db.listAll("Event");
+        HashMap<String,String> list2= new HashMap<String,String>();
+        for(HashMap<String,String> i: list){
+
+            list2.put(i.get("eventName"),i.get("startTime"));
+
+        }
+        return list2;
+    }
 }

@@ -118,9 +118,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
        //PendingIntent broadcast1=PendingIntent.getBroadcast(this,100,intent1,PendingIntent.FLAG_UPDATE_CURRENT);
        Calendar cal=Calendar.getInstance();
        Log.i("time1",cal.getTime().toString());
-       cal.set(cal.HOUR_OF_DAY,16);
-       cal.set(cal.MINUTE,52);
-       //cal.set(cal.SECOND,0);
+       cal.set(cal.HOUR_OF_DAY,17);
+       cal.set(cal.MINUTE,9);
+       cal.set(cal.SECOND,0);
         Log.i("time2",cal.getTime().toString());
         intent1.setAction("Breakfast");
        PendingIntent broadcast1=PendingIntent.getBroadcast(this,(int)cal.getTimeInMillis(),intent1,PendingIntent.FLAG_ONE_SHOT);
@@ -134,8 +134,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
        Intent intent2=new Intent(this,AlarmReceiver.class).putExtra("msg","Lunch starts at "+list.get("Lunch")+".Don't be late, we will be waiting for you :)");
        //PendingIntent broadcast2=PendingIntent.getBroadcast(this,100,intent2,PendingIntent.FLAG_UPDATE_CURRENT);
        Calendar cal2=Calendar.getInstance();
-       cal2.set(cal2.HOUR_OF_DAY,16);
-       cal2.set(cal2.MINUTE,53);
+       cal2.set(cal2.HOUR_OF_DAY,17);
+       cal2.set(cal2.MINUTE,10);
+       cal2.set(cal2.SECOND,0);
        intent2.setAction("Lunch");
        PendingIntent broadcast2=PendingIntent.getBroadcast(this,(int)cal2.getTimeInMillis(),intent2,PendingIntent.FLAG_ONE_SHOT);
        alarmManager2.setInexactRepeating(alarmManager2.RTC_WAKEUP,cal2.getTimeInMillis(),AlarmManager.INTERVAL_DAY,broadcast2);
@@ -147,8 +148,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
        Intent intent3=new Intent(this,AlarmReceiver.class).putExtra("msg","Dinner starts at "+list.get("Dinner")+".Don't be late, we will be waiting for you :)");
       // PendingIntent broadcast3=PendingIntent.getBroadcast(this,100,intent3,PendingIntent.FLAG_UPDATE_CURRENT);
        Calendar cal3=Calendar.getInstance();
-       cal3.set(cal3.HOUR_OF_DAY,16);
-       cal3.set(cal3.MINUTE,56);
+       cal3.set(cal3.HOUR_OF_DAY,17);
+       cal3.set(cal3.MINUTE,11);
+       cal3.set(cal3.SECOND,0);
        intent3.setAction("Dinner");
        PendingIntent broadcast3=PendingIntent.getBroadcast(this,(int)cal3.getTimeInMillis(),intent3,PendingIntent.FLAG_ONE_SHOT);
        alarmManager3.setInexactRepeating(alarmManager3.RTC_WAKEUP,cal3.getTimeInMillis(),AlarmManager.INTERVAL_DAY,broadcast3);

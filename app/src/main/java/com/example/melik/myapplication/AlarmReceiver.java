@@ -86,7 +86,7 @@ public class AlarmReceiver extends BroadcastReceiver{
                         .setContentTitle("Oteller İçin Sanal Yardımcı")
                         .setContentIntent(pendingIntent).build();
 
-                notificationManager.notify(0, notificationCompatBuilder.build());
+                notificationManager.notify(1, notificationCompatBuilder.build());
 
             }else if(intent.getAction().equals("Dinner")){
                 NotificationChannel Dinnerchannel = new NotificationChannel(
@@ -101,7 +101,7 @@ public class AlarmReceiver extends BroadcastReceiver{
                         .setContentTitle("Oteller İçin Sanal Yardımcı")
                         .setContentIntent(pendingIntent).build();
 
-                notificationManager.notify(0, notificationCompatBuilder.build());
+                notificationManager.notify(2, notificationCompatBuilder.build());
             }
         }
 

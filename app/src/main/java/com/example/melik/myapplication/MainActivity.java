@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
         database = new Database(getApplicationContext());
         service = new Service(database); //her işimizi bu servis arkadaşına yaptırıcaz tüm metotları
-        //service.InsertTables();//syncdata fonksiyonunda sqllite çalıştırıyoruz bu çalıştırma için context'e ihtiyaç duyuyor o yüzden parametre olarak gönderiyoruz.
+        service.InsertTables();//syncdata fonksiyonunda sqllite çalıştırıyoruz bu çalıştırma için context'e ihtiyaç duyuyor o yüzden parametre olarak gönderiyoruz.
         Log.i("deneme",service.listAll("Customer").toString());
         Log.i("alacarte",database.allAlacarteNames().toString());
         Log.i("alacarte",service.listAll("Alacarte").toString());
@@ -233,8 +233,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     if(action.equals("Registration-number")){
                         AIOutputContext outputContext=response.getResult().getContext("registration");//contextin ismine bak
                         Map<String, JsonElement > list=outputContext.getParameters();
-                        service.insertCustomer(list.get("given-name").getAsString(),list.get("given-surname").getAsString(),list.get("number").getAsString(),list.get("phone-number").getAsString());
-                        myAccount.setId(service.getCustomerID(list.get("given-name").getAsString(),list.get("given-surname").getAsString(),list.get("number").getAsString(),list.get("phone-number").getAsString()));
+                        String name=list.get("given-name").getAsString();
+                        String surname=list.get("given-surname").getAsString();
+                        String room=list.get("number").getAsString();
+                        String phone=list.get("phone-number").getAsString();
+                        service.insertCustomer(name,surname,room,phone);
+                        Log.i("customerNew",service.listAll("Customer").toString());
+                        myAccount.setId(service.getCustomerID(name,surname,room,phone));
                         Receive(speech);
                     }else if(action.equals("Registration") || action.equals("Registration-name") || action.equals("Registration-surname") || action.equals("Registration-room") ){
                         Receive(speech);

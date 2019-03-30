@@ -21,7 +21,7 @@ public class Database  extends SQLiteOpenHelper {
     private static final String TABLE_CUSTOMER = "Customer";//burası normal değişken tanımlama gibi
     private static String CUSTOMER_ID = "customerId";
     private static String CUSTOMER_NAME = "cName";
-    private static String CUSTOMER_SURNAME="cSurName";
+    private static String CUSTOMER_SURNAME = "sName";
     private static String ROOM_NO = "roomNo";
     private static String PHONE_NO = "phoneNo";
 
@@ -102,7 +102,7 @@ public class Database  extends SQLiteOpenHelper {
         String CREATE_TABLE_CUSTOMER = "CREATE TABLE " + TABLE_CUSTOMER + "("
                 + CUSTOMER_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
                 + CUSTOMER_NAME + " TEXT,"
-                + CUSTOMER_SURNAME +"TEXT,"
+                + CUSTOMER_SURNAME + " TEXT,"
                 + ROOM_NO + " TEXT,"
                 + PHONE_NO + " TEXT" + ")";
         db.execSQL(CREATE_TABLE_CUSTOMER);//Daha sonra bu stringi db'ye gönderdiğimizde tabloyu oluşturuyor.
@@ -191,15 +191,16 @@ public class Database  extends SQLiteOpenHelper {
     /**
      * Müşteri eklemesi yapacağımızda bu fonksiyonu kullanacağız.
      * @param cName customer's first name
+     * @param sname customer's last nama
      * @param roomNo customer's room number
      * @param phoneNo customer's phone number
      * @return nothing
      */
-    public void customerInsert( String cName, String sname,String roomNo, String phoneNo) {
+    public void customerInsert( String cName, String sName ,String roomNo, String phoneNo) {
         SQLiteDatabase db = this.getWritableDatabase();//yine yazılabilir olarak açıyoruz db'yi.
         ContentValues values = new ContentValues();//ContentValues tipinde bir değişken oluşturuyoruz.Isme takılmayın mantık anlaşılıyor içine atıyoruz gönderdiğimiz parametreleri.
         values.put(CUSTOMER_NAME, cName);
-        values.put(CUSTOMER_SURNAME,sname);
+        values.put(CUSTOMER_SURNAME, sName);
         values.put(ROOM_NO, roomNo);
         values.put(PHONE_NO, phoneNo);
 
@@ -254,7 +255,7 @@ public class Database  extends SQLiteOpenHelper {
         return customer;//Hashmap tipindeki customer geri döndürülüyor.
     }
     public int getCustomerID(String name,String surname,String roomNo,String phoneNo){
-        String selectQuery = "SELECT customerId FROM " + TABLE_CUSTOMER+ " WHERE cName="+"'"+name+"'"+" AND cSurName="+"'"+surname+"'"+" AND roomNo="+"'"+roomNo+"'"+" AND phoneNo="+"'"+phoneNo+"'";//Gönderdiğimiz cId ile bir query oluşturuyoruz.
+        String selectQuery = "SELECT customerId FROM " + TABLE_CUSTOMER+ " WHERE "+ CUSTOMER_NAME+"= '"+name+"'"+" AND "+ CUSTOMER_SURNAME+"= '"+surname+"'"+" AND "+ ROOM_NO+ "='"+roomNo+"'"+" AND "+ PHONE_NO + "= '"+phoneNo+ "'";//Gönderdiğimiz cId ile bir query oluşturuyoruz.
         SQLiteDatabase db = this.getReadableDatabase();//Bir değişiklik yapmayacağımız için sadece okunabilir açıyoruz db'yi.
         Cursor cursor = db.rawQuery(selectQuery, null);//Bir cursor ayarlıyor yine algoritmadaki cursor mantığıyla altta bunu en başa çekeceğiz.
         cursor.moveToFirst();//cursor en başa alındı

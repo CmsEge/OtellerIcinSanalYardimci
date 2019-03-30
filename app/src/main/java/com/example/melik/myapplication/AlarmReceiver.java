@@ -65,7 +65,7 @@ public class AlarmReceiver extends BroadcastReceiver{
                 notificationManager.createNotificationChannel(Breakfastchannel);
                 NotificationCompat.Builder notificationCompatBuilder=new NotificationCompat.Builder(context, NOTIFICATION_BREAKFAST_ID);
                 notificationCompatBuilder.setContentText(intent.getStringExtra("msg"))
-                        .setSmallIcon(R.mipmap.ic_launcher)
+                        .setSmallIcon(R.drawable.ic_breakfast)
                         .setContentTitle("Oteller İçin Sanal Yardımcı")
                         .setContentIntent(pendingIntent).build();
 
@@ -82,7 +82,7 @@ public class AlarmReceiver extends BroadcastReceiver{
                 notificationManager.createNotificationChannel(Lunchchannel);
                 NotificationCompat.Builder notificationCompatBuilder=new NotificationCompat.Builder(context, NOTIFICATION_LUNCH_ID);
                 notificationCompatBuilder.setContentText(intent.getStringExtra("msg"))
-                        .setSmallIcon(R.mipmap.ic_launcher)
+                        .setSmallIcon(R.drawable.ic_lunch)
                         .setContentTitle("Oteller İçin Sanal Yardımcı")
                         .setContentIntent(pendingIntent).build();
 
@@ -97,7 +97,7 @@ public class AlarmReceiver extends BroadcastReceiver{
                 notificationManager.createNotificationChannel(Dinnerchannel);
                 NotificationCompat.Builder notificationCompatBuilder=new NotificationCompat.Builder(context, NOTIFICATION_DINNER_ID);
                 notificationCompatBuilder.setContentText(intent.getStringExtra("msg"))
-                        .setSmallIcon(R.mipmap.ic_launcher)
+                        .setSmallIcon(R.drawable.ic_dinner)
                         .setContentTitle("Oteller İçin Sanal Yardımcı")
                         .setContentIntent(pendingIntent).build();
 

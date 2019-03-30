@@ -67,8 +67,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Service service;
     private Database database;
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -109,24 +107,29 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         chatView.setInputText("");
     }
 
-    public void Notification(HashMap<String,String> list, String type, String msg, int h, int m){
+    public void Notification(String getType, String type, String msg, int h, int m){
         AlarmManager alarmManager=(AlarmManager)getSystemService(Context.ALARM_SERVICE);
-        String[] tokens=list.get(type).split(":");
+        String[] tokens=getType.split(":");
         int hour=Integer.parseInt(tokens[0]);
         Intent intent=new Intent(this,AlarmReceiver.class).putExtra("msg",msg);
+        intent.setAction(type);
         Calendar cal=Calendar.getInstance();
         cal.set(cal.HOUR_OF_DAY,hour-1);
         cal.set(cal.MINUTE,Integer.parseInt(tokens[1]));
-        intent.setAction(type);
-        PendingIntent broadcast=PendingIntent.getBroadcast(this,(int)cal.getTimeInMillis(),intent,PendingIntent.FLAG_ONE_SHOT);
-        alarmManager.setInexactRepeating(alarmManager.RTC_WAKEUP,cal.getTimeInMillis(),AlarmManager.INTERVAL_DAY,broadcast);
+        PendingIntent broadcast=PendingIntent.getBroadcast(this,(int)cal.getTimeInMillis(),intent,PendingIntent.FLAG_UPDATE_CURRENT);
+        alarmManager.setInexactRepeating(alarmManager.RTC_WAKEUP,cal.getTimeInMillis(), AlarmManager.INTERVAL_DAY ,broadcast);
+
     }
 
     public void NotificationHandle(){
        HashMap<String,String>list=service.getStartDateOfMeal();
-       Notification(list,"Breakfast","Breakfast starts at "+list.get("Breakfast")+".Don't be late, we will be waiting for you :)", 17, 25);
-       Notification(list,"Lunch","Lunch starts at "+list.get("Lunch")+".Don't be late, we will be waiting for you :)",17,26);
-       Notification(list,"Dinner","Dinner starts at "+list.get("Dinner")+".Don't be late, we will be waiting for you :)",17,27);
+       HashMap<String,String> list2=service.getStartDateOfEvents();
+       Notification(list.get("Breakfast"),"Breakfast","Breakfast starts at "+list.get("Breakfast")+".Don't be late, we will be waiting for you :)", 17, 25);
+       Notification(list.get("Lunch"),"Lunch","Lunch starts at "+list.get("Lunch")+".Don't be late, we will be waiting for you :)",17,26);
+       Notification(list.get("Dinner"),"Dinner","Dinner starts at "+list.get("Dinner")+".Don't be late, we will be waiting for you :)",17,27);
+       for (Map.Entry<String, String> pair: list2.entrySet()) {
+           Notification(pair.getValue(),"Event",pair.getKey()+" starts at "+pair.getValue()+". I wish you will be there..",18,18);
+       }
     }
 
     /*

@@ -108,53 +108,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //Reset edit text
         chatView.setInputText("");
     }
+
+    public void Notification(HashMap<String,String> list, String type, String msg, int h, int m){
+        AlarmManager alarmManager=(AlarmManager)getSystemService(Context.ALARM_SERVICE);
+        String[] tokens=list.get(type).split(":");
+        int hour=Integer.parseInt(tokens[0]);
+        Intent intent=new Intent(this,AlarmReceiver.class).putExtra("msg",msg);
+        Calendar cal=Calendar.getInstance();
+        cal.set(cal.HOUR_OF_DAY,hour-1);
+        cal.set(cal.MINUTE,Integer.parseInt(tokens[1]));
+        intent.setAction(type);
+        PendingIntent broadcast=PendingIntent.getBroadcast(this,(int)cal.getTimeInMillis(),intent,PendingIntent.FLAG_ONE_SHOT);
+        alarmManager.setInexactRepeating(alarmManager.RTC_WAKEUP,cal.getTimeInMillis(),AlarmManager.INTERVAL_DAY,broadcast);
+    }
+
     public void NotificationHandle(){
-       AlarmManager alarmManager1=(AlarmManager)getSystemService(Context.ALARM_SERVICE);
        HashMap<String,String>list=service.getStartDateOfMeal();
-       String breakfastTime=list.get("Breakfast");
-       String[] tokens=breakfastTime.split(":");
-       int hour=Integer.parseInt(tokens[0]);
-       Intent intent1=new Intent(this,AlarmReceiver.class).putExtra("msg","Breakfast starts at "+list.get("Breakfast")+".Don't be late, we will be waiting for you :)");
-       //PendingIntent broadcast1=PendingIntent.getBroadcast(this,100,intent1,PendingIntent.FLAG_UPDATE_CURRENT);
-       Calendar cal=Calendar.getInstance();
-       Log.i("time1",cal.getTime().toString());
-       cal.set(cal.HOUR_OF_DAY,17);
-       cal.set(cal.MINUTE,9);
-       cal.set(cal.SECOND,0);
-        Log.i("time2",cal.getTime().toString());
-        intent1.setAction("Breakfast");
-       PendingIntent broadcast1=PendingIntent.getBroadcast(this,(int)cal.getTimeInMillis(),intent1,PendingIntent.FLAG_ONE_SHOT);
-
-       alarmManager1.setInexactRepeating(alarmManager1.RTC_WAKEUP,cal.getTimeInMillis(),AlarmManager.INTERVAL_DAY,broadcast1);
-      // Notification("Breakfast starts at "+list.get("Breakfast")+". Don't be late, we will be waiting for you :)",hour-1);
-
-       AlarmManager alarmManager2=(AlarmManager)getSystemService(Context.ALARM_SERVICE);
-       tokens=list.get("Lunch").split(":");
-       int hour2=Integer.parseInt(tokens[0]);
-       Intent intent2=new Intent(this,AlarmReceiver.class).putExtra("msg","Lunch starts at "+list.get("Lunch")+".Don't be late, we will be waiting for you :)");
-       //PendingIntent broadcast2=PendingIntent.getBroadcast(this,100,intent2,PendingIntent.FLAG_UPDATE_CURRENT);
-       Calendar cal2=Calendar.getInstance();
-       cal2.set(cal2.HOUR_OF_DAY,17);
-       cal2.set(cal2.MINUTE,10);
-       cal2.set(cal2.SECOND,0);
-       intent2.setAction("Lunch");
-       PendingIntent broadcast2=PendingIntent.getBroadcast(this,(int)cal2.getTimeInMillis(),intent2,PendingIntent.FLAG_ONE_SHOT);
-       alarmManager2.setInexactRepeating(alarmManager2.RTC_WAKEUP,cal2.getTimeInMillis(),AlarmManager.INTERVAL_DAY,broadcast2);
-       //Notification("Lunch starts at "+list.get("Lunch")+". Don't be late, we will be waiting for you :)",hour2-1);
-
-       AlarmManager alarmManager3=(AlarmManager)getSystemService(Context.ALARM_SERVICE);
-       tokens=list.get("Dinner").split(":");
-       int hour3=Integer.parseInt(tokens[0]);
-       Intent intent3=new Intent(this,AlarmReceiver.class).putExtra("msg","Dinner starts at "+list.get("Dinner")+".Don't be late, we will be waiting for you :)");
-      // PendingIntent broadcast3=PendingIntent.getBroadcast(this,100,intent3,PendingIntent.FLAG_UPDATE_CURRENT);
-       Calendar cal3=Calendar.getInstance();
-       cal3.set(cal3.HOUR_OF_DAY,17);
-       cal3.set(cal3.MINUTE,11);
-       cal3.set(cal3.SECOND,0);
-       intent3.setAction("Dinner");
-       PendingIntent broadcast3=PendingIntent.getBroadcast(this,(int)cal3.getTimeInMillis(),intent3,PendingIntent.FLAG_ONE_SHOT);
-       alarmManager3.setInexactRepeating(alarmManager3.RTC_WAKEUP,cal3.getTimeInMillis(),AlarmManager.INTERVAL_DAY,broadcast3);
-       //Notification("Dinner starts at "+list.get("Dinner")+". Don't be late, we will be waiting for you :)", hour3-1);
+       Notification(list,"Breakfast","Breakfast starts at "+list.get("Breakfast")+".Don't be late, we will be waiting for you :)", 17, 25);
+       Notification(list,"Lunch","Lunch starts at "+list.get("Lunch")+".Don't be late, we will be waiting for you :)",17,26);
+       Notification(list,"Dinner","Dinner starts at "+list.get("Dinner")+".Don't be late, we will be waiting for you :)",17,27);
     }
 
     /*

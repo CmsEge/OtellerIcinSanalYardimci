@@ -228,98 +228,113 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
                 String speech=response.getResult().getFulfillment().getSpeech();
                 String action=response.getResult().getAction().toString();
-                switch(action){
-                    case "dinner-reservation":
-                    {
-                        speech=service.DinnerReservation(speech);
+                if(myAccount.getId()==0){
+                    if(action.equals("Registration-number")){
+                        AIOutputContext outputContext=response.getResult().getContext("registration");//contextin ismine bak
+                        Map<StringiJsonElement> list=outputContext.getParameters();
+                        service.insertCustomer(list.get("given-name").getAsString(),list.get("given-surname").getAsString(),list.get("number").getAsString(),list.get("phone-number").getAsString());
+                        myAccount.setId(service.getCustomerID(list.get("given-name").getAsString(),list.get("given-surname").getAsString(),list.get("number").getAsString(),list.get("phone-number").getAsString());
                         Receive(speech);
-                        break;
-                    }
-                    case "Dinner-Reservation.Dinner-Reservation-custom": {
-                        //final AIOutputContext outputContext=response.getResult().getContext("projects/cmsbot-48dcf/agent/sessions/0176a748-a5bd-d3e9-16ac-34a081556910/contexts/dinner-reservation");
-                        AIOutputContext outputContext = response.getResult().getContext("dinner-reservation");
-                        Map<String, JsonElement> list = outputContext.getParameters();
-                        service.getReservationInfo(Integer.parseInt(myAccount.getId()),list.get("Restaurant-Type").getAsString(),list.get("date").getAsString());
+                    }else if(action.equals("Registration") || action.equals("Registration-name") || action.equals("Registration-surname") ||action.equals("Registration-room") ){
                         Receive(speech);
-                        break;
+                    }else{
+                        Receive("Please first register to system. You can say 'Register me.'");
                     }
-                    case "Hotel-Activity": {
-                        speech=service.EventInfo(speech);
-                        Receive(speech);
-                        break;
-                    }
-                    case "hotel-activity-notification": {
-                        service.insertEventNotification(Integer.parseInt(response.getResult().getResolvedQuery()),Integer.parseInt(myAccount.getId()));
-                        Receive(speech);
-                        break;
-                    }
-                    case "order":{
-                        speech=service.OrderInfo(speech);
-                        Receive(speech);
-                        break;
-                    }
-                    case "order-response":{
-                        service.insertOrderRequest(Integer.parseInt(myAccount.getId()),Integer.parseInt(response.getResult().getResolvedQuery()));
-                        service.insertEventNotification(Integer.parseInt(response.getResult().getResolvedQuery()),Integer.parseInt(myAccount.getId()));
-                        Receive(speech);
-                        break;
-                    }
-                    case "All-meals": {
-                        speech=service.MealInfo(speech);
-                        Receive(speech);
-                        break;
-                    }
-                    case "breakfast-time": {
-                        speech=service.mainMealsInfo("Breakfast",speech);
-                        Receive(speech);
-                        break;
-                    }
-                    case "Lunch-Time":{
-                        speech=service.mainMealsInfo("Lunch",speech);
-                        Receive(speech);
-                        break;
-                    }
-                    case "dinner-time":{
-                        speech=service.mainMealsInfo("Dinner",speech);
-                        Receive(speech);
-                        break;
-                    }
-                    case "Do-not-disturb":{
-                        service.insertRoomStatus(Integer.parseInt(myAccount.getId()),1,0,"");//disturb==1 rahatsız etmeyin demek
-                        Receive(speech);
-                        break;
-                    }
-                    case "Cleaning":{
-                        service.insertRoomStatus(Integer.parseInt(myAccount.getId()),0,1,"");
-                        Receive(speech);
-                        break;
-                    }
-                    case "set-alarm":{
+                }else if(myAccount.getId()!=0){
+                    switch(action){
+                        case "dinner-reservation":
+                        {
+                            speech=service.DinnerReservation(speech);
+                            Receive(speech);
+                            break;
+                        }
+                        case "Dinner-Reservation.Dinner-Reservation-custom": {
+                            //final AIOutputContext outputContext=response.getResult().getContext("projects/cmsbot-48dcf/agent/sessions/0176a748-a5bd-d3e9-16ac-34a081556910/contexts/dinner-reservation");
+                            AIOutputContext outputContext = response.getResult().getContext("dinner-reservation");
+                            Map<String, JsonElement> list = outputContext.getParameters();
+                            service.getReservationInfo(Integer.parseInt(myAccount.getId()),list.get("Restaurant-Type").getAsString(),list.get("date").getAsString());
+                            Receive(speech);
+                            break;
+                        }
+                        case "Hotel-Activity": {
+                            speech=service.EventInfo(speech);
+                            Receive(speech);
+                            break;
+                        }
+                        case "hotel-activity-notification": {
+                            service.insertEventNotification(Integer.parseInt(response.getResult().getResolvedQuery()),Integer.parseInt(myAccount.getId()));
+                            Receive(speech);
+                            break;
+                        }
+                        case "order":{
+                            speech=service.OrderInfo(speech);
+                            Receive(speech);
+                            break;
+                        }
+                        case "order-response":{
+                            service.insertOrderRequest(Integer.parseInt(myAccount.getId()),Integer.parseInt(response.getResult().getResolvedQuery()));
+                            service.insertEventNotification(Integer.parseInt(response.getResult().getResolvedQuery()),Integer.parseInt(myAccount.getId()));
+                            Receive(speech);
+                            break;
+                        }
+                        case "All-meals": {
+                            speech=service.MealInfo(speech);
+                            Receive(speech);
+                            break;
+                        }
+                        case "breakfast-time": {
+                            speech=service.mainMealsInfo("Breakfast",speech);
+                            Receive(speech);
+                            break;
+                        }
+                        case "Lunch-Time":{
+                            speech=service.mainMealsInfo("Lunch",speech);
+                            Receive(speech);
+                            break;
+                        }
+                        case "dinner-time":{
+                            speech=service.mainMealsInfo("Dinner",speech);
+                            Receive(speech);
+                            break;
+                        }
+                        case "Do-not-disturb":{
+                            service.insertRoomStatus(Integer.parseInt(myAccount.getId()),1,0,"");//disturb==1 rahatsız etmeyin demek
+                            Receive(speech);
+                            break;
+                        }
+                        case "Cleaning":{
+                            service.insertRoomStatus(Integer.parseInt(myAccount.getId()),0,1,"");
+                            Receive(speech);
+                            break;
+                        }
+                        case "set-alarm":{
 
-                        service.insertRoomStatus(Integer.parseInt(myAccount.getId()),0,0,params.get("time").getAsString());
-                        Log.i("timeeeeeee ,",params.get("time").getAsString());
-                        Receive(speech);
-                        break;
+                            service.insertRoomStatus(Integer.parseInt(myAccount.getId()),0,0,params.get("time").getAsString());
+                            Log.i("timeeeeeee ,",params.get("time").getAsString());
+                            Receive(speech);
+                            break;
+                        }
+                        case "event":{
+                            Intent intent = new Intent(MainActivity.this, PlaceMain.class);
+                            startActivity(intent);
+                            overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
+                            Receive(speech);
+                            break;
+                        }case "faq":{
+                            speech = service.FaqInfo(speech);
+                            Receive(speech);
+                            break;
+                        }case "faq-choice":{
+                            speech = service.FaqAnswer(response.getResult().getResolvedQuery());
+                            Receive(speech);
+                            break;
+                        }
+                        default:
+                            Receive(speech);
+                            break;
                     }
-                    case "event":{
-                        Intent intent = new Intent(MainActivity.this, PlaceMain.class);
-                        startActivity(intent);
-                        overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
-                        Receive(speech);
-                        break;
-                    }case "faq":{
-                        speech = service.FaqInfo(speech);
-                        Receive(speech);
-                        break;
-                    }case "faq-choice":{
-                        speech = service.FaqAnswer(response.getResult().getResolvedQuery());
-                        Receive(speech);
-                        break;
-                    }
-                    default:
-                        Receive(speech);
-                        break;
                 }
+
             }
         });
     }
@@ -341,7 +356,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void initChatView() {
-        int myId = 1;
+        int myId = 0;
         Bitmap icon = BitmapFactory.decodeResource(getResources(), R.drawable.robot_icon);
         Bitmap userIcon = BitmapFactory.decodeResource(getResources(), R.drawable.user_icon);
         String myName = "Siz";

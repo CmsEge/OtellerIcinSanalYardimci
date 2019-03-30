@@ -43,9 +43,9 @@ public class Service {
     }
     public void InsertTables() {
 
-        db.customerInsert("0", "Saygun", "Askin", "107", "0506 870 74 03");
-        db.customerInsert("1","Melikenur","Gülas","108","0512 345 67 89");
-        db.customerInsert("2","Ceren Yaren","Erer","109","0512 345 67 90");
+        db.customerInsert("Saygun ","Aşkın" , "107", "0506 870 74 03");
+        db.customerInsert("Melikenur" ,"Gülas","108","0512 345 67 89");
+        db.customerInsert("Ceren Yaren" ,"Erer","109","0512 345 67 90");
 
         ArrayList<String> entree=new ArrayList<String>();
         entree.add("dsfsd");
@@ -217,6 +217,12 @@ public class Service {
         String time=dateFormat2.format(cal.getTime());
         db.roomStatusInsert(custID,date,time,disturb,clean,alarm);
 
+    }
+    public int getCustomerID(String name,String surname,String roomNo,String phoneNo){
+        return db.getCustomerID(name,surname,roomNo,phoneNo);
+    }
+    public void insertCustomer(String name,String surname,String roomNo,String phoneNo){
+        db.customerInsert(name,surname,roomNo,phoneNo);
     }
     public HashMap<String,String> getStartDateOfMeal(){
         ArrayList<HashMap<String, String>> list=db.listAll("Meals");

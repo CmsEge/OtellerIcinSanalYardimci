@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
         database = new Database(getApplicationContext());
         service = new Service(database); //her işimizi bu servis arkadaşına yaptırıcaz tüm metotları
-        service.InsertTables();//syncdata fonksiyonunda sqllite çalıştırıyoruz bu çalıştırma için context'e ihtiyaç duyuyor o yüzden parametre olarak gönderiyoruz.
+        //service.InsertTables();//syncdata fonksiyonunda sqllite çalıştırıyoruz bu çalıştırma için context'e ihtiyaç duyuyor o yüzden parametre olarak gönderiyoruz.
         Log.i("deneme",service.listAll("Customer").toString());
         Log.i("alacarte",database.allAlacarteNames().toString());
         Log.i("alacarte",service.listAll("Alacarte").toString());
@@ -239,6 +239,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         String phone=list.get("phone-number").getAsString();
                         service.insertCustomer(name,surname,room,phone);
                         Log.i("customerNew",service.listAll("Customer").toString());
+                        int id=service.getCustomerID(name,surname,room,phone);
                         myAccount.setId(service.getCustomerID(name,surname,room,phone));
                         Receive(speech);
                     }else if(action.equals("Registration") || action.equals("Registration-name") || action.equals("Registration-surname") || action.equals("Registration-room") ){
@@ -247,6 +248,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         Receive("Please first register to system. You can say 'Register me.'");
                     }
                 }else if(myAccount.getId()!="0"){
+                    Log.i("id",myAccount.getId());
                     switch(action){
                         case "dinner-reservation":
                         {

@@ -26,6 +26,7 @@ public class Database  extends SQLiteOpenHelper {
     private static String PHONE_NO = "phoneNo";
     private static String PASSWORD = "cusPassword";
     private static String EMAIL = "email";
+    private static String STATUS = "status";
 
     //Table of Alacarte
     private static final String TABLE_ALACARTE = "Alacarte";//burası normal değişken tanımlama gibi
@@ -108,7 +109,8 @@ public class Database  extends SQLiteOpenHelper {
                 + ROOM_NO + " TEXT,"
                 + PHONE_NO + " TEXT,"
                 + PASSWORD + " TEXT,"
-                + EMAIL + " TEXT" + ")";
+                + EMAIL + " TEXT,"
+                + STATUS + " INTEGER" + ")";
         db.execSQL(CREATE_TABLE_CUSTOMER);
 
         String CREATE_TABLE_ALACARTE = "CREATE TABLE " + TABLE_ALACARTE + "("
@@ -208,6 +210,7 @@ public class Database  extends SQLiteOpenHelper {
         values.put(PHONE_NO, phoneNo);
         values.put(PASSWORD, cusPassword);
         values.put(EMAIL, email);
+        values.put(STATUS, 0);
 
         db.insert(TABLE_CUSTOMER, null, values);//bu değerleri insert'e direk gönderiyoruz.
         db.close();
@@ -298,24 +301,28 @@ public class Database  extends SQLiteOpenHelper {
         db.close();
         return customerList;//Tüm müşterilerin listesini geri döndürüyor.
     }
-    /**
-     * Müşterinin herhangi bir verisinde değişiklik yapmak istediğimizde bu fonksiyonu kullanacağız.
-     * @param customerId The hotel's unique customer number(autoincrement for now)
-     * @param cName customer's first name
-     * @param roomNo customer's room number
-     * @param phoneNo customer's phone number
-     * @return nothing
-     */
-    public void customerUpdate(int customerId,  String cName, String surname, String roomNo, String phoneNo) {
+
+    public void customerUpdate(String email, int status) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(CUSTOMER_NAME, cName);
-        values.put(CUSTOMER_SURNAME,surname);
-        values.put(ROOM_NO, roomNo);
-        values.put(PHONE_NO, phoneNo);
+        values.put(STATUS, status);
 
-        db.update(TABLE_CUSTOMER, values, CUSTOMER_ID + " = ?",
-                new String[] { String.valueOf(customerId) });
+        db.update(TABLE_CUSTOMER, values, EMAIL + " = ?",
+                new String[] { String.valueOf(email) });
+    }
+
+    public void changeStatus(){
+        String selectQuery = "SELECT email FROM " + TABLE_CUSTOMER+ " WHERE "+STATUS+" = "+"'"+1
+                +"'";//Gönderdiğimiz cId ile bir query oluşturuyoruz.
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.rawQuery(selectQuery, null);//Bir cursor ayarlıyor yine algoritmadaki cursor mantığıyla altta bunu en başa çekeceğiz.
+        cursor.moveToFirst();//cursor en başa alındı
+        if(cursor.getCount() > 0){//cursor boş bir yeri göstermiyorsa içeri giriyor.
+            customerUpdate(cursor.getString(0),0);
+        }
+        cursor.close();//cursor kapatılıyor.
+        db.close();
     }
     /**
      * Tablonun Satır sayısını döndüren fonksiyon.
@@ -501,6 +508,23 @@ public class Database  extends SQLiteOpenHelper {
             cursor.close();
             return true;
         }
+    }
+
+    public ArrayList<String> getCustomerbyStatus(){
+        String selectQuery = "SELECT customerId, cName FROM " + TABLE_CUSTOMER+ " WHERE "+STATUS+" = "+"'"+1
+                +"'";//Gönderdiğimiz cId ile bir query oluşturuyoruz.
+        SQLiteDatabase db = this.getReadableDatabase();
+        ArrayList<String> list= new ArrayList<String>();
+        Cursor cursor = db.rawQuery(selectQuery, null);//Bir cursor ayarlıyor yine algoritmadaki cursor mantığıyla altta bunu en başa çekeceğiz.
+        cursor.moveToFirst();//cursor en başa alındı
+
+        if(cursor.getCount() > 0){//cursor boş bir yeri göstermiyorsa içeri giriyor.
+            list.add(Integer.toString(cursor.getInt(0)));
+            list.add(cursor.getString(1));
+        }
+        cursor.close();//cursor kapatılıyor.
+        db.close();
+        return list;
     }
     /**
      * !!!!!!!!!!!!!!!!!!!!!!!!!

@@ -260,4 +260,17 @@ public class Service {
         return db.getCustomerPassword(email);
     }
     public boolean customerControl(String name, String surname, String email){return db.cusControl(name,surname,email); }
+
+    public void updateCustomer(String email, int status){
+        db.customerUpdate(email,status);
+    }
+
+    public void changeStatus(){
+        db.changeStatus();
+    }
+
+    public ArrayList<String> getCustomerbyStatus(){
+        ArrayList<String> list= db.getCustomerbyStatus();
+        return list;
+    }
 }

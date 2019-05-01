@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.content.Intent;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
@@ -45,6 +46,8 @@ public class SignIn extends AppCompatActivity {
         } else if (Patterns.EMAIL_ADDRESS.matcher(email.getText().toString()).matches()) {
             String password = service.getCustomerByEmail(email.getText().toString());
             if (password.equals(pass.getText().toString())) {
+                service.updateCustomer(email.getText().toString(),1);
+                Log.i("Customer", service.listAll("Customer").toString());
                 Intent intent = new Intent(SignIn.this, MainScreen.class);
                 startActivity(intent);
             } else {

@@ -9,22 +9,27 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ViewAnimator;
 
+import com.example.melik.eventbrite.Configuration;
+
 
 public class SignIn extends AppCompatActivity {
 
     private Button signUp;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.log_in);
-        signUp=findViewById(R.id.signUpButton);
+        signUp = findViewById(R.id.signUpButton);
     }
-    public void SignUp(View v){
-        Intent intent=new Intent(SignIn.this,SignUp.class);
+
+    public void SignUp(View v) {
+        Intent intent = new Intent(SignIn.this, SignUp.class);
         startActivity(intent);
     }
-    public void SignIn(View v){
-        Intent intent=new Intent(SignIn.this,MainScreen.class);
+
+    public void SignIn(View v) {
+        Intent intent = new Intent(SignIn.this, Configuration.class);
         startActivity(intent);
     }
 }

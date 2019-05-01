@@ -482,6 +482,26 @@ public class Database  extends SQLiteOpenHelper {
         return answer;
 
     }
+    public boolean cusControl(String name, String surname, String email){
+
+        String selectQuery = "SELECT customerId FROM " + TABLE_CUSTOMER+ " WHERE "+ CUSTOMER_NAME+" = "+"'"+name+"'"+
+                " AND "+CUSTOMER_SURNAME+" = "+"'"+surname+"'"+" " +
+                "AND "+EMAIL+" = "+"'"+email
+                +"'";
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        if(cursor.getCount()>0){
+            cursor.moveToFirst();
+            boolean answer = cursor.isNull(0);
+            db.close();
+            cursor.close();
+            return answer;
+        }else{
+            db.close();
+            cursor.close();
+            return true;
+        }
+    }
     /**
      * !!!!!!!!!!!!!!!!!!!!!!!!!
      * Tabloları silen fonksiyon.

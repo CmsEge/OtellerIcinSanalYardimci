@@ -33,6 +33,7 @@ public class SignUp  extends AppCompatActivity {
         service=new Service(database);
         //service.InsertTables();
         Log.i("list",service.getAllAlacarteNames().toString());
+        Log.i("customer", service.listAll("Customer").toString());
     }
     public void SignUp(View v){
         name = (EditText) findViewById(R.id.nameEdit);
@@ -45,10 +46,14 @@ public class SignUp  extends AppCompatActivity {
             Toast.makeText(getApplicationContext(),"Please, fill all the cell!",Toast.LENGTH_LONG).show();
         }else{
             if(Patterns.EMAIL_ADDRESS.matcher(email.getText().toString()).matches()){
-                service.insertCustomer(name.getText().toString(),surname.getText().toString(),roomNo.getText().toString(),phoneNo.getText().toString(),pass.getText().toString(),email.getText().toString());
-                Log.i("customer", service.listAll("Customer").toString());
-                Intent intent=new Intent(SignUp.this,SignIn.class);
-                startActivity(intent);
+                if(!service.customerControl(name.getText().toString(), surname.getText().toString(), email.getText().toString())){
+                    Toast.makeText(getApplicationContext(),"You have already registered!",Toast.LENGTH_LONG).show();
+                }else{
+                    service.insertCustomer(name.getText().toString(),surname.getText().toString(),roomNo.getText().toString(),phoneNo.getText().toString(),pass.getText().toString(),email.getText().toString());
+                    Log.i("customer", service.listAll("Customer").toString());
+                    Intent intent=new Intent(SignUp.this,SignIn.class);
+                    startActivity(intent);
+                }
             }else{
                 Toast.makeText(getApplicationContext(),"Please, fill right your email!",Toast.LENGTH_LONG).show();
             }

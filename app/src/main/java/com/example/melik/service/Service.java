@@ -259,4 +259,5 @@ public class Service {
     public String getCustomerByEmail(String email){
         return db.getCustomerPassword(email);
     }
+    public boolean customerControl(String name, String surname, String email){return db.cusControl(name,surname,email); }
 }

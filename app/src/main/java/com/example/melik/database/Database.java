@@ -24,6 +24,8 @@ public class Database  extends SQLiteOpenHelper {
     private static String CUSTOMER_SURNAME="sName";
     private static String ROOM_NO = "roomNo";
     private static String PHONE_NO = "phoneNo";
+    private static String PASSWORD = "cusPassword";
+    private static String EMAIL = "email";
 
     //Table of Alacarte
     private static final String TABLE_ALACARTE = "Alacarte";//burası normal değişken tanımlama gibi
@@ -104,8 +106,10 @@ public class Database  extends SQLiteOpenHelper {
                 + CUSTOMER_NAME + " TEXT,"
                 + CUSTOMER_SURNAME + " TEXT,"
                 + ROOM_NO + " TEXT,"
-                + PHONE_NO + " TEXT" + ")";
-        db.execSQL(CREATE_TABLE_CUSTOMER);//Daha sonra bu stringi db'ye gönderdiğimizde tabloyu oluşturuyor.
+                + PHONE_NO + " TEXT,"
+                + PASSWORD + " TEXT,"
+                + EMAIL + " TEXT" + ")";
+        db.execSQL(CREATE_TABLE_CUSTOMER);
 
         String CREATE_TABLE_ALACARTE = "CREATE TABLE " + TABLE_ALACARTE + "("
                 + ALACARTE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
@@ -195,13 +199,15 @@ public class Database  extends SQLiteOpenHelper {
      * @param phoneNo customer's phone number
      * @return nothing
      */
-    public void customerInsert( String cName, String sName,String roomNo, String phoneNo) {
+    public void customerInsert( String cName, String sName,String roomNo, String phoneNo, String cusPassword, String email) {
         SQLiteDatabase db = this.getWritableDatabase();//yine yazılabilir olarak açıyoruz db'yi.
         ContentValues values = new ContentValues();//ContentValues tipinde bir değişken oluşturuyoruz.Isme takılmayın mantık anlaşılıyor içine atıyoruz gönderdiğimiz parametreleri.
         values.put(CUSTOMER_NAME, cName);
         values.put(CUSTOMER_SURNAME, sName);
         values.put(ROOM_NO, roomNo);
         values.put(PHONE_NO, phoneNo);
+        values.put(PASSWORD, cusPassword);
+        values.put(EMAIL, email);
 
         db.insert(TABLE_CUSTOMER, null, values);//bu değerleri insert'e direk gönderiyoruz.
         db.close();
@@ -248,13 +254,18 @@ public class Database  extends SQLiteOpenHelper {
             customer.put(CUSTOMER_SURNAME,cursor.getString(3));
             customer.put(ROOM_NO, cursor.getString(4));
             customer.put(PHONE_NO, cursor.getString(5));
+            customer.put(PASSWORD, cursor.getString(6));
+            customer.put(EMAIL, cursor.getString(7));
         }
         cursor.close();//cursor kapatılıyor.
         db.close();
         return customer;//Hashmap tipindeki customer geri döndürülüyor.
     }
-    public int getCustomerID(String name,String surname,String roomNo,String phoneNo){
-        String selectQuery = "SELECT customerId FROM " + TABLE_CUSTOMER+ " WHERE "+ CUSTOMER_NAME+" = "+"'"+name+"'"+" AND "+CUSTOMER_SURNAME+" = "+"'"+surname+"'"+" AND  "+ROOM_NO+" = "+"'"+roomNo+"'"+" AND "+PHONE_NO+" = "+"'"+phoneNo+"'";//Gönderdiğimiz cId ile bir query oluşturuyoruz.
+    public int getCustomerID(String name,String surname,String roomNo,String phoneNo, String cusPassword, String email){
+        String selectQuery = "SELECT customerId FROM " + TABLE_CUSTOMER+ " WHERE "+ CUSTOMER_NAME+" = "+"'"+name+"'"+" AND "+CUSTOMER_SURNAME+" = "+"'"+surname+"'"+" " +
+                "AND  "+ROOM_NO+" = "+"'"+roomNo+"'"+" AND "+PHONE_NO+" = "+"'"+phoneNo+"'"+" " +
+                "AND "+PASSWORD+" = "+"'"+cusPassword+"'"+" AND "+EMAIL+" = "+"'"+email
+                +"'";//Gönderdiğimiz cId ile bir query oluşturuyoruz.
         SQLiteDatabase db = this.getReadableDatabase();//Bir değişiklik yapmayacağımız için sadece okunabilir açıyoruz db'yi.
         Cursor cursor = db.rawQuery(selectQuery, null);//Bir cursor ayarlıyor yine algoritmadaki cursor mantığıyla altta bunu en başa çekeceğiz.
         cursor.moveToFirst();//cursor en başa alındı
@@ -459,6 +470,17 @@ public class Database  extends SQLiteOpenHelper {
 
         db.insert(TABLE_ROOM_STATUS, null, values);//bu değerleri insert'e direk gönderiyoruz.
         db.close();
+    }
+    public String getCustomerPassword(String email){
+        String selectQuery = "SELECT cusPassword FROM " + TABLE_CUSTOMER+ " WHERE "+ EMAIL+" = "+"'"+email+"'";
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        cursor.moveToFirst();
+        String answer = cursor.getString(5);
+        db.close();
+        cursor.close();
+        return answer;
+
     }
     /**
      * !!!!!!!!!!!!!!!!!!!!!!!!!

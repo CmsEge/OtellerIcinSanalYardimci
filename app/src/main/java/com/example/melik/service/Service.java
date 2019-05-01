@@ -43,9 +43,9 @@ public class Service {
     }
     public void InsertTables() {
 
-        db.customerInsert("Saygun ","Aşkın" , "107", "0506 870 74 03");
-        db.customerInsert("Melikenur" ,"Gülas","108","0512 345 67 89");
-        db.customerInsert("Ceren Yaren" ,"Erer","109","0512 345 67 90");
+        db.customerInsert("Saygun ","Aşkın" , "107", "0506 870 74 03","1234","saygunaskın@gmail.com");
+        db.customerInsert("Melikenur" ,"Gülas","108","0512 345 67 89","1234","melikegulas@gmail.com");
+        db.customerInsert("Ceren Yaren" ,"Erer","109","0512 345 67 90","1234","c.yaren@gmail.com");
 
         ArrayList<String> entree=new ArrayList<String>();
         entree.add("dsfsd");
@@ -218,11 +218,11 @@ public class Service {
         db.roomStatusInsert(custID,date,time,disturb,clean,alarm);
 
     }
-    public int getCustomerID(String name,String surname,String roomNo,String phoneNo){
-        return db.getCustomerID(name,surname,roomNo,phoneNo);
+    public int getCustomerID(String name,String surname,String roomNo,String phoneNo,String cusPassword, String email){
+        return db.getCustomerID(name,surname,roomNo,phoneNo,cusPassword,email);
     }
-    public void insertCustomer(String name,String surname,String roomNo,String phoneNo){
-        db.customerInsert(name,surname,roomNo,phoneNo);
+    public void insertCustomer(String name,String surname,String roomNo,String phoneNo,String cusPassword, String email){
+        db.customerInsert(name,surname,roomNo,phoneNo,cusPassword,email);
     }
     public HashMap<String,String> getStartDateOfMeal(){
         ArrayList<HashMap<String, String>> list=db.listAll("Meals");
@@ -255,5 +255,8 @@ public class Service {
 
         }
         return list2;
+    }
+    public String getCustomerByEmail(String email){
+        return db.getCustomerPassword(email);
     }
 }

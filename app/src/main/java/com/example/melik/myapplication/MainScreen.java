@@ -15,7 +15,6 @@ public class MainScreen extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         shire=findViewById(R.id.shireButton);
-
     }
     public void ChatBot(View v){
         Intent intent=new Intent(MainScreen.this,MainActivity.class);

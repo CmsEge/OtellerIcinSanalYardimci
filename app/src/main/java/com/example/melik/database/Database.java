@@ -20,9 +20,8 @@ public class Database  extends SQLiteOpenHelper {
     //Table of Customer
     private static final String TABLE_CUSTOMER = "Customer";//burası normal değişken tanımlama gibi
     private static String CUSTOMER_ID = "customerId";
-    private static String ID = "id";
     private static String CUSTOMER_NAME = "cName";
-    private static String CUSTOMER_SURNAME = "cSurname";
+    private static String CUSTOMER_SURNAME="sName";
     private static String ROOM_NO = "roomNo";
     private static String PHONE_NO = "phoneNo";
 
@@ -102,7 +101,6 @@ public class Database  extends SQLiteOpenHelper {
         //burası normal sorgu kısmı bunu bir string ile oluşturuyoruz.
         String CREATE_TABLE_CUSTOMER = "CREATE TABLE " + TABLE_CUSTOMER + "("
                 + CUSTOMER_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
-                + ID + " TEXT,"
                 + CUSTOMER_NAME + " TEXT,"
                 + CUSTOMER_SURNAME + " TEXT,"
                 + ROOM_NO + " TEXT,"
@@ -192,19 +190,16 @@ public class Database  extends SQLiteOpenHelper {
     }
     /**
      * Müşteri eklemesi yapacağımızda bu fonksiyonu kullanacağız.
-     * @param id customer's identification number
      * @param cName customer's first name
-     * @param cSurname customer's last name
      * @param roomNo customer's room number
      * @param phoneNo customer's phone number
      * @return nothing
      */
-    public void customerInsert(String id, String cName, String cSurname, String roomNo, String phoneNo) {
+    public void customerInsert( String cName, String sName,String roomNo, String phoneNo) {
         SQLiteDatabase db = this.getWritableDatabase();//yine yazılabilir olarak açıyoruz db'yi.
         ContentValues values = new ContentValues();//ContentValues tipinde bir değişken oluşturuyoruz.Isme takılmayın mantık anlaşılıyor içine atıyoruz gönderdiğimiz parametreleri.
-        values.put(ID, id);
         values.put(CUSTOMER_NAME, cName);
-        values.put(CUSTOMER_SURNAME, cSurname);
+        values.put(CUSTOMER_SURNAME, sName);
         values.put(ROOM_NO, roomNo);
         values.put(PHONE_NO, phoneNo);
 
@@ -249,15 +244,26 @@ public class Database  extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery(selectQuery, null);//Bir cursor ayarlıyor yine algoritmadaki cursor mantığıyla altta bunu en başa çekeceğiz.
         cursor.moveToFirst();//cursor en başa alındı
         if(cursor.getCount() > 0){//cursor boş bir yeri göstermiyorsa içeri giriyor.
-            customer.put(ID, cursor.getString(1));
             customer.put(CUSTOMER_NAME, cursor.getString(2));
-            customer.put(CUSTOMER_SURNAME, cursor.getString(3));
+            customer.put(CUSTOMER_SURNAME,cursor.getString(3));
             customer.put(ROOM_NO, cursor.getString(4));
             customer.put(PHONE_NO, cursor.getString(5));
         }
         cursor.close();//cursor kapatılıyor.
         db.close();
         return customer;//Hashmap tipindeki customer geri döndürülüyor.
+    }
+    public int getCustomerID(String name,String surname,String roomNo,String phoneNo){
+        String selectQuery = "SELECT customerId FROM " + TABLE_CUSTOMER+ " WHERE "+ CUSTOMER_NAME+" = "+"'"+name+"'"+" AND "+CUSTOMER_SURNAME+" = "+"'"+surname+"'"+" AND  "+ROOM_NO+" = "+"'"+roomNo+"'"+" AND "+PHONE_NO+" = "+"'"+phoneNo+"'";//Gönderdiğimiz cId ile bir query oluşturuyoruz.
+        SQLiteDatabase db = this.getReadableDatabase();//Bir değişiklik yapmayacağımız için sadece okunabilir açıyoruz db'yi.
+        Cursor cursor = db.rawQuery(selectQuery, null);//Bir cursor ayarlıyor yine algoritmadaki cursor mantığıyla altta bunu en başa çekeceğiz.
+        cursor.moveToFirst();//cursor en başa alındı
+        if(cursor.getCount() > 0){//cursor boş bir yeri göstermiyorsa içeri giriyor.
+            return cursor.getInt(0);
+        }
+        cursor.close();//cursor kapatılıyor.
+        db.close();
+        return 0;
     }
     /**
      * Tüm customer tablomuzu görmek için bu fonksiyonu kullanacağız.
@@ -284,19 +290,16 @@ public class Database  extends SQLiteOpenHelper {
     /**
      * Müşterinin herhangi bir verisinde değişiklik yapmak istediğimizde bu fonksiyonu kullanacağız.
      * @param customerId The hotel's unique customer number(autoincrement for now)
-     * @param id customer's identification number
      * @param cName customer's first name
-     * @param cSurname customer's last name
      * @param roomNo customer's room number
      * @param phoneNo customer's phone number
      * @return nothing
      */
-    public void customerUpdate(int customerId, String id, String cName, String cSurname, String roomNo, String phoneNo) {
+    public void customerUpdate(int customerId,  String cName, String surname, String roomNo, String phoneNo) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(ID, id);
         values.put(CUSTOMER_NAME, cName);
-        values.put(CUSTOMER_SURNAME, cSurname);
+        values.put(CUSTOMER_SURNAME,surname);
         values.put(ROOM_NO, roomNo);
         values.put(PHONE_NO, phoneNo);
 

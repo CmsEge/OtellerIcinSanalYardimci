@@ -43,9 +43,9 @@ public class Service {
     }
     public void InsertTables() {
 
-        db.customerInsert("0", "Saygun", "Askin", "107", "0506 870 74 03");
-        db.customerInsert("1","Melikenur","Gülas","108","0512 345 67 89");
-        db.customerInsert("2","Ceren Yaren","Erer","109","0512 345 67 90");
+        db.customerInsert("Saygun ","Aşkın" , "107", "0506 870 74 03");
+        db.customerInsert("Melikenur" ,"Gülas","108","0512 345 67 89");
+        db.customerInsert("Ceren Yaren" ,"Erer","109","0512 345 67 90");
 
         ArrayList<String> entree=new ArrayList<String>();
         entree.add("dsfsd");
@@ -83,10 +83,25 @@ public class Service {
         db.mealInsert("Night Buffet","00:00","03:00");
 
 
-        db.faqInsert("Are pets accepted?","No, we do not accept pets.");
+        db.faqInsert("Are pets accepted?","Yes, we do accept pets. They are our best friends!");
         db.faqInsert("Do you have WIFI at the hotel?","Free wireless internet is available throughout the hotel and in all rooms.");
         db.faqInsert("What are the check-in and check-out times?","Check-in time is 14:00 and check-out time is 12:00.");
-
+        db.faqInsert("Is smoking free in the rooms?","Our hotel has both non-smoking and smoking free rooms. Please advise your room preference when booking.");
+        db.faqInsert("How can i come from the airport to the hotel?","You can use our free transfer service from the airport to our hotel.");
+        db.faqInsert("Do I have to pay if I cancel the reservation? ","You can cancel your reservation until 12:00 before a day, otherwise you have to pay the first day.");
+        db.faqInsert("Do I need to have my ID at check-in?","Yes. You must have an identity card, passport or driver's license at check-in.");
+        db.faqInsert("What are the must see places around Alanya?","Side (historical town) in 65 km, Perge (Roman historical heritage site) in 85 km, Aspendos (Roman amphitheatre) in 70 km, Manavgat Waterfall in 60 km.");
+        db.faqInsert("What is the distance between sea and the hotel?","Our hotel is located on the seafront.");
+        db.faqInsert("Can non-refundable or prepaid reservations be canceled?","No prepaid or non-refundable reservations may not be canceled or changed. \n" +
+                "In the event of a cancellation, change or the failure to use a reservation, \n" +
+                "the total fee or a designated part of it will not be refunded.");
+        db.faqInsert("Do the hotel accommodation charges have to be calculated in Turkish Lira?","No, our hotel accepts currencies such as Euro, USD, GBP, AUD and CHF.");
+        db.faqInsert("Is there a discount on cash payments?","Yes, there is a 5% discount.");
+        db.faqInsert("Which credit cards are honored at the hotel?","We accept Visa, Mastercard and American Express credit cards. You may handle your Visa and MasterCard credit card transactions in Euros or US dollars. \n" +
+                "Our hotel applies the daily foreign exchange rates announced by the Turkish Central Bank.");
+        db.faqInsert("Does the hotel have parking facilities?","Yes, you can park your car on the street in front of the hotel, free of charge.");
+        db.faqInsert("Is the free airport service available only on check-in dates at the hotel?","No, you can use the free airport transfer service on either your arrival day at the hotel or on your day of departure.");
+        db.faqInsert("Should I bring a hairdryer with me?","No, all of our rooms are equipped with hairdryers.");
     }
 
 
@@ -203,6 +218,12 @@ public class Service {
         db.roomStatusInsert(custID,date,time,disturb,clean,alarm);
 
     }
+    public int getCustomerID(String name,String surname,String roomNo,String phoneNo){
+        return db.getCustomerID(name,surname,roomNo,phoneNo);
+    }
+    public void insertCustomer(String name,String surname,String roomNo,String phoneNo){
+        db.customerInsert(name,surname,roomNo,phoneNo);
+    }
     public HashMap<String,String> getStartDateOfMeal(){
         ArrayList<HashMap<String, String>> list=db.listAll("Meals");
         HashMap<String,String> list2= new HashMap<String,String>();
@@ -222,6 +243,16 @@ public class Service {
                     break;
                 }
             }
+        }
+        return list2;
+    }
+    public HashMap<String,String> getStartDateOfEvents(){
+        ArrayList<HashMap<String, String>> list=db.listAll("Event");
+        HashMap<String,String> list2= new HashMap<String,String>();
+        for(HashMap<String,String> i: list){
+
+            list2.put(i.get("eventName"),i.get("startTime"));
+
         }
         return list2;
     }

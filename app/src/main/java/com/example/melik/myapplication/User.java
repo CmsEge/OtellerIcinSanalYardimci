@@ -24,6 +24,7 @@ public class User implements IChatUser {
         return this.id.toString();
     }
 
+    public void setId(Integer id){this.id=id;}
     @Nullable
     @Override
     public String getName() {

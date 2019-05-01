@@ -55,6 +55,7 @@ import android.content.Intent;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -74,20 +75,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         database = new Database(getApplicationContext());
         service = new Service(database); //her işimizi bu servis arkadaşına yaptırıcaz tüm metotları
         //service.InsertTables();//syncdata fonksiyonunda sqllite çalıştırıyoruz bu çalıştırma için context'e ihtiyaç duyuyor o yüzden parametre olarak gönderiyoruz.
-        Log.i("deneme",service.listAll("Customer").toString());
-        Log.i("alacarte",database.allAlacarteNames().toString());
-        Log.i("alacarte",service.listAll("Alacarte").toString());
-        Log.i("reservations",service.listAll("ReservationAla").toString());
-        Log.i("events",service.listAll("Event").toString());
-        Log.i("notifications",service.listAll("EventNotification").toString());
-        Log.i("orders: ",service.listAll("OrderTable").toString());
+        Log.i("deneme", service.listAll("Customer").toString());
+        Log.i("alacarte", database.allAlacarteNames().toString());
+        Log.i("alacarte", service.listAll("Alacarte").toString());
+        Log.i("reservations", service.listAll("ReservationAla").toString());
+        Log.i("events", service.listAll("Event").toString());
+        Log.i("notifications", service.listAll("EventNotification").toString());
+        Log.i("orders: ", service.listAll("OrderTable").toString());
         Log.i("orderReq", service.listAll("OrderRequest").toString());
-        Log.i("meals",service.listAll("Meals").toString());
+        Log.i("meals", service.listAll("Meals").toString());
         Log.i("roomStatus", service.listAll("RoomStatus").toString());
         initChatView();
         //Language, Dialogflow Client access token
         final LanguageConfig config = new LanguageConfig("en", "ecd717ee86524b2e977ca6e4483c7346");
         initService(config);
+        Receive("Hello "+ myAccount.getName());
         NotificationHandle();
     }
 
@@ -107,29 +109,29 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         chatView.setInputText("");
     }
 
-    public void Notification(String getType, String type, String msg, int h, int m){
-        AlarmManager alarmManager=(AlarmManager)getSystemService(Context.ALARM_SERVICE);
-        String[] tokens=getType.split(":");
-        int hour=Integer.parseInt(tokens[0]);
-        Intent intent=new Intent(this,AlarmReceiver.class).putExtra("msg",msg);
+    public void Notification(String getType, String type, String msg, int h, int m) {
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        String[] tokens = getType.split(":");
+        int hour = Integer.parseInt(tokens[0]);
+        Intent intent = new Intent(this, AlarmReceiver.class).putExtra("msg", msg);
         intent.setAction(type);
-        Calendar cal=Calendar.getInstance();
-        cal.set(cal.HOUR_OF_DAY,hour-1);
-        cal.set(cal.MINUTE,Integer.parseInt(tokens[1]));
-        PendingIntent broadcast=PendingIntent.getBroadcast(this,(int)cal.getTimeInMillis(),intent,PendingIntent.FLAG_UPDATE_CURRENT);
-        alarmManager.setInexactRepeating(alarmManager.RTC_WAKEUP,cal.getTimeInMillis(), AlarmManager.INTERVAL_DAY ,broadcast);
+        Calendar cal = Calendar.getInstance();
+        cal.set(cal.HOUR_OF_DAY, hour - 1);
+        cal.set(cal.MINUTE, Integer.parseInt(tokens[1]));
+        PendingIntent broadcast = PendingIntent.getBroadcast(this, (int) cal.getTimeInMillis(), intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        alarmManager.setInexactRepeating(alarmManager.RTC_WAKEUP, cal.getTimeInMillis(), AlarmManager.INTERVAL_DAY, broadcast);
 
     }
 
-    public void NotificationHandle(){
-       HashMap<String,String>list=service.getStartDateOfMeal();
-       HashMap<String,String> list2=service.getStartDateOfEvents();
-       Notification(list.get("Breakfast"),"Breakfast","Breakfast starts at "+list.get("Breakfast")+".Don't be late, we will be waiting for you :)", 17, 25);
-       Notification(list.get("Lunch"),"Lunch","Lunch starts at "+list.get("Lunch")+".Don't be late, we will be waiting for you :)",17,26);
-       Notification(list.get("Dinner"),"Dinner","Dinner starts at "+list.get("Dinner")+".Don't be late, we will be waiting for you :)",17,27);
-       for (Map.Entry<String, String> pair: list2.entrySet()) {
-           Notification(pair.getValue(),"Event",pair.getKey()+" starts at "+pair.getValue()+". I wish you will be there..",18,18);
-       }
+    public void NotificationHandle() {
+        HashMap<String, String> list = service.getStartDateOfMeal();
+        HashMap<String, String> list2 = service.getStartDateOfEvents();
+        Notification(list.get("Breakfast"), "Breakfast", "Breakfast starts at " + list.get("Breakfast") + ".Don't be late, we will be waiting for you :)", 17, 25);
+        Notification(list.get("Lunch"), "Lunch", "Lunch starts at " + list.get("Lunch") + ".Don't be late, we will be waiting for you :)", 17, 26);
+        Notification(list.get("Dinner"), "Dinner", "Dinner starts at " + list.get("Dinner") + ".Don't be late, we will be waiting for you :)", 17, 27);
+        for (Map.Entry<String, String> pair : list2.entrySet()) {
+            Notification(pair.getValue(), "Event", pair.getKey() + " starts at " + pair.getValue() + ". I wish you will be there..", 18, 18);
+        }
     }
 
     /*
@@ -159,11 +161,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             String event = params[1];
             String context = params[2];
 
-            if (!TextUtils.isEmpty(query)){
+            if (!TextUtils.isEmpty(query)) {
                 request.setQuery(query);
             }
 
-            if (!TextUtils.isEmpty(event)){
+            if (!TextUtils.isEmpty(event)) {
                 request.setEvent(new AIEvent(event));
             }
 
@@ -218,135 +220,140 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     Log.i(TAG, "Intent name: " + metadata.getIntentName());
                 }
 */
-                final HashMap<String, JsonElement> params=response.getResult().getParameters();
+                final HashMap<String, JsonElement> params = response.getResult().getParameters();
                 if (params != null && !params.isEmpty()) {
-                    Log.i("Action: ",response.getResult().getAction().toString());
+                    Log.i("Action: ", response.getResult().getAction().toString());
                     Log.i(TAG, "Parameters: ");
                     for (final Map.Entry<String, JsonElement> entry : params.entrySet()) {
                         Log.i(TAG, String.format("%s: %s",
                                 entry.getKey(), entry.getValue().toString()));
                     }
                 }
-                String speech=response.getResult().getFulfillment().getSpeech();
-                String action=response.getResult().getAction().toString();
-                    switch(action){
-                        case "dinner-reservation":
-                        {
-                            speech=service.DinnerReservation(speech);
-                            Receive(speech);
-                            break;
-                        }
-                        case "Dinner-Reservation.Dinner-Reservation-custom": {
-                            //final AIOutputContext outputContext=response.getResult().getContext("projects/cmsbot-48dcf/agent/sessions/0176a748-a5bd-d3e9-16ac-34a081556910/contexts/dinner-reservation");
-                            AIOutputContext outputContext = response.getResult().getContext("dinner-reservation");
-                            Map<String, JsonElement> list = outputContext.getParameters();
-                            service.getReservationInfo(Integer.parseInt(myAccount.getId()),list.get("Restaurant-Type").getAsString(),list.get("date").getAsString());
-                            Receive(speech);
-                            break;
-                        }
-                        case "Hotel-Activity": {
-                            speech=service.EventInfo(speech);
-                            Receive(speech);
-                            break;
-                        }
-                        case "hotel-activity-notification": {
-                            service.insertEventNotification(Integer.parseInt(response.getResult().getResolvedQuery()),Integer.parseInt(myAccount.getId()));
-                            Receive(speech);
-                            break;
-                        }
-                        case "order":{
-                            speech=service.OrderInfo(speech);
-                            Receive(speech);
-                            break;
-                        }
-                        case "order-response":{
-                            service.insertOrderRequest(Integer.parseInt(myAccount.getId()),Integer.parseInt(response.getResult().getResolvedQuery()));
-                            service.insertEventNotification(Integer.parseInt(response.getResult().getResolvedQuery()),Integer.parseInt(myAccount.getId()));
-                            Receive(speech);
-                            break;
-                        }
-                        case "All-meals": {
-                            speech=service.MealInfo(speech);
-                            Receive(speech);
-                            break;
-                        }
-                        case "breakfast-time": {
-                            speech=service.mainMealsInfo("Breakfast",speech);
-                            Receive(speech);
-                            break;
-                        }
-                        case "Lunch-Time":{
-                            speech=service.mainMealsInfo("Lunch",speech);
-                            Receive(speech);
-                            break;
-                        }
-                        case "dinner-time":{
-                            speech=service.mainMealsInfo("Dinner",speech);
-                            Receive(speech);
-                            break;
-                        }
-                        case "Do-not-disturb":{
-                            service.insertRoomStatus(Integer.parseInt(myAccount.getId()),1,0,"");//disturb==1 rahatsız etmeyin demek
-                            Receive(speech);
-                            break;
-                        }
-                        case "Cleaning":{
-                            service.insertRoomStatus(Integer.parseInt(myAccount.getId()),0,1,"");
-                            Receive(speech);
-                            break;
-                        }
-                        case "set-alarm":{
-
-                            service.insertRoomStatus(Integer.parseInt(myAccount.getId()),0,0,params.get("time").getAsString());
-                            Log.i("timeeeeeee ,",params.get("time").getAsString());
-                            Receive(speech);
-                            break;
-                        }
-                        case "event":{
-                            Intent intent = new Intent(MainActivity.this, PlaceMain.class);
-                            startActivity(intent);
-                            overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
-                            Receive(speech);
-                            break;
-                        }case "faq":{
-                            speech = service.FaqInfo(speech);
-                            Receive(speech);
-                            break;
-                        }case "faq-choice":{
-                            speech = service.FaqAnswer(response.getResult().getResolvedQuery());
-                            Receive(speech);
-                            break;
-                        }
-                        default:
-                            Receive(speech);
-                            break;
+                String speech = response.getResult().getFulfillment().getSpeech();
+                String action = response.getResult().getAction().toString();
+                switch (action) {
+                    case "dinner-reservation": {
+                        speech = service.DinnerReservation(speech);
+                        Receive(speech);
+                        break;
                     }
+                    case "Dinner-Reservation.Dinner-Reservation-custom": {
+                        //final AIOutputContext outputContext=response.getResult().getContext("projects/cmsbot-48dcf/agent/sessions/0176a748-a5bd-d3e9-16ac-34a081556910/contexts/dinner-reservation");
+                        AIOutputContext outputContext = response.getResult().getContext("dinner-reservation");
+                        Map<String, JsonElement> list = outputContext.getParameters();
+                        service.getReservationInfo(Integer.parseInt(myAccount.getId()), list.get("Restaurant-Type").getAsString(), list.get("date").getAsString());
+                        Receive(speech);
+                        break;
+                    }
+                    case "Hotel-Activity": {
+                        speech = service.EventInfo(speech);
+                        Receive(speech);
+                        break;
+                    }
+                    case "hotel-activity-notification": {
+                        service.insertEventNotification(Integer.parseInt(response.getResult().getResolvedQuery()), Integer.parseInt(myAccount.getId()));
+                        Receive(speech);
+                        break;
+                    }
+                    case "order": {
+                        speech = service.OrderInfo(speech);
+                        Receive(speech);
+                        break;
+                    }
+                    case "order-response": {
+                        service.insertOrderRequest(Integer.parseInt(myAccount.getId()), Integer.parseInt(response.getResult().getResolvedQuery()));
+                        service.insertEventNotification(Integer.parseInt(response.getResult().getResolvedQuery()), Integer.parseInt(myAccount.getId()));
+                        Receive(speech);
+                        break;
+                    }
+                    case "All-meals": {
+                        speech = service.MealInfo(speech);
+                        Receive(speech);
+                        break;
+                    }
+                    case "breakfast-time": {
+                        speech = service.mainMealsInfo("Breakfast", speech);
+                        Receive(speech);
+                        break;
+                    }
+                    case "Lunch-Time": {
+                        speech = service.mainMealsInfo("Lunch", speech);
+                        Receive(speech);
+                        break;
+                    }
+                    case "dinner-time": {
+                        speech = service.mainMealsInfo("Dinner", speech);
+                        Receive(speech);
+                        break;
+                    }
+                    case "Do-not-disturb": {
+                        service.insertRoomStatus(Integer.parseInt(myAccount.getId()), 1, 0, "");//disturb==1 rahatsız etmeyin demek
+                        Receive(speech);
+                        break;
+                    }
+                    case "Cleaning": {
+                        service.insertRoomStatus(Integer.parseInt(myAccount.getId()), 0, 1, "");
+                        Receive(speech);
+                        break;
+                    }
+                    case "set-alarm": {
+
+                        service.insertRoomStatus(Integer.parseInt(myAccount.getId()), 0, 0, params.get("time").getAsString());
+                        Log.i("timeeeeeee ,", params.get("time").getAsString());
+                        Receive(speech);
+                        break;
+                    }
+                    case "event": {
+                        Intent intent = new Intent(MainActivity.this, PlaceMain.class);
+                        startActivity(intent);
+                        overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
+                        Receive(speech);
+                        break;
+                    }
+                    case "faq": {
+                        speech = service.FaqInfo(speech);
+                        Receive(speech);
+                        break;
+                    }
+                    case "faq-choice": {
+                        speech = service.FaqAnswer(response.getResult().getResolvedQuery());
+                        Receive(speech);
+                        break;
+                    }
+                    default:
+                        Receive(speech);
+                        break;
+                }
             }
         });
     }
-    private void Receive(String speech){
-        final Message receivedMessage=new Message.Builder()
+
+    private void Receive(String speech) {
+        final Message receivedMessage = new Message.Builder()
                 .setUser(droidKaigiBot)
                 .setRightMessage(false)
                 .setMessageText(speech)
                 .build();
         chatView.receive(receivedMessage);
     }
+
     private void onError(final AIError error) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Log.e(TAG,error.toString());
+                Log.e(TAG, error.toString());
             }
         });
     }
 
     private void initChatView() {
+        ArrayList<String> customer = service.getCustomerbyStatus();
+
         int myId = 0;
         Bitmap icon = BitmapFactory.decodeResource(getResources(), R.drawable.robot_icon);
         Bitmap userIcon = BitmapFactory.decodeResource(getResources(), R.drawable.user_icon);
         String myName = "Siz";
-        myAccount = new User(myId, myName, userIcon);
+        myAccount = new User(Integer.parseInt(customer.get(0)), customer.get(1), userIcon);
 
         int botId = 2;
         String botName = "Shire";

@@ -198,28 +198,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                // Variables
                 gson.toJson(response);
-                /*final Status status = response.getStatus();
-                final Result result = response.getResult();
-                final String speech = result.getFulfillment().getSpeech();
-                final Metadata metadata = result.getMetadata();
-                final HashMap<String, JsonElement> params = result.getParameters();
-
-                // Logging
-                Log.d(TAG, "onResult");
-                Log.i(TAG, "Received success response");
-                Log.i(TAG, "Status code: " + status.getCode());
-                Log.i(TAG, "Status type: " + status.getErrorType());
-                Log.i(TAG, "Resolved query: " + result.getResolvedQuery());
-                Log.i(TAG, "Action: " + result.getAction());
-                Log.i(TAG, "Speech: " + speech);
-
-                if (metadata != null) {
-                    Log.i(TAG, "Intent id: " + metadata.getIntentId());
-                    Log.i(TAG, "Intent name: " + metadata.getIntentName());
-                }
-*/
                 final HashMap<String, JsonElement> params = response.getResult().getParameters();
                 if (params != null && !params.isEmpty()) {
                     Log.i("Action: ", response.getResult().getAction().toString());

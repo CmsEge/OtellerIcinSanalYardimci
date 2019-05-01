@@ -31,7 +31,6 @@ public class SignUp  extends AppCompatActivity {
         signUp=findViewById(R.id.signUpButton);
         database=new Database(getApplicationContext());
         service=new Service(database);
-        //service.InsertTables();
         Log.i("list",service.getAllAlacarteNames().toString());
         Log.i("customer", service.listAll("Customer").toString());
     }

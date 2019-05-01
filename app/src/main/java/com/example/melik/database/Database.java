@@ -482,11 +482,14 @@ public class Database  extends SQLiteOpenHelper {
         String selectQuery = "SELECT cusPassword FROM " + TABLE_CUSTOMER+ " WHERE "+ EMAIL+" = "+"'"+email+"'";
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
-        cursor.moveToFirst();
-        String answer = cursor.getString(0);
-        db.close();
-        cursor.close();
-        return answer;
+        if(cursor.getCount()>0){
+            cursor.moveToFirst();
+            String answer = cursor.getString(0);
+            db.close();
+            cursor.close();
+            return answer;
+        }
+        return null;
 
     }
     public boolean cusControl(String name, String surname, String email){

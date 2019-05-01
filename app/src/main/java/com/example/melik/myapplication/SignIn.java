@@ -45,6 +45,7 @@ public class SignIn extends AppCompatActivity {
         } else if (Patterns.EMAIL_ADDRESS.matcher(email.getText().toString()).matches()) {
             String password = service.getCustomerByEmail(email.getText().toString());
             if (password.equals(pass.getText().toString())) {
+
                 Intent intent = new Intent(SignIn.this, MainScreen.class);
                 startActivity(intent);
             } else {

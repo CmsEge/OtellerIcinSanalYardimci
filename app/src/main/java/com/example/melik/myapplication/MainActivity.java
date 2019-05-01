@@ -229,26 +229,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
                 String speech=response.getResult().getFulfillment().getSpeech();
                 String action=response.getResult().getAction().toString();
-                if(myAccount.getId().equals("0")){
-                    if(action.equals("Registration-number")){
-                        AIOutputContext outputContext=response.getResult().getContext("registration");//contextin ismine bak
-                        Map<String, JsonElement > list=outputContext.getParameters();
-                        String name=list.get("given-name").getAsString();
-                        String surname=list.get("given-surname").getAsString();
-                        String room=list.get("number").getAsString();
-                        String phone=list.get("phone-number").getAsString();
-                        service.insertCustomer(name,surname,room,phone);
-                        Log.i("customerNew",service.listAll("Customer").toString());
-                        int id=service.getCustomerID(name,surname,room,phone);
-                        myAccount.setId(service.getCustomerID(name,surname,room,phone));
-                        Receive(speech);
-                    }else if(action.equals("Registration") || action.equals("Registration-name") || action.equals("Registration-surname") || action.equals("Registration-room") ){
-                        Receive(speech);
-                    }else{
-                        Receive("Please first register to system. You can say 'Register me.'");
-                    }
-                }else if(myAccount.getId()!="0"){
-                    Log.i("id",myAccount.getId());
                     switch(action){
                         case "dinner-reservation":
                         {
@@ -341,8 +321,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             Receive(speech);
                             break;
                     }
-                }
-
             }
         });
     }

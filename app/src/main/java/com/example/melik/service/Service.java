@@ -43,7 +43,7 @@ public class Service {
     }
     public void InsertTables() {
 
-        db.customerInsert("Saygun ","Aşkın" , "107", "0506 870 74 03","1234","saygunaskın@gmail.com");
+        db.customerInsert("Saygun ","Aşkın" , "107", "0506 870 74 03","1234","saygunaskin@gmail.com");
         db.customerInsert("Melikenur" ,"Gülas","108","0512 345 67 89","1234","melikegulas@gmail.com");
         db.customerInsert("Ceren Yaren" ,"Erer","109","0512 345 67 90","1234","c.yaren@gmail.com");
 

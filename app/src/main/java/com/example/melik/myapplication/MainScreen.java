@@ -7,6 +7,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+
+import com.example.melik.eventbrite.Configuration;
+import com.example.melik.places.PlaceMain;
 import com.example.melik.service.Service;
 import com.example.melik.database.Database;
 
@@ -32,6 +35,14 @@ public class MainScreen extends AppCompatActivity {
         service.changeStatus();
         Log.i("customer", service.listAll("Customer").toString());
         Intent intent = new Intent(MainScreen.this, SignIn.class);
+        startActivity(intent);
+    }
+    public void Event(View v){
+        Intent intent=new Intent(MainScreen.this, Configuration.class);
+        startActivity(intent);
+    }
+    public void Places(View v){
+        Intent intent=new Intent(MainScreen.this, PlaceMain.class);
         startActivity(intent);
     }
 }

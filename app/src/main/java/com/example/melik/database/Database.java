@@ -476,7 +476,7 @@ public class Database  extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
         cursor.moveToFirst();
-        String answer = cursor.getString(5);
+        String answer = cursor.getString(0);
         db.close();
         cursor.close();
         return answer;

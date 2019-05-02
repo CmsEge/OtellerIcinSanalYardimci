@@ -121,31 +121,48 @@ public class Service {
         List<String> list=new ArrayList<String>();
         list=this.getAllAlacarteNames();
         String a="";
-        for(String i: list){
-            a+="\n"+i;
+        if(list.size()>0){
+            for(String i: list){
+                a+="\n"+i;
+            }
+        }else{
+            Log.i("EventInfo","Alacarte Tablosu boş");
         }
         speech=speech.replace("$RestaurantTypes",a);
         return speech;
     }
-    public void getReservationInfo(int cusID,String AlaName,String date){
+    public void setReservationInfo(int cusID,String AlaName,String date){
         List<String> list=new ArrayList<String>();
         list=this.getAllAlacarteNames();
         int alaID=0;
         int a=1;
-        for(String i: list){
-            if(i.equals(AlaName)){alaID=a;break;}else{a++;}
+        if(list.size()>0){
+            for(String i: list){
+                if(i.equals(AlaName)){
+                    alaID=a;
+                    this.reservationAlaInsert(date,cusID,alaID);
+                    break;
+                }else{a++;}
+            }
+        }else{
+            Log.i("EventInfo","Alacarte Tablosu boş");
         }
-        this.reservationAlaInsert(date,cusID,alaID);
     }
 
     public String EventInfo(String speech)
     {
         ArrayList<HashMap<String, String>> list=db.listAll("Event");
         String s="";
-        for(HashMap<String,String> i: list){
-            s+="\n"+ i.get("eventId")+"."+i.get("eventName")+" starts at "+i.get("startTime")+" and ends at "+i.get("endTime")+" at "+i.get("eventPlace");
+        if(list.size()>0){
+            for(HashMap<String,String> i: list){
+                s+="\n"+ i.get("eventId")+"."+i.get("eventName")+" starts at "+i.get("startTime")+" and ends at "+i.get("endTime")+" at "+i.get("eventPlace");
+            }
+            s+="\n";
         }
-        s+="\n";
+        else{
+            Log.i("EventInfo","Event Tablosu boş");
+
+        }
         speech=speech.replace("$HotelActivities",s);
         return speech;
     }
@@ -193,10 +210,14 @@ public class Service {
     public String OrderInfo(String speech){
         ArrayList<HashMap<String, String>> list=db.listAll("OrderTable");
         String s="";
-        for(HashMap<String,String> i: list){
-            s+="\n"+ i.get("orderId")+"."+i.get("orderName")+" costs "+i.get("cost");
+        if(list.size()>0){
+            for(HashMap<String,String> i: list){
+                s+="\n"+ i.get("orderId")+"."+i.get("orderName")+" costs "+i.get("cost");
+            }
+            s+="\n";
+        }else{
+            Log.i("EventInfo","Order Tablosu boş");
         }
-        s+="\n";
         speech=speech.replace("$orderList",s);  //buraya bak
         return speech;
     }

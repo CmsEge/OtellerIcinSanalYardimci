@@ -27,11 +27,18 @@ public class SignIn extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.log_in);
-        signUp = findViewById(R.id.signUpButton);
         database = new Database(getApplicationContext());
         service = new Service(database);
         //service.InsertTables();
+       if(service.getCustomerbyStatus().size()>0){
+           Log.i("Customer", service.listAll("Customer").toString());
+           Intent intent = new Intent(SignIn.this, MainScreen.class);
+           startActivity(intent);
+        }else{
+           Log.i("Customer", service.listAll("Customer").toString());
+            setContentView(R.layout.log_in);
+       }
+        signUp = findViewById(R.id.signUpButton);
     }
 
     public void SignUp(View v) {

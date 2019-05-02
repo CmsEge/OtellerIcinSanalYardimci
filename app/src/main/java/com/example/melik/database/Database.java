@@ -194,13 +194,6 @@ public class Database  extends SQLiteOpenHelper {
                 new String[] { String.valueOf(customerId) });//Burada sorguyu oluşturup direk silme fonksiyonuna gönderiyor.customerId ile gönderiyor.
         db.close();//işlem bitince her fonksiyonda db kapatılıyor.
     }
-    /**
-     * Müşteri eklemesi yapacağımızda bu fonksiyonu kullanacağız.
-     * @param cName customer's first name
-     * @param roomNo customer's room number
-     * @param phoneNo customer's phone number
-     * @return nothing
-     */
     public void customerInsert( String cName, String sName,String roomNo, String phoneNo, String cusPassword, String email) {
         SQLiteDatabase db = this.getWritableDatabase();//yine yazılabilir olarak açıyoruz db'yi.
         ContentValues values = new ContentValues();//ContentValues tipinde bir değişken oluşturuyoruz.Isme takılmayın mantık anlaşılıyor içine atıyoruz gönderdiğimiz parametreleri.
@@ -215,37 +208,6 @@ public class Database  extends SQLiteOpenHelper {
         db.insert(TABLE_CUSTOMER, null, values);//bu değerleri insert'e direk gönderiyoruz.
         db.close();
     }
-    public void orderInsert(String order, String cost) {
-        SQLiteDatabase db = this.getWritableDatabase();//yine yazılabilir olarak açıyoruz db'yi.
-        ContentValues values = new ContentValues();//ContentValues tipinde bir değişken oluşturuyoruz.Isme takılmayın mantık anlaşılıyor içine atıyoruz gönderdiğimiz parametreleri.
-        values.put(ORDER, order);
-        values.put(COST, cost);
-        db.insert(TABLE_ORDER, null, values);//bu değerleri insert'e direk gönderiyoruz.
-        db.close();
-    }
-    public void faqInsert(String question, String answer) {
-        SQLiteDatabase db = this.getWritableDatabase();//yine yazılabilir olarak açıyoruz db'yi.
-        ContentValues values = new ContentValues();//ContentValues tipinde bir değişken oluşturuyoruz.Isme takılmayın mantık anlaşılıyor içine atıyoruz gönderdiğimiz parametreleri.
-        values.put(QUESTION, question);
-        values.put(ANSWER, answer);
-        db.insert(TABLE_FAQ, null, values);//bu değerleri insert'e direk gönderiyoruz.
-        db.close();
-    }
-    public void orderRequestInsert(int custId, int orderId, String date, String time) {
-        SQLiteDatabase db = this.getWritableDatabase();//yine yazılabilir olarak açıyoruz db'yi.
-        ContentValues values = new ContentValues();//ContentValues tipinde bir değişken oluşturuyoruz.Isme takılmayın mantık anlaşılıyor içine atıyoruz gönderdiğimiz parametreleri.
-        values.put(ORD_ID, orderId);
-        values.put(CUSTO_ID, custId);
-        values.put(DATE_ORDER,date );
-        values.put(TIME,time );
-        db.insert(TABLE_ORDER_REQUEST, null, values);//bu değerleri insert'e direk gönderiyoruz.
-        db.close();
-    }
-    /**
-     * Müşteri id'si ile müşterinin tüm bilgilerini çekmek için bu fonksiyonu kullanacağız.
-     * @param cId The hotel's unique customer number(autoincrement for now)
-     * @return HashMap<String,String> customer
-     */
     public HashMap<String, String> customerDetail(int cId){
         HashMap<String,String> customer = new HashMap<String,String>();//Bir hashmap oluşturuyoruz.
         String selectQuery = "SELECT * FROM " + TABLE_CUSTOMER+ " WHERE customerId="+cId;//Gönderdiğimiz cId ile bir query oluşturuyoruz.
@@ -279,10 +241,6 @@ public class Database  extends SQLiteOpenHelper {
         db.close();
         return 0;
     }
-    /**
-     * Tüm customer tablomuzu görmek için bu fonksiyonu kullanacağız.
-     * @return ArrayList<HashMap<String, String>> customerList
-     */
     public ArrayList<HashMap<String, String>> allCustomers(){
         SQLiteDatabase db = this.getReadableDatabase();//yine sadece okunabilir.
         String selectQuery = "SELECT * FROM " + TABLE_CUSTOMER;
@@ -301,7 +259,6 @@ public class Database  extends SQLiteOpenHelper {
         db.close();
         return customerList;//Tüm müşterilerin listesini geri döndürüyor.
     }
-
     public void customerUpdate(String email, int status) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -310,7 +267,6 @@ public class Database  extends SQLiteOpenHelper {
         db.update(TABLE_CUSTOMER, values, EMAIL + " = ?",
                 new String[] { String.valueOf(email) });
     }
-
     public void changeStatus(){
         String selectQuery = "SELECT email FROM " + TABLE_CUSTOMER+ " WHERE "+STATUS+" = "+"'"+1
                 +"'";//Gönderdiğimiz cId ile bir query oluşturuyoruz.
@@ -324,18 +280,95 @@ public class Database  extends SQLiteOpenHelper {
         cursor.close();//cursor kapatılıyor.
         db.close();
     }
-    /**
-     * Tablonun Satır sayısını döndüren fonksiyon.
-     * @return int rowCount
-     */
-    public int getRowCount() {
-        String countQuery = "SELECT  * FROM " + TABLE_CUSTOMER;
+    public String getCustomerPassword(String email){
+        String selectQuery = "SELECT cusPassword FROM " + TABLE_CUSTOMER+ " WHERE "+ EMAIL+" = "+"'"+email+"'";
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery(countQuery, null);
-        int rowCount = cursor.getCount();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        if(cursor.getCount()>0){
+            cursor.moveToFirst();
+            String answer = cursor.getString(0);
+            db.close();
+            cursor.close();
+            return answer;
+        }
+        return null;
+    }
+    public boolean cusControl(String name, String surname, String email){
+
+        String selectQuery = "SELECT customerId FROM " + TABLE_CUSTOMER+ " WHERE "+ CUSTOMER_NAME+" = "+"'"+name+"'"+
+                " AND "+CUSTOMER_SURNAME+" = "+"'"+surname+"'"+" " +
+                "AND "+EMAIL+" = "+"'"+email
+                +"'";
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        if(cursor.getCount()>0){
+            cursor.moveToFirst();
+            boolean answer = cursor.isNull(0);
+            db.close();
+            cursor.close();
+            return answer;
+        }else{
+            db.close();
+            cursor.close();
+            return true;
+        }
+    }
+    public ArrayList<String> getCustomerbyStatus(){
+        String selectQuery = "SELECT customerId, cName FROM " + TABLE_CUSTOMER+ " WHERE "+STATUS+" = "+"'"+1
+                +"'";//Gönderdiğimiz cId ile bir query oluşturuyoruz.
+        SQLiteDatabase db = this.getReadableDatabase();
+        ArrayList<String> list= new ArrayList<String>();
+        Cursor cursor = db.rawQuery(selectQuery, null);//Bir cursor ayarlıyor yine algoritmadaki cursor mantığıyla altta bunu en başa çekeceğiz.
+        cursor.moveToFirst();//cursor en başa alındı
+
+        if(cursor.getCount() > 0){//cursor boş bir yeri göstermiyorsa içeri giriyor.
+            list.add(Integer.toString(cursor.getInt(0)));
+            list.add(cursor.getString(1));
+        }
+        cursor.close();//cursor kapatılıyor.
+        db.close();
+        return list;
+    }
+    public void orderInsert(String order, String cost) {
+        SQLiteDatabase db = this.getWritableDatabase();//yine yazılabilir olarak açıyoruz db'yi.
+        ContentValues values = new ContentValues();//ContentValues tipinde bir değişken oluşturuyoruz.Isme takılmayın mantık anlaşılıyor içine atıyoruz gönderdiğimiz parametreleri.
+        values.put(ORDER, order);
+        values.put(COST, cost);
+        db.insert(TABLE_ORDER, null, values);//bu değerleri insert'e direk gönderiyoruz.
+        db.close();
+    }
+    public void orderRequestInsert(int custId, int orderId, String date, String time) {
+        SQLiteDatabase db = this.getWritableDatabase();//yine yazılabilir olarak açıyoruz db'yi.
+        ContentValues values = new ContentValues();//ContentValues tipinde bir değişken oluşturuyoruz.Isme takılmayın mantık anlaşılıyor içine atıyoruz gönderdiğimiz parametreleri.
+        values.put(ORD_ID, orderId);
+        values.put(CUSTO_ID, custId);
+        values.put(DATE_ORDER,date );
+        values.put(TIME,time );
+        db.insert(TABLE_ORDER_REQUEST, null, values);//bu değerleri insert'e direk gönderiyoruz.
+        db.close();
+    }
+    public void faqInsert(String question, String answer) {
+        SQLiteDatabase db = this.getWritableDatabase();//yine yazılabilir olarak açıyoruz db'yi.
+        ContentValues values = new ContentValues();//ContentValues tipinde bir değişken oluşturuyoruz.Isme takılmayın mantık anlaşılıyor içine atıyoruz gönderdiğimiz parametreleri.
+        values.put(QUESTION, question);
+        values.put(ANSWER, answer);
+        db.insert(TABLE_FAQ, null, values);//bu değerleri insert'e direk gönderiyoruz.
+        db.close();
+    }
+    public String listAnswer(int id){
+        SQLiteDatabase db = this.getReadableDatabase();//yine sadece okunabilir.
+        String selectQuery = "SELECT answer FROM " + TABLE_FAQ+ " WHERE "+FAQ_ID+"="+"'"+id+"'";
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        if(cursor.getCount()>0){
+            cursor.moveToFirst();
+            String answer = cursor.getString(0);
+            db.close();
+            cursor.close();
+            return answer;
+        }
         db.close();
         cursor.close();
-        return rowCount;
+        return null;
     }
     //Alacarte Functions
     public void alacarteInsert(String name,ArrayList<String> entree, ArrayList<String> warm, ArrayList<String> main, ArrayList<String> dessert) {
@@ -366,9 +399,19 @@ public class Database  extends SQLiteOpenHelper {
         }
         db.close();
         cursor.close();
-        return List;//Tüm müşterilerin listesini geri döndürüyor.
+        return List;
     }
+    //ReservationAla Functions
+    public void reservationAlaInsert(String date, int cus, int ala) {
+        SQLiteDatabase db = this.getWritableDatabase();//yine yazılabilir olarak açıyoruz db'yi.
+        ContentValues values = new ContentValues();//ContentValues tipinde bir değişken oluşturuyoruz.Isme takılmayın mantık anlaşılıyor içine atıyoruz gönderdiğimiz parametreleri.
+        values.put(DATE, date);
+        values.put(CUS_ID, cus);
+        values.put(ALA_ID, ala);
 
+        db.insert(TABLE_RESERVATION_ALA, null, values);//bu değerleri insert'e direk gönderiyoruz.
+        db.close();
+    }
     public List<String> listMealTimes(String mealName){
         SQLiteDatabase db = this.getReadableDatabase();//yine sadece okunabilir.
         String selectQuery = "SELECT mealStartTime, mealEndTime FROM " + TABLE_MEALS+ " WHERE "+MEAL_NAME+"="+"'"+mealName+"'";
@@ -388,27 +431,15 @@ public class Database  extends SQLiteOpenHelper {
         cursor.close();
         return List;
     }
-    public String listAnswer(int id){
-        SQLiteDatabase db = this.getReadableDatabase();//yine sadece okunabilir.
-        String selectQuery = "SELECT answer FROM " + TABLE_FAQ+ " WHERE "+FAQ_ID+"="+"'"+id+"'";
-        //liste dışından numara verince atıyor.
-        Cursor cursor = db.rawQuery(selectQuery, null);
-        cursor.moveToFirst();
-        String answer = cursor.getString(0);
-        db.close();
-        cursor.close();
-        return answer;
-    }
+    public void mealInsert(String mealName, String mealStartTime, String mealEndTime) {
 
-    //ReservationAla Functions
-    public void reservationAlaInsert(String date, int cus, int ala) {
         SQLiteDatabase db = this.getWritableDatabase();//yine yazılabilir olarak açıyoruz db'yi.
         ContentValues values = new ContentValues();//ContentValues tipinde bir değişken oluşturuyoruz.Isme takılmayın mantık anlaşılıyor içine atıyoruz gönderdiğimiz parametreleri.
-        values.put(DATE, date);
-        values.put(CUS_ID, cus);
-        values.put(ALA_ID, ala);
+        values.put(MEAL_NAME, mealName);
+        values.put(MEAL_START_TIME, mealStartTime);
+        values.put(MEAL_END_TIME, mealEndTime);
 
-        db.insert(TABLE_RESERVATION_ALA, null, values);//bu değerleri insert'e direk gönderiyoruz.
+        db.insert(TABLE_MEALS, null, values);//bu değerleri insert'e direk gönderiyoruz.
         db.close();
     }
     public void eventInsert(String eventName, String startTime, String endTime, String eventPlace) {
@@ -431,20 +462,26 @@ public class Database  extends SQLiteOpenHelper {
         db.insert(TABLE_EVENT_NOTIFICATION, null, values);//bu değerleri insert'e direk gönderiyoruz.
         db.close();
     }
-
-    public void mealInsert(String mealName, String mealStartTime, String mealEndTime) {
+    public void roomStatusInsert(int custID, String date,String time, int disturb,int clean,String alarm) {
 
         SQLiteDatabase db = this.getWritableDatabase();//yine yazılabilir olarak açıyoruz db'yi.
         ContentValues values = new ContentValues();//ContentValues tipinde bir değişken oluşturuyoruz.Isme takılmayın mantık anlaşılıyor içine atıyoruz gönderdiğimiz parametreleri.
-        values.put(MEAL_NAME, mealName);
-        values.put(MEAL_START_TIME, mealStartTime);
-        values.put(MEAL_END_TIME, mealEndTime);
+        values.put(CUSTOME_ID, custID);
+        values.put(DATE_, date);
+        values.put(TIME_, time);
+        values.put(DISTURB, disturb);
+        values.put(CLEAN, clean);
+        values.put(ALARM, alarm);
 
-        db.insert(TABLE_MEALS, null, values);//bu değerleri insert'e direk gönderiyoruz.
+        db.insert(TABLE_ROOM_STATUS, null, values);//bu değerleri insert'e direk gönderiyoruz.
         db.close();
     }
+    public void resetTables(String tableName){
 
-
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(tableName, null, null);
+        db.close();
+    }
     public ArrayList<HashMap<String, String>> listAll(String tableName){
 
         SQLiteDatabase db = this.getReadableDatabase();//yine sadece okunabilir.
@@ -464,81 +501,14 @@ public class Database  extends SQLiteOpenHelper {
         db.close();
         return List;//Tüm müşterilerin listesini geri döndürüyor.
     }
-    public void roomStatusInsert(int custID, String date,String time, int disturb,int clean,String alarm) {
-
-        SQLiteDatabase db = this.getWritableDatabase();//yine yazılabilir olarak açıyoruz db'yi.
-        ContentValues values = new ContentValues();//ContentValues tipinde bir değişken oluşturuyoruz.Isme takılmayın mantık anlaşılıyor içine atıyoruz gönderdiğimiz parametreleri.
-        values.put(CUSTOME_ID, custID);
-        values.put(DATE_, date);
-        values.put(TIME_, time);
-        values.put(DISTURB, disturb);
-        values.put(CLEAN, clean);
-        values.put(ALARM, alarm);
-
-        db.insert(TABLE_ROOM_STATUS, null, values);//bu değerleri insert'e direk gönderiyoruz.
-        db.close();
-    }
-    public String getCustomerPassword(String email){
-        String selectQuery = "SELECT cusPassword FROM " + TABLE_CUSTOMER+ " WHERE "+ EMAIL+" = "+"'"+email+"'";
+    public int getRowCount() {
+        String countQuery = "SELECT  * FROM " + TABLE_CUSTOMER;
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery(selectQuery, null);
-        if(cursor.getCount()>0){
-            cursor.moveToFirst();
-            String answer = cursor.getString(0);
-            db.close();
-            cursor.close();
-            return answer;
-        }
-        return null;
-
-    }
-    public boolean cusControl(String name, String surname, String email){
-
-        String selectQuery = "SELECT customerId FROM " + TABLE_CUSTOMER+ " WHERE "+ CUSTOMER_NAME+" = "+"'"+name+"'"+
-                " AND "+CUSTOMER_SURNAME+" = "+"'"+surname+"'"+" " +
-                "AND "+EMAIL+" = "+"'"+email
-                +"'";
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery(selectQuery, null);
-        if(cursor.getCount()>0){
-            cursor.moveToFirst();
-            boolean answer = cursor.isNull(0);
-            db.close();
-            cursor.close();
-            return answer;
-        }else{
-            db.close();
-            cursor.close();
-            return true;
-        }
-    }
-
-    public ArrayList<String> getCustomerbyStatus(){
-        String selectQuery = "SELECT customerId, cName FROM " + TABLE_CUSTOMER+ " WHERE "+STATUS+" = "+"'"+1
-                +"'";//Gönderdiğimiz cId ile bir query oluşturuyoruz.
-        SQLiteDatabase db = this.getReadableDatabase();
-        ArrayList<String> list= new ArrayList<String>();
-        Cursor cursor = db.rawQuery(selectQuery, null);//Bir cursor ayarlıyor yine algoritmadaki cursor mantığıyla altta bunu en başa çekeceğiz.
-        cursor.moveToFirst();//cursor en başa alındı
-
-        if(cursor.getCount() > 0){//cursor boş bir yeri göstermiyorsa içeri giriyor.
-            list.add(Integer.toString(cursor.getInt(0)));
-            list.add(cursor.getString(1));
-        }
-        cursor.close();//cursor kapatılıyor.
+        Cursor cursor = db.rawQuery(countQuery, null);
+        int rowCount = cursor.getCount();
         db.close();
-        return list;
-    }
-    /**
-     * !!!!!!!!!!!!!!!!!!!!!!!!!
-     * Tabloları silen fonksiyon.
-     * @return nothing
-     */
-    public void resetTables(){
-
-        SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(TABLE_CUSTOMER, null, null);
-        db.close();
+        cursor.close();
+        return rowCount;
     }
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {}

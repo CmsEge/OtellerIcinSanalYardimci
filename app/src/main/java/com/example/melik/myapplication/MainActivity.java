@@ -109,7 +109,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         chatView.setInputText("");
     }
 
-    public void Notification(String getType, String type, String msg, int h, int m) {
+    public void Notification(String getType, String type, String msg) {
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         String[] tokens = getType.split(":");
         int hour = Integer.parseInt(tokens[0]);
@@ -126,17 +126,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void NotificationHandle() {
         HashMap<String, String> list = service.getStartDateOfMeal();
         HashMap<String, String> list2 = service.getStartDateOfEvents();
-        Notification(list.get("Breakfast"), "Breakfast", "Breakfast starts at " + list.get("Breakfast") + ".Don't be late, we will be waiting for you :)", 17, 25);
-        Notification(list.get("Lunch"), "Lunch", "Lunch starts at " + list.get("Lunch") + ".Don't be late, we will be waiting for you :)", 17, 26);
-        Notification(list.get("Dinner"), "Dinner", "Dinner starts at " + list.get("Dinner") + ".Don't be late, we will be waiting for you :)", 17, 27);
-        for (Map.Entry<String, String> pair : list2.entrySet()) {
-            Notification(pair.getValue(), "Event", pair.getKey() + " starts at " + pair.getValue() + ". I wish you will be there..", 18, 18);
+        if(list.size()>0){
+            Notification(list.get("Breakfast"), "Breakfast", "Breakfast starts at " + list.get("Breakfast") + ".Don't be late, we will be waiting for you :)");
+            Notification(list.get("Lunch"), "Lunch", "Lunch starts at " + list.get("Lunch") + ".Don't be late, we will be waiting for you :)");
+            Notification(list.get("Dinner"), "Dinner", "Dinner starts at " + list.get("Dinner") + ".Don't be late, we will be waiting for you :)");
         }
+        if(list2.size()>0){
+            for (Map.Entry<String, String> pair : list2.entrySet()) {
+                Notification(pair.getValue(), "Event", pair.getKey() + " starts at " + pair.getValue() + ". I wish you will be there..");
+            }
+        }
+
+        //Burada eventNotification table dan şuan chatbotla konuşan kişinin eventlere kaydı varsa o kayıtlar için notification atılmalı . myacoount.id ile
+        //eventNotification tablosundan kişinin kayıtlandığı eventleri çekebilirisin
+        //tabloyu gezerken if else ile kişinin eventi var mı , varsa noti attır yoksa atmasın bu kontrole dikkat et.
+
+        //Aynı şekilde reservationAla tablosundan da konuşan kişinin yemek saatinden önce bildirim atılmalı.
     }
 
-    /*
-     * AIRequest should have query OR event
-     */
     private void sendRequest(String text) {
         Log.d(TAG, text);
         final String queryString = String.valueOf(text);
@@ -150,7 +157,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         new AiTask().execute(queryString, eventString, contextString);
     }
-
     public class AiTask extends AsyncTask<String, Void, AIResponse> {
         private AIError aiError;
 
@@ -182,7 +188,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 return null;
             }
         }
-
         @Override
         protected void onPostExecute(final AIResponse response) {
             if (response != null) {
@@ -192,8 +197,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         }
     }
-
-
     private void onResult(final AIResponse response) {
         runOnUiThread(new Runnable() {
             @Override
@@ -220,7 +223,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         //final AIOutputContext outputContext=response.getResult().getContext("projects/cmsbot-48dcf/agent/sessions/0176a748-a5bd-d3e9-16ac-34a081556910/contexts/dinner-reservation");
                         AIOutputContext outputContext = response.getResult().getContext("dinner-reservation");
                         Map<String, JsonElement> list = outputContext.getParameters();
-                        service.getReservationInfo(Integer.parseInt(myAccount.getId()), list.get("Restaurant-Type").getAsString(), list.get("date").getAsString());
+                        service.setReservationInfo(Integer.parseInt(myAccount.getId()), list.get("Restaurant-Type").getAsString(), list.get("date").getAsString());
                         Receive(speech);
                         break;
                     }
@@ -241,7 +244,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     }
                     case "order-response": {
                         service.insertOrderRequest(Integer.parseInt(myAccount.getId()), Integer.parseInt(response.getResult().getResolvedQuery()));
-                        service.insertEventNotification(Integer.parseInt(response.getResult().getResolvedQuery()), Integer.parseInt(myAccount.getId()));
+                        //service.insertEventNotification(Integer.parseInt(response.getResult().getResolvedQuery()), Integer.parseInt(myAccount.getId()));
                         Receive(speech);
                         break;
                     }

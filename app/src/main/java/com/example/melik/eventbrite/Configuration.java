@@ -50,6 +50,7 @@ public class Configuration extends ListActivity {
     final String latitude = "41.0805174";
     final String longtitude = "29.0082785";
     ArrayAdapter<String> myAdapter;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,7 +70,7 @@ public class Configuration extends ListActivity {
             temp = makeCall("https://www.eventbriteapi.com/v3/events/search/?location.latitude=" + latitude + "&location.longitude=" + longtitude + "&token=" + EVENT_KEY);
 
             //print the call in the console
-            Log.i("call:","https://www.eventbriteapi.com/v3/events/search/?location.latitude=" + latitude + "&location.longitude=" + longtitude + "&token=" + EVENT_KEY);
+            Log.i("call:", "https://www.eventbriteapi.com/v3/events/search/?location.latitude=" + latitude + "&location.longitude=" + longtitude + "&token=" + EVENT_KEY);
             return "";
         }
 
@@ -92,7 +93,7 @@ public class Configuration extends ListActivity {
                 for (int i = 0; i < eventList.size(); i++) {
                     // make a list of the venus that are loaded in the list.
                     // show the name, the category and the city
-                    listEvent.add(i, eventList.get(i).getName() + "\nStart Now: " + eventList.get(i).getStart() + "\nFinish Now: " + eventList.get(i).getEnd() + "\nDescription:" + eventList.get(i).getDescription() + "");
+                    listEvent.add(i, eventList.get(i).getName() + "\nStart Now: " + eventList.get(i).getStartCalendar() + "  " + eventList.get(i).getStart() + "\nFinish Now: " + eventList.get(i).getEndCalendar() + "  " + eventList.get(i).getEnd() + "\nDescription:" + eventList.get(i).getDescription() + "");
                 }
                 myAdapter = new ArrayAdapter<String>(Configuration.this, R.layout.event_row, R.id.eventListView, listEvent);
                 setListAdapter(myAdapter);
@@ -101,6 +102,7 @@ public class Configuration extends ListActivity {
             }
         }
     }
+
     public static String makeCall(String url) {
 
         // string buffers the url
@@ -129,7 +131,7 @@ public class Configuration extends ListActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        Log.i("replystring",replyString);
+        Log.i("replystring", replyString);
 
         // trim the whitespaces
         return replyString.trim();
@@ -155,7 +157,7 @@ public class Configuration extends ListActivity {
                             poi.setName(jsonArray.getJSONObject(i).getJSONObject("name").optString("text"));
                         }
 
-                        if (jsonArray.getJSONObject(i).has("description")){
+                        if (jsonArray.getJSONObject(i).has("description")) {
                             if (jsonArray.getJSONObject(i).getJSONObject("description").has("text")) {
                                 poi.setDescription(jsonArray.getJSONObject(i).getJSONObject("description").optString("text", " "));
                             }
@@ -163,12 +165,14 @@ public class Configuration extends ListActivity {
 
                         if (jsonArray.getJSONObject(i).has("start")) {
                             if (jsonArray.getJSONObject(i).getJSONObject("start").has("local")) {
-                                poi.setStart(jsonArray.getJSONObject(i).getJSONObject("start").optString("local",""));
+                                poi.setStartCalendar(jsonArray.getJSONObject(i).getJSONObject("start").optString("local", "").substring(0, 10));
+                                poi.setStart(jsonArray.getJSONObject(i).getJSONObject("start").optString("local", "").substring(11, 16));
                             }
                         }
                         if (jsonArray.getJSONObject(i).has("end")) {
                             if (jsonArray.getJSONObject(i).getJSONObject("end").has("local")) {
-                                poi.setEnd(jsonArray.getJSONObject(i).getJSONObject("end").optString("local",""));
+                                poi.setEndCalendar(jsonArray.getJSONObject(i).getJSONObject("end").optString("local", "").substring(0, 10));
+                                poi.setEnd(jsonArray.getJSONObject(i).getJSONObject("end").optString("local", "").substring(11, 16));
                             }
                         }
                     }

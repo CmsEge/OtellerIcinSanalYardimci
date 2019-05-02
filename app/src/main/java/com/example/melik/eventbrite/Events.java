@@ -5,6 +5,25 @@ public class Events {
     private String description;
     private String start;
     private String end;
+    private String startCalendar;
+    private String endCalendar;
+
+    public String getStartCalendar() {
+        return startCalendar;
+    }
+
+    public void setStartCalendar(String startCalendar) {
+        this.startCalendar = startCalendar;
+    }
+
+    public String getEndCalendar() {
+        return endCalendar;
+    }
+
+    public void setEndCalendar(String endCalendar) {
+        this.endCalendar = endCalendar;
+    }
+
 
     public String getName() {
         return name;

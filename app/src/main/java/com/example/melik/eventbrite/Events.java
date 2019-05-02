@@ -1,5 +1,9 @@
 package com.example.melik.eventbrite;
 
+import android.media.Image;
+
+import java.net.URL;
+
 public class Events {
     private String name;
     private String description;
@@ -7,6 +11,18 @@ public class Events {
     private String end;
     private String startCalendar;
     private String endCalendar;
+
+    public String getUrlLogo() {
+        return urlLogo;
+    }
+
+    public void setUrlLogo(String urlLogo) {
+        this.urlLogo = urlLogo;
+    }
+
+    private String urlLogo;
+
+
 
     public String getStartCalendar() {
         return startCalendar;

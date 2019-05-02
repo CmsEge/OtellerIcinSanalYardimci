@@ -92,7 +92,7 @@ public class Configuration extends ListActivity {
                 for (int i = 0; i < eventList.size(); i++) {
                     // make a list of the venus that are loaded in the list.
                     // show the name, the category and the city
-                    listEvent.add(i, eventList.get(i).getName() + "\nStart Now: " + eventList.get(i).getStart() + "\nFinish Now: " + eventList.get(i).getEnd() + "\n(" + eventList.get(i).getDescription() + ")");
+                    listEvent.add(i, eventList.get(i).getName() + "\nStart Now: " + eventList.get(i).getStart() + "\nFinish Now: " + eventList.get(i).getEnd() + "\nDescription:" + eventList.get(i).getDescription() + "");
                 }
                 myAdapter = new ArrayAdapter<String>(Configuration.this, R.layout.event_row, R.id.eventListView, listEvent);
                 setListAdapter(myAdapter);
@@ -151,26 +151,32 @@ public class Configuration extends ListActivity {
                 for (int i = 0; i < jsonArray.length(); i++) {
                     Events poi = new Events();
                     if (jsonArray.getJSONObject(i).has("name")) {
-                        poi.setName(jsonArray.getJSONObject(i).optString("name"));
-
+                        if (jsonArray.getJSONObject(i).getJSONObject("name").has("text")) {
+                            poi.setName(jsonArray.getJSONObject(i).getJSONObject("name").optString("text"));
+                        }
 
                         if (jsonArray.getJSONObject(i).has("description")){
-                            poi.setDescription(jsonArray.getJSONObject(i).optString("text", " "));
+                            if (jsonArray.getJSONObject(i).getJSONObject("description").has("text")) {
+                                poi.setDescription(jsonArray.getJSONObject(i).getJSONObject("description").optString("text", " "));
+                            }
                         }
 
                         if (jsonArray.getJSONObject(i).has("start")) {
                             if (jsonArray.getJSONObject(i).getJSONObject("start").has("local")) {
-                                poi.setStart(jsonArray.getJSONObject(i).optString("local",""));
+                                poi.setStart(jsonArray.getJSONObject(i).getJSONObject("start").optString("local",""));
                             }
                         }
                         if (jsonArray.getJSONObject(i).has("end")) {
                             if (jsonArray.getJSONObject(i).getJSONObject("end").has("local")) {
-                                poi.setStart(jsonArray.getJSONObject(i).optString("local",""));
+                                poi.setEnd(jsonArray.getJSONObject(i).getJSONObject("end").optString("local",""));
                             }
                         }
                     }
                     temp.add(poi);
-                    //Log.i("poi",poi.toString());
+                    /*Log.i("poi",poi.getName());
+                    Log.i("poi",poi.getStart());
+                    Log.i("poi",poi.getEnd());
+                    Log.i("poi",poi.getDescription());*/
                 }
             }
         } catch (Exception e) {

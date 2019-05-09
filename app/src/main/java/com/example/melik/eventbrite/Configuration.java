@@ -1,7 +1,14 @@
 package com.example.melik.eventbrite;
 
 
+import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ListActivity;
+import android.content.DialogInterface;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.media.Image;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -18,10 +25,15 @@ import javax.ws.rs.core.MediaType;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.melik.myapplication.R;
 import com.example.melik.places.GooglePlace;
@@ -36,28 +48,36 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.BufferedInputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.example.melik.myapplication.R.drawable.ic_launcher_background;
 import static com.example.melik.places.PlaceMain.makeCall;
 
 public class Configuration extends ListActivity {
     ArrayList<Events> eventList;
-    private Button event;
-    private TextView eventText;
     final String EVENT_KEY = "LCJHM625NWALIR3PZJVG";
     final String latitude = "41.0805174";
     final String longtitude = "29.0082785";
     ArrayAdapter<String> myAdapter;
+    private ListView listView;
+    private ImageView image;
+    String url;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.event_brite);
-
+        View inflatedView = getLayoutInflater().inflate(R.layout.event_row, null);
+        image = (ImageView) inflatedView.findViewById(R.id.logo);
         new eventPlaces().execute();
 
     }
+
 
     private class eventPlaces extends AsyncTask<View, Void, String> {
 
@@ -69,7 +89,7 @@ public class Configuration extends ListActivity {
             temp = makeCall("https://www.eventbriteapi.com/v3/events/search/?location.latitude=" + latitude + "&location.longitude=" + longtitude + "&token=" + EVENT_KEY);
 
             //print the call in the console
-            Log.i("call:","https://www.eventbriteapi.com/v3/events/search/?location.latitude=" + latitude + "&location.longitude=" + longtitude + "&token=" + EVENT_KEY);
+            Log.i("call:", "https://www.eventbriteapi.com/v3/events/search/?location.latitude=" + latitude + "&location.longitude=" + longtitude + "&token=" + EVENT_KEY);
             return "";
         }
 
@@ -87,20 +107,38 @@ public class Configuration extends ListActivity {
 
                 eventList = (ArrayList<Events>) parseEvent(temp);
 
-                List<String> listEvent = new ArrayList<String>();
+                final List<String> listEvent = new ArrayList<String>();
 
                 for (int i = 0; i < eventList.size(); i++) {
-                    // make a list of the venus that are loaded in the list.
-                    // show the name, the category and the city
-                    listEvent.add(i, eventList.get(i).getName() + "\nStart Now: " + eventList.get(i).getStart() + "\nFinish Now: " + eventList.get(i).getEnd() + "\n(" + eventList.get(i).getDescription() + ")");
+                    url = eventList.get(i).getUrlLogo();
+                    ImageDownloader imageDownloader = new ImageDownloader();
+                    imageDownloader.download(url,image);
+                    /*new DownloadImageTask(image)
+                            .execute(url);*/
+                    listEvent.add(i, eventList.get(i).getName() + "\n\nStart Now: " + eventList.get(i).getStartCalendar() + "  " + eventList.get(i).getStart() + "\nFinish Now: " + eventList.get(i).getEndCalendar() + "  " + eventList.get(i).getEnd() + "\n");
                 }
                 myAdapter = new ArrayAdapter<String>(Configuration.this, R.layout.event_row, R.id.eventListView, listEvent);
-                setListAdapter(myAdapter);
 
+                //myAdapter = new ArrayAdapter<String>(Configuration.this, android.R.layout.simple_list_item_1, android.R.id.text1, listEvent);
+                //setListAdapter(myAdapter);
+
+                listView = getListView();
+                listView.setAdapter(myAdapter);
+                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view,
+                                            int position, long id) {
+
+                        Toast.makeText(getApplicationContext(), eventList.get(position).getDescription(), Toast.LENGTH_LONG).show();
+
+                    }
+                });
 
             }
         }
     }
+
     public static String makeCall(String url) {
 
         // string buffers the url
@@ -129,7 +167,7 @@ public class Configuration extends ListActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        Log.i("replystring",replyString);
+        Log.i("replystring", replyString);
 
         // trim the whitespaces
         return replyString.trim();
@@ -151,26 +189,40 @@ public class Configuration extends ListActivity {
                 for (int i = 0; i < jsonArray.length(); i++) {
                     Events poi = new Events();
                     if (jsonArray.getJSONObject(i).has("name")) {
-                        poi.setName(jsonArray.getJSONObject(i).optString("name"));
+                        if (jsonArray.getJSONObject(i).getJSONObject("name").has("text")) {
+                            poi.setName(jsonArray.getJSONObject(i).getJSONObject("name").optString("text"));
+                        }
 
-
-                        if (jsonArray.getJSONObject(i).has("description")){
-                            poi.setDescription(jsonArray.getJSONObject(i).optString("text", " "));
+                        if (jsonArray.getJSONObject(i).has("description")) {
+                            if (jsonArray.getJSONObject(i).getJSONObject("description").has("text")) {
+                                poi.setDescription(jsonArray.getJSONObject(i).getJSONObject("description").optString("text", " "));
+                            }
                         }
 
                         if (jsonArray.getJSONObject(i).has("start")) {
                             if (jsonArray.getJSONObject(i).getJSONObject("start").has("local")) {
-                                poi.setStart(jsonArray.getJSONObject(i).optString("local",""));
+                                poi.setStartCalendar(jsonArray.getJSONObject(i).getJSONObject("start").optString("local", "").substring(0, 10));
+                                poi.setStart(jsonArray.getJSONObject(i).getJSONObject("start").optString("local", "").substring(11, 16));
                             }
                         }
                         if (jsonArray.getJSONObject(i).has("end")) {
                             if (jsonArray.getJSONObject(i).getJSONObject("end").has("local")) {
-                                poi.setStart(jsonArray.getJSONObject(i).optString("local",""));
+                                poi.setEndCalendar(jsonArray.getJSONObject(i).getJSONObject("end").optString("local", "").substring(0, 10));
+                                poi.setEnd(jsonArray.getJSONObject(i).getJSONObject("end").optString("local", "").substring(11, 16));
+                            }
+                        }
+                        if(jsonArray.getJSONObject(i).has("logo")){
+                            if (jsonArray.getJSONObject(i).getJSONObject("logo").has("url")) {
+                                poi.setUrlLogo(jsonArray.getJSONObject(i).getJSONObject("logo").optString("url"));
                             }
                         }
                     }
                     temp.add(poi);
-                    //Log.i("poi",poi.toString());
+                    //Log.i("poi",poi.getUrlLogo());
+                    /*Log.i("poi",poi.getName());
+                    Log.i("poi",poi.getStart());
+                    Log.i("poi",poi.getEnd());
+                    Log.i("poi",poi.getDescription());*/
                 }
             }
         } catch (Exception e) {
@@ -179,6 +231,32 @@ public class Configuration extends ListActivity {
         }
         return temp;
 
+    }
+
+
+    private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
+        ImageView bmImage;
+
+        public DownloadImageTask(ImageView bmImage) {
+            this.bmImage = bmImage;
+        }
+
+        protected Bitmap doInBackground(String... urls) {
+            String urldisplay = urls[0];
+            Bitmap mIcon11 = null;
+            try {
+                InputStream in = new java.net.URL(urldisplay).openStream();
+                mIcon11 = BitmapFactory.decodeStream(in);
+            } catch (Exception e) {
+                Log.e("Error", e.getMessage());
+                e.printStackTrace();
+            }
+            return mIcon11;
+        }
+
+        protected void onPostExecute(Bitmap result) {
+            bmImage.setImageBitmap(result);
+        }
     }
 
 

@@ -294,4 +294,7 @@ public class Service {
         ArrayList<String> list= db.getCustomerbyStatus();
         return list;
     }
+   /* public  HashMap<String,String> CustEvents(int custId){
+        return db.CustEvents(custId);
+    }*/
 }

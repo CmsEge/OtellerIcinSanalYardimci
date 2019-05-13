@@ -126,6 +126,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void NotificationHandle() {
         HashMap<String, String> list = service.getStartDateOfMeal();
         HashMap<String, String> list2 = service.getStartDateOfEvents();
+        HashMap<String,String> list3=service.CustEvents(Integer.parseInt(myAccount.getId()));
+        Log.i("notiiiiiiiiii", list3.toString());
         if(list.size()>0){
             Notification(list.get("Breakfast"), "Breakfast", "Breakfast starts at " + list.get("Breakfast") + ".Don't be late, we will be waiting for you :)");
             Notification(list.get("Lunch"), "Lunch", "Lunch starts at " + list.get("Lunch") + ".Don't be late, we will be waiting for you :)");
@@ -136,14 +138,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Notification(pair.getValue(), "Event", pair.getKey() + " starts at " + pair.getValue() + ". I wish you will be there..");
             }
         }
-
-        //Burada eventNotification table dan şuan chatbotla konuşan kişinin eventlere kaydı varsa o kayıtlar için notification atılmalı . myacoount.id ile
-        //eventNotification tablosundan kişinin kayıtlandığı eventleri çekebilirisin
-        //tabloyu gezerken if else ile kişinin eventi var mı , varsa noti attır yoksa atmasın bu kontrole dikkat et.
-
-        //Aynı şekilde reservationAla tablosundan da konuşan kişinin yemek saatinden önce bildirim atılmalı.
     }
-
     private void sendRequest(String text) {
         Log.d(TAG, text);
         final String queryString = String.valueOf(text);

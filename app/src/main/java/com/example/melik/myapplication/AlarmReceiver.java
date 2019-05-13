@@ -20,11 +20,13 @@ public class AlarmReceiver extends BroadcastReceiver{
     public static final String NOTIFICATION_LUNCH_ID = "lunch_id";
     public static final String NOTIFICATION_DINNER_ID = "dinner_id";
     public static final String NOTIFICATION_EVENT_ID = "event_id";
+    public static final String NOTIFICATION_EVENT_NOTI_ID = "event_noti_id";
 
     public static final String CHANNEL_BREAKFAST_NAME = "Breakfast Channel";
     public static final String CHANNEL_LUNCH_NAME = "Lunch Channel";
     public static final String CHANNEL_DINNER_NAME = "Dinner Channel";
     public static final String CHANNEL_EVENT_NAME = "Event Channel";
+    public static final String CHANNEL_EVENT_NOTI_NAME = "Event Notification Channel";
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -118,6 +120,21 @@ public class AlarmReceiver extends BroadcastReceiver{
                         .setContentIntent(pendingIntent).build();
 
                 notificationManager.notify(3, notificationCompatBuilder.build());
+            }
+            else if(intent.getAction().equals("EventNoti")){
+                NotificationChannel EventChannel = new NotificationChannel(
+                        NOTIFICATION_EVENT_NOTI_ID,
+                        CHANNEL_EVENT_NOTI_NAME,
+                        IMPORTANCE_HIGH
+                );
+                notificationManager.createNotificationChannel(EventChannel);
+                NotificationCompat.Builder notificationCompatBuilder=new NotificationCompat.Builder(context, NOTIFICATION_EVENT_ID);
+                notificationCompatBuilder.setContentText(intent.getStringExtra("msg"))
+                        .setSmallIcon(R.drawable.ic_launcher)
+                        .setContentTitle("Oteller İçin Sanal Yardımcı")
+                        .setContentIntent(pendingIntent).build();
+
+                notificationManager.notify(4, notificationCompatBuilder.build());
             }
         }
 

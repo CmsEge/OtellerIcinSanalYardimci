@@ -25,7 +25,7 @@ public class SignIn extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         database = new Database(getApplicationContext());
         service = new Service(database);
-        service.InsertTables();
+        //service.InsertTables();
        if(service.getCustomerbyStatus().size()>0){
            Log.i("Customer", service.listAll("Customer").toString());
            Intent intent = new Intent(SignIn.this, MainScreen.class);

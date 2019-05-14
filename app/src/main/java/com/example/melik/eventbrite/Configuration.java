@@ -118,7 +118,7 @@ public class Configuration extends ListActivity {
                     imageDownloader.download(url,image);*/
                     /*new DownloadImageTask(image)
                             .execute(url);*/
-                    listEvent.add(i, eventList.get(i).getName() + "\n\nStarts at: " + eventList.get(i).getStartCalendar() + "  " + eventList.get(i).getStart() + "\nFinishes at: " + eventList.get(i).getEndCalendar() + "  " + eventList.get(i).getEnd() + "\n");
+                    listEvent.add(i, eventList.get(i).getName() + "\n\nStart Now: " + eventList.get(i).getStartCalendar() + "  " + eventList.get(i).getStart() + "\nFinish Now: " + eventList.get(i).getEndCalendar() + "  " + eventList.get(i).getEnd() + "\n");
                 }
                 myAdapter = new ArrayAdapter<String>(Configuration.this, R.layout.event_row, R.id.eventListView, listEvent);
 
@@ -130,16 +130,14 @@ public class Configuration extends ListActivity {
                 listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
                     @Override
-                    public void onItemClick(AdapterView<?> parent, View view,
-                                            int position, long id) {
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
                         url = eventList.get(position).getUrl();
                         //url = url.replaceAll("https://www.eventbrite.com/e/", "");
-                        //Toast.makeText(getApplicationContext(), url,Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), url,Toast.LENGTH_LONG).show();
                         Intent browse = new Intent( Intent.ACTION_VIEW , Uri.parse( url ) );
-
                         startActivity( browse );
-                        //Toast.makeText(getApplicationContext(), eventList.get(position).getDescription(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), eventList.get(position).getDescription(), Toast.LENGTH_LONG).show();
 
                     }
                 });

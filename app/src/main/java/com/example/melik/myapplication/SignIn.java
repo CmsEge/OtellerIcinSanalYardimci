@@ -14,16 +14,12 @@ import android.widget.ViewAnimator;
 
 import com.example.melik.database.Database;
 import com.example.melik.service.Service;
-
-
 public class SignIn extends AppCompatActivity {
-
     private Button signUp;
     private Database database;
     private Service service;
     private EditText email;
     private EditText pass;
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,12 +36,10 @@ public class SignIn extends AppCompatActivity {
        }
         signUp = findViewById(R.id.signUpButton);
     }
-
     public void SignUp(View v) {
         Intent intent = new Intent(SignIn.this, SignUp.class);
         startActivity(intent);
     }
-
     public void SignIn(View v) {
         email = (EditText) findViewById(R.id.mailEdit2);
         pass = (EditText) findViewById(R.id.passEdit2);

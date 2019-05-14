@@ -501,6 +501,20 @@ public class Database  extends SQLiteOpenHelper {
         db.close();
         return List;//Tüm müşterilerin listesini geri döndürüyor.
     }
+   /* public  HashMap<String, String> CustEvents(int custId){
+        SQLiteDatabase db = this.getReadableDatabase();
+        String selectQuery = "SELECT Event.eventName, Event.startTime FROM  Event INNER JOIN EventNotification ON EventNotification.eveId=Event.eventId WHERE EventNotification.custId="+"'"+custId+"'";
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        HashMap<String, String> map = new HashMap<String, String>();//bu kadar iç içe arraylist hashmap anlamam ben internetten baktım...
+        if (cursor.moveToFirst()) {
+            do {
+
+                map.put(cursor.getString(0), cursor.getString(1));//tek tek customerleri çıkarıyor ve bir altta listeye ekliyor.
+            } while (cursor.moveToNext());
+        }
+        db.close();
+        return map;
+    }*/
     public int getRowCount() {
         String countQuery = "SELECT  * FROM " + TABLE_CUSTOMER;
         SQLiteDatabase db = this.getReadableDatabase();

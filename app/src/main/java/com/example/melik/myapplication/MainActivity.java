@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
         database = new Database(getApplicationContext());
         service = new Service(database); //her işimizi bu servis arkadaşına yaptırıcaz tüm metotları
-        //service.InsertTables();//syncdata fonksiyonunda sqllite çalıştırıyoruz bu çalıştırma için context'e ihtiyaç duyuyor o yüzden parametre olarak gönderiyoruz.
+        service.InsertTables();//syncdata fonksiyonunda sqllite çalıştırıyoruz bu çalıştırma için context'e ihtiyaç duyuyor o yüzden parametre olarak gönderiyoruz.
         Log.i("deneme", service.listAll("Customer").toString());
         Log.i("alacarte", database.allAlacarteNames().toString());
         Log.i("alacarte", service.listAll("Alacarte").toString());

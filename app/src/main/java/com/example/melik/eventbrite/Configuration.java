@@ -118,7 +118,7 @@ public class Configuration extends ListActivity {
                     imageDownloader.download(url,image);*/
                     /*new DownloadImageTask(image)
                             .execute(url);*/
-                    listEvent.add(i, eventList.get(i).getName() + "\n\nStart Now: " + eventList.get(i).getStartCalendar() + "  " + eventList.get(i).getStart() + "\nFinish Now: " + eventList.get(i).getEndCalendar() + "  " + eventList.get(i).getEnd() + "\n");
+                    listEvent.add(i, eventList.get(i).getName() + "\n\nStarts at: " + eventList.get(i).getStartCalendar() + "  " + eventList.get(i).getStart() + "\nFinishes at: " + eventList.get(i).getEndCalendar() + "  " + eventList.get(i).getEnd() + "\n");
                 }
                 myAdapter = new ArrayAdapter<String>(Configuration.this, R.layout.event_row, R.id.eventListView, listEvent);
 
@@ -133,13 +133,13 @@ public class Configuration extends ListActivity {
                     public void onItemClick(AdapterView<?> parent, View view,
                                             int position, long id) {
 
-                        //url = eventList.get(position).getUrl();
+                        url = eventList.get(position).getUrl();
                         //url = url.replaceAll("https://www.eventbrite.com/e/", "");
                         //Toast.makeText(getApplicationContext(), url,Toast.LENGTH_LONG).show();
-                        /*Intent browse = new Intent( Intent.ACTION_VIEW , Uri.parse( url ) );
+                        Intent browse = new Intent( Intent.ACTION_VIEW , Uri.parse( url ) );
 
-                        startActivity( browse );*/
-                        Toast.makeText(getApplicationContext(), eventList.get(position).getDescription(), Toast.LENGTH_LONG).show();
+                        startActivity( browse );
+                        //Toast.makeText(getApplicationContext(), eventList.get(position).getDescription(), Toast.LENGTH_LONG).show();
 
                     }
                 });
@@ -220,9 +220,9 @@ public class Configuration extends ListActivity {
                                 poi.setEnd(jsonArray.getJSONObject(i).getJSONObject("end").optString("local", "").substring(11, 16));
                             }
                         }
-                        /*if (jsonArray.getJSONObject(i).has("url")) {
-                                poi.setUrl(jsonArray.getJSONObject(i).getJSONObject("url").toString());
-                        }*/
+                        if (jsonArray.getJSONObject(i).has("url")) {
+                                poi.setUrl(jsonArray.getJSONObject(i).optString("url"));
+                        }
                         /*if(jsonArray.getJSONObject(i).has("logo")){
                             if (jsonArray.getJSONObject(i).getJSONObject("logo").has("url")) {
                                 poi.setUrlLogo(jsonArray.getJSONObject(i).getJSONObject("logo").optString("url"));

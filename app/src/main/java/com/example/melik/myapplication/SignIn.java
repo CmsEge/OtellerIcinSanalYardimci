@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -26,6 +27,8 @@ public class SignIn extends AppCompatActivity {
         database = new Database(getApplicationContext());
         service = new Service(database);
         //service.InsertTables();
+        //getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
+       // getActionBar().hide();
        if(service.getCustomerbyStatus().size()>0){
            Log.i("Customer", service.listAll("Customer").toString());
            Intent intent = new Intent(SignIn.this, MainScreen.class);

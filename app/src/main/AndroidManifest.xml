@@ -16,17 +16,17 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="com.example.melik.myapplication.SignIn">
+        <activity android:name="com.example.melik.myapplication.SignIn" android:theme="@style/Theme.AppCompat.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.example.melik.myapplication.MainActivity"></activity>
-        <activity android:name="com.example.melik.myapplication.SignUp"></activity>
-        <activity android:name="com.example.melik.myapplication.MainScreen"></activity>
-        <activity android:name="com.example.melik.places.PlaceMain"></activity>
+        <activity android:name="com.example.melik.myapplication.MainActivity" android:theme="@style/Theme.AppCompat.NoActionBar"></activity>
+        <activity android:name="com.example.melik.myapplication.SignUp" android:theme="@style/Theme.AppCompat.NoActionBar"></activity>
+        <activity android:name="com.example.melik.myapplication.MainScreen" android:theme="@style/Theme.AppCompat.NoActionBar"></activity>
+        <activity android:name="com.example.melik.places.PlaceMain" ></activity>
         <activity android:name="com.example.melik.eventbrite.Configuration"></activity>
         <uses-library android:name="org.apache.http.legacy" android:required="false"/>
         <activity android:name=".NotificationActivity" />

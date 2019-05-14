@@ -34,6 +34,7 @@
         android:drawableLeft="@drawable/ic_action_user"
         android:ems="10"
         android:hint="Username"
+        android:textColorHint="#888888"
         android:inputType="textEmailAddress"
         android:textSize="16dp"
         android:textColor="#FFFFFF"
@@ -54,6 +55,7 @@
         android:ems="10"
         android:hint="Password"
         android:textColor="#FFFFFF"
+        android:textColorHint="#888888"
         android:inputType="textPassword"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.496"
@@ -70,6 +72,7 @@
         android:background="@drawable/mybutton3"
         android:onClick="SignIn"
         android:text="Login"
+
         android:textColor="#FFFFFF"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.494"

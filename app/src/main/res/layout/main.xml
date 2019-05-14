@@ -4,45 +4,47 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFFFF">
+    android:background="@drawable/gradient">
 
     <TextView
         android:id="@+id/textView"
         android:layout_width="395dp"
         android:layout_height="80dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="68dp"
         android:layout_marginEnd="8dp"
-        android:text=""
-
-        android:textSize="35dp"
         android:gravity="center"
+
+        android:text=""
+        android:textColor="#FFFFFF"
+        android:textSize="35dp"
         app:layout_constraintEnd_toEndOf="parent"
 
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/shireButton"
-        android:layout_width="165dp"
+        android:layout_width="395dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="20dp"
         android:layout_marginEnd="8dp"
         android:background="@drawable/mybutton"
         android:onClick="ChatBot"
         android:text="Shıre"
         android:textColor="#FFFFFF"
-        app:layout_constraintEnd_toStartOf="@+id/eventButton"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView" />
 
     <Button
         android:id="@+id/eventButton"
-        android:layout_width="165dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
+        android:layout_width="395dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="24dp"
         android:layout_marginEnd="8dp"
         android:background="@drawable/mybutton"
@@ -50,12 +52,12 @@
         android:text="Event"
         android:textColor="#FFFFFF"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/shireButton"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/shireButton" />
 
     <Button
         android:id="@+id/placesButton"
-        android:layout_width="185dp"
+        android:layout_width="395dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="24dp"
@@ -65,18 +67,19 @@
         android:text="Places"
         android:textColor="#FFFFFF"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/shireButton" />
+        app:layout_constraintTop_toBottomOf="@+id/eventButton" />
 
     <Button
         android:id="@+id/logOutButton"
         android:layout_width="185dp"
-        android:layout_height="wrap_content"
+        android:layout_height="35dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
-        android:background="@drawable/mybutton2"
+        android:background="@drawable/mybutton3"
         android:onClick="LogOut"
         android:text="Log out"
         android:textColor="#FFFFFF"
@@ -84,7 +87,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/placesButton"
-        app:layout_constraintVertical_bias="0.87" />
+        app:layout_constraintVertical_bias="0.578" />
 
 
 </android.support.constraint.ConstraintLayout>

@@ -12,7 +12,7 @@ public class User implements IChatUser {
     private String name;
     private Bitmap icon;
 
-    public User(int id, String name) {
+    public User(int id, String name, Bitmap icon) {
         this.id = id;
         this.name = name;
         this.icon = icon;

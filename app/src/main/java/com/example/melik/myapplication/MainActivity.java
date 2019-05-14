@@ -327,14 +327,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         ArrayList<String> customer = service.getCustomerbyStatus();
 
         int myId = 0;
-        //Bitmap icon = BitmapFactory.decodeResource(getResources(), R.drawable.robot_icon);
-        //Bitmap userIcon = BitmapFactory.decodeResource(getResources(), R.drawable.user_icon);
+        Bitmap icon = BitmapFactory.decodeResource(getResources(), R.drawable.robot);
+        Bitmap userIcon = BitmapFactory.decodeResource(getResources(), R.drawable.user);
         String myName = "Siz";
-        myAccount = new User(Integer.parseInt(customer.get(0)), customer.get(1));
+        myAccount = new User(Integer.parseInt(customer.get(0)), customer.get(1), userIcon);
 
         int botId = 2;
         String botName = "Shire";
-        droidKaigiBot = new User(botId, botName);
+        droidKaigiBot = new User(botId, botName, icon);
 
         chatView = findViewById(R.id.chat_view);
         chatView.setRightBubbleColor(Color.parseColor("#007BFF"));

@@ -11,12 +11,15 @@ public class Events {
     private String end;
     private String startCalendar;
     private String endCalendar;
-    private String urlLogo;
+    private String Url;
 
+    public String getUrl() {
+        return Url;
+    }
 
-    public String getUrlLogo() { return urlLogo; }
-
-    public void setUrlLogo(String urlLogo) { this.urlLogo = urlLogo; }
+    public void setUrl(String url) {
+        Url = url;
+    }
 
     public String getStartCalendar() {
         return startCalendar;

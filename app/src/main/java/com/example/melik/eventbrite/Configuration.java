@@ -6,9 +6,11 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.Image;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -73,7 +75,7 @@ public class Configuration extends ListActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.event_brite);
         View inflatedView = getLayoutInflater().inflate(R.layout.event_row, null);
-        image = (ImageView) inflatedView.findViewById(R.id.logo);
+        //image = (ImageView) inflatedView.findViewById(R.id.logo);
         new eventPlaces().execute();
 
     }
@@ -110,9 +112,9 @@ public class Configuration extends ListActivity {
                 final List<String> listEvent = new ArrayList<String>();
 
                 for (int i = 0; i < eventList.size(); i++) {
-                    url = eventList.get(i).getUrlLogo();
+                   /* url = eventList.get(i).getUrlLogo();
                     ImageDownloader imageDownloader = new ImageDownloader();
-                    imageDownloader.download(url,image);
+                    imageDownloader.download(url,image);*/
                     /*new DownloadImageTask(image)
                             .execute(url);*/
                     listEvent.add(i, eventList.get(i).getName() + "\n\nStart Now: " + eventList.get(i).getStartCalendar() + "  " + eventList.get(i).getStart() + "\nFinish Now: " + eventList.get(i).getEndCalendar() + "  " + eventList.get(i).getEnd() + "\n");
@@ -129,7 +131,9 @@ public class Configuration extends ListActivity {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view,
                                             int position, long id) {
-
+                        url=eventList.get(position).getUrlLogo();
+                        Intent browse =new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                        startActivity(browse);
                         Toast.makeText(getApplicationContext(), eventList.get(position).getDescription(), Toast.LENGTH_LONG).show();
 
                     }
@@ -215,6 +219,9 @@ public class Configuration extends ListActivity {
                             if (jsonArray.getJSONObject(i).getJSONObject("logo").has("url")) {
                                 poi.setUrlLogo(jsonArray.getJSONObject(i).getJSONObject("logo").optString("url"));
                             }
+                        }
+                        if(jsonArray.getJSONObject(i).has("url")){
+                            poi.setUrlLogo(jsonArray.getJSONObject(i).getJSONObject("url").toString());
                         }
                     }
                     temp.add(poi);

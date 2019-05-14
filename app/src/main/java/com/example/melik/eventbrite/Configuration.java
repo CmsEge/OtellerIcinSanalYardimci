@@ -84,6 +84,7 @@ public class Configuration extends ListActivity {
     private class eventPlaces extends AsyncTask<View, Void, String> {
 
         String temp;
+        String url;
 
         @Override
         protected String doInBackground(View... urls) {
@@ -112,7 +113,7 @@ public class Configuration extends ListActivity {
                 final List<String> listEvent = new ArrayList<String>();
 
                 for (int i = 0; i < eventList.size(); i++) {
-                   /* url = eventList.get(i).getUrlLogo();
+                    /*url = eventList.get(i).getUrlLogo();
                     ImageDownloader imageDownloader = new ImageDownloader();
                     imageDownloader.download(url,image);*/
                     /*new DownloadImageTask(image)
@@ -129,11 +130,13 @@ public class Configuration extends ListActivity {
                 listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
                     @Override
-                    public void onItemClick(AdapterView<?> parent, View view,
-                                            int position, long id) {
-                        url=eventList.get(position).getUrlLogo();
-                        Intent browse =new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-                        startActivity(browse);
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                        url = eventList.get(position).getUrl();
+                        //url = url.replaceAll("https://www.eventbrite.com/e/", "");
+                        Toast.makeText(getApplicationContext(), url,Toast.LENGTH_LONG).show();
+                        Intent browse = new Intent( Intent.ACTION_VIEW , Uri.parse( url ) );
+                        startActivity( browse );
                         Toast.makeText(getApplicationContext(), eventList.get(position).getDescription(), Toast.LENGTH_LONG).show();
 
                     }
@@ -215,14 +218,14 @@ public class Configuration extends ListActivity {
                                 poi.setEnd(jsonArray.getJSONObject(i).getJSONObject("end").optString("local", "").substring(11, 16));
                             }
                         }
-                        if(jsonArray.getJSONObject(i).has("logo")){
+                        if (jsonArray.getJSONObject(i).has("url")) {
+                                poi.setUrl(jsonArray.getJSONObject(i).optString("url"));
+                        }
+                        /*if(jsonArray.getJSONObject(i).has("logo")){
                             if (jsonArray.getJSONObject(i).getJSONObject("logo").has("url")) {
                                 poi.setUrlLogo(jsonArray.getJSONObject(i).getJSONObject("logo").optString("url"));
                             }
-                        }
-                        if(jsonArray.getJSONObject(i).has("url")){
-                            poi.setUrlLogo(jsonArray.getJSONObject(i).getJSONObject("url").toString());
-                        }
+                        }*/
                     }
                     temp.add(poi);
                     //Log.i("poi",poi.getUrlLogo());

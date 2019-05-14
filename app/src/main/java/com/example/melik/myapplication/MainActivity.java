@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
         database = new Database(getApplicationContext());
         service = new Service(database); //her işimizi bu servis arkadaşına yaptırıcaz tüm metotları
-        //service.InsertTables();//syncdata fonksiyonunda sqllite çalıştırıyoruz bu çalıştırma için context'e ihtiyaç duyuyor o yüzden parametre olarak gönderiyoruz.
+        service.InsertTables();//syncdata fonksiyonunda sqllite çalıştırıyoruz bu çalıştırma için context'e ihtiyaç duyuyor o yüzden parametre olarak gönderiyoruz.
         Log.i("deneme", service.listAll("Customer").toString());
         Log.i("alacarte", database.allAlacarteNames().toString());
         Log.i("alacarte", service.listAll("Alacarte").toString());
@@ -126,6 +126,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void NotificationHandle() {
         HashMap<String, String> list = service.getStartDateOfMeal();
         HashMap<String, String> list2 = service.getStartDateOfEvents();
+
+
         if(list.size()>0){
             Notification(list.get("Breakfast"), "Breakfast", "Breakfast starts at " + list.get("Breakfast") + ".Don't be late, we will be waiting for you :)");
             Notification(list.get("Lunch"), "Lunch", "Lunch starts at " + list.get("Lunch") + ".Don't be late, we will be waiting for you :)");
@@ -325,26 +327,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         ArrayList<String> customer = service.getCustomerbyStatus();
 
         int myId = 0;
-        Bitmap icon = BitmapFactory.decodeResource(getResources(), R.drawable.robot_icon);
-        Bitmap userIcon = BitmapFactory.decodeResource(getResources(), R.drawable.user_icon);
+        //Bitmap icon = BitmapFactory.decodeResource(getResources(), R.drawable.robot_icon);
+        //Bitmap userIcon = BitmapFactory.decodeResource(getResources(), R.drawable.user_icon);
         String myName = "Siz";
-        myAccount = new User(Integer.parseInt(customer.get(0)), customer.get(1), userIcon);
+        myAccount = new User(Integer.parseInt(customer.get(0)), customer.get(1));
 
         int botId = 2;
         String botName = "Shire";
-        droidKaigiBot = new User(botId, botName, icon);
+        droidKaigiBot = new User(botId, botName);
 
         chatView = findViewById(R.id.chat_view);
-        chatView.setRightBubbleColor(Color.parseColor("#459FB2"));
-        chatView.setLeftBubbleColor(Color.parseColor("#B25D7F"));
-        chatView.setBackgroundColor(Color.parseColor("#D4D4D4"));
-        chatView.setSendButtonColor(Color.parseColor("#021aee"));
+        chatView.setRightBubbleColor(Color.parseColor("#007BFF"));
+        chatView.setLeftBubbleColor(Color.parseColor("#DBE4ED"));
+        chatView.setBackgroundColor(Color.WHITE);
+        chatView.setSendButtonColor(Color.parseColor("#416FD9"));
         //chatView.setSendIcon(R.drawable.user_icon);
         chatView.setRightMessageTextColor(Color.WHITE);
-        chatView.setLeftMessageTextColor(Color.WHITE);
-        chatView.setUsernameTextColor(Color.WHITE);
-        chatView.setSendTimeTextColor(Color.WHITE);
-        chatView.setDateSeparatorColor(Color.WHITE);
+        chatView.setLeftMessageTextColor(Color.parseColor("#0C3C66"));
+        chatView.setUsernameTextColor(Color.parseColor("#0C3C66"));
+        chatView.setSendTimeTextColor(Color.parseColor("#0C3C66"));
+        chatView.setDateSeparatorColor(Color.parseColor("#0C3C66"));
         chatView.setInputTextHint("new message...");
         chatView.setMessageMarginTop(5);
         chatView.setMessageMarginBottom(5);

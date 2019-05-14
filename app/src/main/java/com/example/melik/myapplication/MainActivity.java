@@ -126,8 +126,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void NotificationHandle() {
         HashMap<String, String> list = service.getStartDateOfMeal();
         HashMap<String, String> list2 = service.getStartDateOfEvents();
-        HashMap<String,String> list3=service.CustEvents(Integer.parseInt(myAccount.getId()));
-        Log.i("notiiiiiiiiii", list3.toString());
         if(list.size()>0){
             Notification(list.get("Breakfast"), "Breakfast", "Breakfast starts at " + list.get("Breakfast") + ".Don't be late, we will be waiting for you :)");
             Notification(list.get("Lunch"), "Lunch", "Lunch starts at " + list.get("Lunch") + ".Don't be late, we will be waiting for you :)");

@@ -57,6 +57,9 @@ dependencies {
     // https://mvnrepository.com/artifact/org.glassfish.jersey.media/jersey-media-json-jackson
     //noinspection GradleDependency
     implementation group: 'org.glassfish.jersey.media', name: 'jersey-media-json-jackson', version: '2.27'
+    // https://mvnrepository.com/artifact/com.squareup.picasso/picasso
+    implementation group: 'com.squareup.picasso', name: 'picasso', version: '2.5.2'
+
 
 
 

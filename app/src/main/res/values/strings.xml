@@ -11,4 +11,7 @@
     <string name="error_location">Unable to retrieve location. Please ensure your GPS is enabled.</string>
     <string name="error_parse">Application encountered errors while processing web data. Please try again later.</string>
     <string name="error_unknown">Sorry Application encountered generic error. Please restart application.</string>
+    <string name="title_location_permission">First, you must grant access to your location</string>
+    <string name="text_location_permission">Location</string>
+    <string name="ok">Okey</string>
 </resources>

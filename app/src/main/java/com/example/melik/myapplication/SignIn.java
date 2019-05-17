@@ -15,6 +15,7 @@ import android.widget.ViewAnimator;
 
 import com.example.melik.database.Database;
 import com.example.melik.service.Service;
+import com.example.melik.eventbrite.Configuration;
 public class SignIn extends AppCompatActivity {
     private Button signUp;
     private Database database;

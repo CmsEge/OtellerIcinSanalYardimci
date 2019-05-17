@@ -12,6 +12,15 @@ public class Events {
     private String startCalendar;
     private String endCalendar;
     private String Url;
+    private String imageURL;
+
+    public String getImageURL() {
+        return imageURL;
+    }
+
+    public void setImageURL(String imageURL) {
+        this.imageURL = imageURL;
+    }
 
     public String getUrl() {
         return Url;

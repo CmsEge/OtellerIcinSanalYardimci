@@ -262,12 +262,12 @@ public class Configuration extends ListActivity implements LocationListener {
                             poi.setUrl(jsonArray.getJSONObject(i).optString("url"));
                         }
                         if(jsonArray.getJSONObject(i).has("logo") && !jsonArray.getJSONObject(i).isNull("logo")){
-                            if (jsonArray.getJSONObject(i).getJSONObject("logo").has("url")) {
-                                poi.setImageURL(jsonArray.getJSONObject(i).getJSONObject("logo").optString("url",""));
-                                Log.i("logourl",jsonArray.getJSONObject(i).getJSONObject("logo").optString("url",""));
-                            }
+                        if (jsonArray.getJSONObject(i).getJSONObject("logo").has("url")) {
+                            poi.setImageURL(jsonArray.getJSONObject(i).getJSONObject("logo").optString("url",""));
+                            Log.i("logourl",jsonArray.getJSONObject(i).getJSONObject("logo").optString("url",""));
                         }
                     }
+                }
                     temp.add(poi);
                 }
             }

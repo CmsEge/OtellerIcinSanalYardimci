@@ -5,12 +5,15 @@ public class GooglePlace {
     private String category;
     private String rating;
     private String open;
+    private String imageUrl;
+    private String url;
 
-    public GooglePlace() {
-        this.name = "";
-        this.rating = "";
-        this.open = "";
-        this.setCategory("");
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     public void setName(String name) {
@@ -43,5 +46,21 @@ public class GooglePlace {
 
     public String getOpenNow() {
         return open;
+    }
+
+    public String getOpen() {
+        return open;
+    }
+
+    public void setOpen(String open) {
+        this.open = open;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }

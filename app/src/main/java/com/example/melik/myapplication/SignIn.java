@@ -16,12 +16,14 @@ import android.widget.ViewAnimator;
 import com.example.melik.database.Database;
 import com.example.melik.service.Service;
 import com.example.melik.eventbrite.Configuration;
+
 public class SignIn extends AppCompatActivity {
     private Button signUp;
     private Database database;
     private Service service;
     private EditText email;
     private EditText pass;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,21 +31,31 @@ public class SignIn extends AppCompatActivity {
         service = new Service(database);
         //service.InsertTables();
         //getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
-       // getActionBar().hide();
-       if(service.getCustomerbyStatus().size()>0){
-           Log.i("Customer", service.listAll("Customer").toString());
-           Intent intent = new Intent(SignIn.this, MainScreen.class);
-           startActivity(intent);
-        }else{
-           Log.i("Customer", service.listAll("Customer").toString());
+        // getActionBar().hide();
+        if (service.getCustomerbyStatus().size() > 0) {
+            Log.i("Customer", service.listAll("Customer").toString());
+            Intent intent = new Intent(SignIn.this, MainScreen.class);
+            startActivity(intent);
+        } else {
+            Log.i("Customer", service.listAll("Customer").toString());
             setContentView(R.layout.log_in);
-       }
+        }
         signUp = findViewById(R.id.signUpButton);
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.slide_from_left, R.anim.slide_to_right);
+    }
+
+
     public void SignUp(View v) {
         Intent intent = new Intent(SignIn.this, SignUp.class);
         startActivity(intent);
+        overridePendingTransition(R.anim.slide_from_right, R.anim.slide_from_left);
     }
+
     public void SignIn(View v) {
         email = (EditText) findViewById(R.id.mailEdit2);
         pass = (EditText) findViewById(R.id.passEdit2);
@@ -52,10 +64,11 @@ public class SignIn extends AppCompatActivity {
         } else if (Patterns.EMAIL_ADDRESS.matcher(email.getText().toString()).matches()) {
             String password = service.getCustomerByEmail(email.getText().toString());
             if (password.equals(pass.getText().toString())) {
-                service.updateCustomer(email.getText().toString(),1);
+                service.updateCustomer(email.getText().toString(), 1);
                 Log.i("Customer", service.listAll("Customer").toString());
                 Intent intent = new Intent(SignIn.this, MainScreen.class);
                 startActivity(intent);
+                overridePendingTransition(R.anim.slide_from_right, R.anim.slide_from_left);
             } else {
                 Toast.makeText(getApplicationContext(), "User couldn't find.", Toast.LENGTH_LONG).show();
             }

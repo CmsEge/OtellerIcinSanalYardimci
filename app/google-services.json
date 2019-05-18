@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "62984908527",
+    "firebase_url": "https://cmsbot-1558188488126.firebaseio.com",
+    "project_id": "cmsbot-1558188488126",
+    "storage_bucket": "cmsbot-1558188488126.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:62984908527:android:b80b2db3ef44548a",
+        "android_client_info": {
+          "package_name": "com.example.melik.myapplication"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "62984908527-r74ahdv2ksn3v4fch2q191hj7lbrmfd1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAU0WRUmoyVVAnD6dc98QuCQbu1Gh8oNEY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "62984908527-r74ahdv2ksn3v4fch2q191hj7lbrmfd1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

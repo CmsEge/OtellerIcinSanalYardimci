@@ -89,8 +89,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //Language, Dialogflow Client access token
         final LanguageConfig config = new LanguageConfig("en", "ecd717ee86524b2e977ca6e4483c7346");
         initService(config);
-        Receive("Hello "+ myAccount.getName());
+        Receive("Hello " + myAccount.getName());
         NotificationHandle();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.slide_from_left, R.anim.slide_to_right);
     }
 
     @Override
@@ -128,17 +134,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         HashMap<String, String> list2 = service.getStartDateOfEvents();
 
 
-        if(list.size()>0){
+        if (list.size() > 0) {
             Notification(list.get("Breakfast"), "Breakfast", "Breakfast starts at " + list.get("Breakfast") + ".Don't be late, we will be waiting for you :)");
             Notification(list.get("Lunch"), "Lunch", "Lunch starts at " + list.get("Lunch") + ".Don't be late, we will be waiting for you :)");
             Notification(list.get("Dinner"), "Dinner", "Dinner starts at " + list.get("Dinner") + ".Don't be late, we will be waiting for you :)");
         }
-        if(list2.size()>0){
+        if (list2.size() > 0) {
             for (Map.Entry<String, String> pair : list2.entrySet()) {
                 Notification(pair.getValue(), "Event", pair.getKey() + " starts at " + pair.getValue() + ". I wish you will be there..");
             }
         }
     }
+
     private void sendRequest(String text) {
         Log.d(TAG, text);
         final String queryString = String.valueOf(text);
@@ -152,6 +159,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         new AiTask().execute(queryString, eventString, contextString);
     }
+
     public class AiTask extends AsyncTask<String, Void, AIResponse> {
         private AIError aiError;
 
@@ -183,6 +191,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 return null;
             }
         }
+
         @Override
         protected void onPostExecute(final AIResponse response) {
             if (response != null) {
@@ -192,6 +201,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         }
     }
+
     private void onResult(final AIResponse response) {
         runOnUiThread(new Runnable() {
             @Override
@@ -277,13 +287,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                         service.insertRoomStatus(Integer.parseInt(myAccount.getId()), 0, 0, params.get("time").getAsString());
                         Log.i("timeeeeeee ,", params.get("time").getAsString());
-                        Receive(speech);
-                        break;
-                    }
-                    case "event": {
-                        Intent intent = new Intent(MainActivity.this, PlaceMain.class);
-                        startActivity(intent);
-                        overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
                         Receive(speech);
                         break;
                     }

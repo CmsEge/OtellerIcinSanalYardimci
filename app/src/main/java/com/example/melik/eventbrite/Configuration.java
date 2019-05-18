@@ -119,6 +119,12 @@ public class Configuration extends ListActivity implements LocationListener {
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.slide_from_left, R.anim.slide_to_right);
+    }
+
     private class eventPlaces extends AsyncTask<View, Void, String> {
 
         String temp;
@@ -278,7 +284,6 @@ public class Configuration extends ListActivity implements LocationListener {
         return temp;
 
     }
-
 
     @Override
     public void onLocationChanged(Location location) {

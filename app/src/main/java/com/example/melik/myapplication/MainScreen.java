@@ -28,7 +28,7 @@ import com.example.melik.database.Database;
 
 import java.util.ArrayList;
 
-public class MainScreen extends AppCompatActivity  {
+public class MainScreen extends AppCompatActivity {
 
     private Service service;
     private Database database;
@@ -39,32 +39,45 @@ public class MainScreen extends AppCompatActivity  {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
-        shire=findViewById(R.id.shireButton);
-        database=new Database(getApplicationContext());
-        service= new Service(database);
-        text=findViewById(R.id.textView);
-        ArrayList<String> cust=service.getCustomerbyStatus();
-        text.append("Welcome "+ cust.get(1));
+        shire = findViewById(R.id.shireButton);
+        database = new Database(getApplicationContext());
+        service = new Service(database);
+        text = findViewById(R.id.textView);
+        ArrayList<String> cust = service.getCustomerbyStatus();
+        text.append("Welcome " + cust.get(1));
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.slide_from_left, R.anim.slide_to_right);
     }
 
 
-    public void ChatBot(View v){
-        Intent intent=new Intent(MainScreen.this,MainActivity.class);
+    public void ChatBot(View v) {
+        Intent intent = new Intent(MainScreen.this, MainActivity.class);
         startActivity(intent);
+        overridePendingTransition(R.anim.slide_from_right, R.anim.slide_from_left);
     }
-    public void LogOut(View v){
+
+    public void LogOut(View v) {
         service.changeStatus();
         Log.i("customer", service.listAll("Customer").toString());
         Intent intent = new Intent(MainScreen.this, SignIn.class);
         startActivity(intent);
+        overridePendingTransition(R.anim.slide_from_right, R.anim.slide_from_left);
     }
-    public void Event(View v){
-        Intent intent=new Intent(MainScreen.this, Configuration.class);
+
+    public void Event(View v) {
+        Intent intent = new Intent(MainScreen.this, Configuration.class);
         startActivity(intent);
+        overridePendingTransition(R.anim.slide_from_right, R.anim.slide_from_left);
     }
-    public void Places(View v){
-        Intent intent=new Intent(MainScreen.this, PlaceMain.class);
+
+    public void Places(View v) {
+        Intent intent = new Intent(MainScreen.this, PlaceMain.class);
         startActivity(intent);
+        overridePendingTransition(R.anim.slide_from_right, R.anim.slide_from_left);
     }
 
 }

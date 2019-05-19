@@ -16,6 +16,7 @@ public class Database  extends SQLiteOpenHelper {
 
     private static final int DATABASE_VERSION = 1;//Bu neden bilmiyorum versiyon değiştirirsek diye bizi bilgilendirmek amaçlı sanırım.
     private static final String DATABASE_NAME = "ChatBot";
+    private static Database sInstance;
 
     //Table of Customer
     private static final String TABLE_CUSTOMER = "Customer";//burası normal değişken tanımlama gibi
@@ -99,6 +100,7 @@ public class Database  extends SQLiteOpenHelper {
     public Database(Context context) {//Database context ile oluşuyor.
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
+
     @Override
     public void onCreate(SQLiteDatabase db) {
         //burası normal sorgu kısmı bunu bir string ile oluşturuyoruz.
@@ -187,6 +189,8 @@ public class Database  extends SQLiteOpenHelper {
                 + ANSWER + " TEXT " + " ) ";
         db.execSQL(CREATE_TABLE_FAQ);
     }
+
+
     //Customer Functions
     public void customerDelete(int customerId){
         SQLiteDatabase db = this.getWritableDatabase();//kullanmakta olduğumuz database'i yazılabilir(writable) olarak açıyor gibi bişey.Algoritma text işlemleri gibi.
@@ -194,6 +198,7 @@ public class Database  extends SQLiteOpenHelper {
                 new String[] { String.valueOf(customerId) });//Burada sorguyu oluşturup direk silme fonksiyonuna gönderiyor.customerId ile gönderiyor.
         db.close();//işlem bitince her fonksiyonda db kapatılıyor.
     }
+
     public void customerInsert( String cName, String sName,String roomNo, String phoneNo, String cusPassword, String email) {
         SQLiteDatabase db = this.getWritableDatabase();//yine yazılabilir olarak açıyoruz db'yi.
         ContentValues values = new ContentValues();//ContentValues tipinde bir değişken oluşturuyoruz.Isme takılmayın mantık anlaşılıyor içine atıyoruz gönderdiğimiz parametreleri.
@@ -208,6 +213,7 @@ public class Database  extends SQLiteOpenHelper {
         db.insert(TABLE_CUSTOMER, null, values);//bu değerleri insert'e direk gönderiyoruz.
         db.close();
     }
+
     public HashMap<String, String> customerDetail(int cId){
         HashMap<String,String> customer = new HashMap<String,String>();//Bir hashmap oluşturuyoruz.
         String selectQuery = "SELECT * FROM " + TABLE_CUSTOMER+ " WHERE customerId="+cId;//Gönderdiğimiz cId ile bir query oluşturuyoruz.
@@ -226,6 +232,7 @@ public class Database  extends SQLiteOpenHelper {
         db.close();
         return customer;//Hashmap tipindeki customer geri döndürülüyor.
     }
+
     public int getCustomerID(String name,String surname,String roomNo,String phoneNo, String cusPassword, String email){
         String selectQuery = "SELECT customerId FROM " + TABLE_CUSTOMER+ " WHERE "+ CUSTOMER_NAME+" = "+"'"+name+"'"+" AND "+CUSTOMER_SURNAME+" = "+"'"+surname+"'"+" " +
                 "AND  "+ROOM_NO+" = "+"'"+roomNo+"'"+" AND "+PHONE_NO+" = "+"'"+phoneNo+"'"+" " +
@@ -241,6 +248,7 @@ public class Database  extends SQLiteOpenHelper {
         db.close();
         return 0;
     }
+
     public ArrayList<HashMap<String, String>> allCustomers(){
         SQLiteDatabase db = this.getReadableDatabase();//yine sadece okunabilir.
         String selectQuery = "SELECT * FROM " + TABLE_CUSTOMER;
@@ -259,6 +267,7 @@ public class Database  extends SQLiteOpenHelper {
         db.close();
         return customerList;//Tüm müşterilerin listesini geri döndürüyor.
     }
+
     public void customerUpdate(String email, int status) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -267,6 +276,7 @@ public class Database  extends SQLiteOpenHelper {
         db.update(TABLE_CUSTOMER, values, EMAIL + " = ?",
                 new String[] { String.valueOf(email) });
     }
+
     public void changeStatus(){
         String selectQuery = "SELECT email FROM " + TABLE_CUSTOMER+ " WHERE "+STATUS+" = "+"'"+1
                 +"'";//Gönderdiğimiz cId ile bir query oluşturuyoruz.
@@ -280,6 +290,7 @@ public class Database  extends SQLiteOpenHelper {
         cursor.close();//cursor kapatılıyor.
         db.close();
     }
+
     public String getCustomerPassword(String email){
         String selectQuery = "SELECT cusPassword FROM " + TABLE_CUSTOMER+ " WHERE "+ EMAIL+" = "+"'"+email+"'";
         SQLiteDatabase db = this.getReadableDatabase();
@@ -293,6 +304,7 @@ public class Database  extends SQLiteOpenHelper {
         }
         return null;
     }
+
     public boolean cusControl(String name, String surname, String email){
 
         String selectQuery = "SELECT customerId FROM " + TABLE_CUSTOMER+ " WHERE "+ CUSTOMER_NAME+" = "+"'"+name+"'"+
@@ -313,6 +325,7 @@ public class Database  extends SQLiteOpenHelper {
             return true;
         }
     }
+
     public ArrayList<String> getCustomerbyStatus(){
         String selectQuery = "SELECT customerId, cName FROM " + TABLE_CUSTOMER+ " WHERE "+STATUS+" = "+"'"+1
                 +"'";//Gönderdiğimiz cId ile bir query oluşturuyoruz.
@@ -329,6 +342,7 @@ public class Database  extends SQLiteOpenHelper {
         db.close();
         return list;
     }
+
     public void orderInsert(String order, String cost) {
         SQLiteDatabase db = this.getWritableDatabase();//yine yazılabilir olarak açıyoruz db'yi.
         ContentValues values = new ContentValues();//ContentValues tipinde bir değişken oluşturuyoruz.Isme takılmayın mantık anlaşılıyor içine atıyoruz gönderdiğimiz parametreleri.
@@ -337,6 +351,7 @@ public class Database  extends SQLiteOpenHelper {
         db.insert(TABLE_ORDER, null, values);//bu değerleri insert'e direk gönderiyoruz.
         db.close();
     }
+
     public void orderRequestInsert(int custId, int orderId, String date, String time) {
         SQLiteDatabase db = this.getWritableDatabase();//yine yazılabilir olarak açıyoruz db'yi.
         ContentValues values = new ContentValues();//ContentValues tipinde bir değişken oluşturuyoruz.Isme takılmayın mantık anlaşılıyor içine atıyoruz gönderdiğimiz parametreleri.
@@ -347,6 +362,7 @@ public class Database  extends SQLiteOpenHelper {
         db.insert(TABLE_ORDER_REQUEST, null, values);//bu değerleri insert'e direk gönderiyoruz.
         db.close();
     }
+
     public void faqInsert(String question, String answer) {
         SQLiteDatabase db = this.getWritableDatabase();//yine yazılabilir olarak açıyoruz db'yi.
         ContentValues values = new ContentValues();//ContentValues tipinde bir değişken oluşturuyoruz.Isme takılmayın mantık anlaşılıyor içine atıyoruz gönderdiğimiz parametreleri.
@@ -355,6 +371,7 @@ public class Database  extends SQLiteOpenHelper {
         db.insert(TABLE_FAQ, null, values);//bu değerleri insert'e direk gönderiyoruz.
         db.close();
     }
+
     public String listAnswer(int id){
         SQLiteDatabase db = this.getReadableDatabase();//yine sadece okunabilir.
         String selectQuery = "SELECT answer FROM " + TABLE_FAQ+ " WHERE "+FAQ_ID+"="+"'"+id+"'";
@@ -370,6 +387,7 @@ public class Database  extends SQLiteOpenHelper {
         cursor.close();
         return null;
     }
+
     //Alacarte Functions
     public void alacarteInsert(String name,ArrayList<String> entree, ArrayList<String> warm, ArrayList<String> main, ArrayList<String> dessert) {
         SQLiteDatabase db = this.getWritableDatabase();//yine yazılabilir olarak açıyoruz db'yi.
@@ -383,6 +401,7 @@ public class Database  extends SQLiteOpenHelper {
         db.insert(TABLE_ALACARTE, null, values);//bu değerleri insert'e direk gönderiyoruz.
         db.close();
     }
+
     public List<String> allAlacarteNames(){
         SQLiteDatabase db = this.getReadableDatabase();//yine sadece okunabilir.
         String selectQuery = "SELECT * FROM " + TABLE_ALACARTE;
@@ -401,6 +420,7 @@ public class Database  extends SQLiteOpenHelper {
         cursor.close();
         return List;
     }
+
     //ReservationAla Functions
     public void reservationAlaInsert(String date, int cus, int ala) {
         SQLiteDatabase db = this.getWritableDatabase();//yine yazılabilir olarak açıyoruz db'yi.
@@ -412,6 +432,7 @@ public class Database  extends SQLiteOpenHelper {
         db.insert(TABLE_RESERVATION_ALA, null, values);//bu değerleri insert'e direk gönderiyoruz.
         db.close();
     }
+
     public List<String> listMealTimes(String mealName){
         SQLiteDatabase db = this.getReadableDatabase();//yine sadece okunabilir.
         String selectQuery = "SELECT mealStartTime, mealEndTime FROM " + TABLE_MEALS+ " WHERE "+MEAL_NAME+"="+"'"+mealName+"'";
@@ -431,6 +452,7 @@ public class Database  extends SQLiteOpenHelper {
         cursor.close();
         return List;
     }
+
     public void mealInsert(String mealName, String mealStartTime, String mealEndTime) {
 
         SQLiteDatabase db = this.getWritableDatabase();//yine yazılabilir olarak açıyoruz db'yi.
@@ -442,6 +464,7 @@ public class Database  extends SQLiteOpenHelper {
         db.insert(TABLE_MEALS, null, values);//bu değerleri insert'e direk gönderiyoruz.
         db.close();
     }
+
     public void eventInsert(String eventName, String startTime, String endTime, String eventPlace) {
         SQLiteDatabase db = this.getWritableDatabase();//yine yazılabilir olarak açıyoruz db'yi.
         ContentValues values = new ContentValues();//ContentValues tipinde bir değişken oluşturuyoruz.Isme takılmayın mantık anlaşılıyor içine atıyoruz gönderdiğimiz parametreleri.
@@ -453,6 +476,7 @@ public class Database  extends SQLiteOpenHelper {
         db.insert(TABLE_EVENT, null, values);//bu değerleri insert'e direk gönderiyoruz.
         db.close();
     }
+
     public void eventNotificationInsert(int eveId, int custId) {
         SQLiteDatabase db = this.getWritableDatabase();//yine yazılabilir olarak açıyoruz db'yi.
         ContentValues values = new ContentValues();//ContentValues tipinde bir değişken oluşturuyoruz.Isme takılmayın mantık anlaşılıyor içine atıyoruz gönderdiğimiz parametreleri.
@@ -462,6 +486,7 @@ public class Database  extends SQLiteOpenHelper {
         db.insert(TABLE_EVENT_NOTIFICATION, null, values);//bu değerleri insert'e direk gönderiyoruz.
         db.close();
     }
+
     public void roomStatusInsert(int custID, String date,String time, int disturb,int clean,String alarm) {
 
         SQLiteDatabase db = this.getWritableDatabase();//yine yazılabilir olarak açıyoruz db'yi.
@@ -476,12 +501,14 @@ public class Database  extends SQLiteOpenHelper {
         db.insert(TABLE_ROOM_STATUS, null, values);//bu değerleri insert'e direk gönderiyoruz.
         db.close();
     }
+
     public void resetTables(String tableName){
 
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(tableName, null, null);
         db.close();
     }
+
     public ArrayList<HashMap<String, String>> listAll(String tableName){
 
         SQLiteDatabase db = this.getReadableDatabase();//yine sadece okunabilir.
@@ -501,7 +528,21 @@ public class Database  extends SQLiteOpenHelper {
         db.close();
         return List;//Tüm müşterilerin listesini geri döndürüyor.
     }
-   /* public  HashMap<String, String> CustEvents(int custId){
+
+    public int getRowCount() {
+        String countQuery = "SELECT  * FROM " + TABLE_CUSTOMER;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(countQuery, null);
+        int rowCount = cursor.getCount();
+        db.close();
+        cursor.close();
+        return rowCount;
+    }
+
+    @Override
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {}
+
+       /* public  HashMap<String, String> CustEvents(int custId){
         SQLiteDatabase db = this.getReadableDatabase();
         String selectQuery = "SELECT Event.eventName, Event.startTime FROM  Event INNER JOIN EventNotification ON EventNotification.eveId=Event.eventId WHERE EventNotification.custId="+"'"+custId+"'";
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -515,15 +556,4 @@ public class Database  extends SQLiteOpenHelper {
         db.close();
         return map;
     }*/
-    public int getRowCount() {
-        String countQuery = "SELECT  * FROM " + TABLE_CUSTOMER;
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery(countQuery, null);
-        int rowCount = cursor.getCount();
-        db.close();
-        cursor.close();
-        return rowCount;
-    }
-    @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {}
 }

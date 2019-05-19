@@ -10,10 +10,47 @@
       "client_info": {
         "mobilesdk_app_id": "1:62984908527:android:b80b2db3ef44548a",
         "android_client_info": {
+          "package_name": "com.example.melik"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "62984908527-r74ahdv2ksn3v4fch2q191hj7lbrmfd1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAU0WRUmoyVVAnD6dc98QuCQbu1Gh8oNEY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "62984908527-r74ahdv2ksn3v4fch2q191hj7lbrmfd1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:62984908527:android:979f2db140afeae7",
+        "android_client_info": {
           "package_name": "com.example.melik.myapplication"
         }
       },
       "oauth_client": [
+        {
+          "client_id": "62984908527-rvlu9thmno4s7u06ht779jvlnaivpl15.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.melik.myapplication",
+            "certificate_hash": "06561d9bd4eabb69387bd5583d69a290b02027c3"
+          }
+        },
         {
           "client_id": "62984908527-r74ahdv2ksn3v4fch2q191hj7lbrmfd1.apps.googleusercontent.com",
           "client_type": 3

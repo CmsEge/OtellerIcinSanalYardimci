@@ -1,6 +1,8 @@
 package com.example.melik.myapplication;
 
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.content.Intent;
@@ -17,7 +19,7 @@ import com.example.melik.database.Database;
 import com.example.melik.service.Service;
 import com.example.melik.eventbrite.Configuration;
 
-public class SignIn extends AppCompatActivity {
+public class SignIn extends AppCompatActivity{
     private Button signUp;
     private Database database;
     private Service service;
@@ -29,9 +31,10 @@ public class SignIn extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         database = new Database(getApplicationContext());
         service = new Service(database);
-        //service.InsertTables();
+        service.InsertTables();
         //getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
         // getActionBar().hide();
+
         if (service.getCustomerbyStatus().size() > 0) {
             Log.i("Customer", service.listAll("Customer").toString());
             Intent intent = new Intent(SignIn.this, MainScreen.class);
@@ -40,6 +43,7 @@ public class SignIn extends AppCompatActivity {
             Log.i("Customer", service.listAll("Customer").toString());
             setContentView(R.layout.log_in);
         }
+
         signUp = findViewById(R.id.signUpButton);
     }
 
@@ -48,7 +52,6 @@ public class SignIn extends AppCompatActivity {
         super.onBackPressed();
         overridePendingTransition(R.anim.slide_from_left, R.anim.slide_to_right);
     }
-
 
     public void SignUp(View v) {
         Intent intent = new Intent(SignIn.this, SignUp.class);
@@ -76,4 +79,5 @@ public class SignIn extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "Please, fill right your email!", Toast.LENGTH_LONG).show();
         }
     }
+
 }

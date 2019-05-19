@@ -25,6 +25,7 @@ public class User implements IChatUser {
     }
 
     public void setId(Integer id){this.id=id;}
+
     @Nullable
     @Override
     public String getName() {
@@ -41,4 +42,5 @@ public class User implements IChatUser {
     public void setIcon(Bitmap icon) {
         this.icon = icon;
     }
+
 }

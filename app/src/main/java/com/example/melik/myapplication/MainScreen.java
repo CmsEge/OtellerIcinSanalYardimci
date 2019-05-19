@@ -34,6 +34,7 @@ public class MainScreen extends AppCompatActivity {
     private Database database;
     private Button shire;
     private TextView text;
+    public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -45,12 +46,16 @@ public class MainScreen extends AppCompatActivity {
         text = findViewById(R.id.textView);
         ArrayList<String> cust = service.getCustomerbyStatus();
         text.append("Welcome " + cust.get(1));
+        checkLocationPermission();
     }
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
         overridePendingTransition(R.anim.slide_from_left, R.anim.slide_to_right);
+        service.changeStatus();
+        Intent intent = new Intent(MainScreen.this, SignIn.class);
+        startActivity(intent);
     }
 
 
@@ -65,7 +70,7 @@ public class MainScreen extends AppCompatActivity {
         Log.i("customer", service.listAll("Customer").toString());
         Intent intent = new Intent(MainScreen.this, SignIn.class);
         startActivity(intent);
-        overridePendingTransition(R.anim.slide_from_right, R.anim.slide_from_left);
+        overridePendingTransition(R.anim.slide_from_left, R.anim.slide_to_right);
     }
 
     public void Event(View v) {
@@ -78,6 +83,46 @@ public class MainScreen extends AppCompatActivity {
         Intent intent = new Intent(MainScreen.this, PlaceMain.class);
         startActivity(intent);
         overridePendingTransition(R.anim.slide_from_right, R.anim.slide_from_left);
+    }
+
+    public boolean checkLocationPermission() {
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            // Should we show an explanation?
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.ACCESS_FINE_LOCATION)) {
+
+                // Show an explanation to the user *asynchronously* -- don't block
+                // this thread waiting for the user's response! After the user
+                // sees the explanation, try again to request the permission.
+                new AlertDialog.Builder(this)
+                        .setTitle(R.string.title_location_permission)
+                        .setMessage(R.string.text_location_permission)
+                        .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                //Prompt the user once explanation has been shown
+                                ActivityCompat.requestPermissions(MainScreen.this,
+                                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                                        MY_PERMISSIONS_REQUEST_LOCATION);
+                            }
+                        })
+                        .create()
+                        .show();
+
+
+            } else {
+                // No explanation needed, we can request the permission.
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                        MY_PERMISSIONS_REQUEST_LOCATION);
+            }
+            return false;
+        } else {
+            return true;
+        }
     }
 
 }
